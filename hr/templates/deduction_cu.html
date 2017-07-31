@@ -8,11 +8,11 @@
 {% block head_end %}
     <script src="{% static 'js/vendors/jquery-formset.js' %}" xmlns="http://www.w3.org/1999/html"></script>
     <script type="text/javascript">
-        $(function () {
-            $('.deduction-form').formset({
-                prefix: '{{ deduction_formset.prefix }}'
-            });
+      $(function () {
+        $('.deduction-form').formset({
+          prefix: '{{ deduction_formset.prefix }}'
         });
+      });
     </script>
 {% endblock %}
 {% block title %}
@@ -20,8 +20,8 @@
 {% endblock %}
 {% block breadcrumbs %}
     {{ block.super }}
-        <li><a href="{% url 'payroll_entry' %}">{% trans 'Payroll Entry' %}</a>
-        <li><a href="{% url 'entry_list' %}">{% trans 'Entry List' %}</a>
+    <li><a href="{% url 'payroll_entry' %}">{% trans 'Payroll Entry' %}</a>
+    <li><a href="{% url 'entry_list' %}">{% trans 'Entry List' %}</a>
 
 {% endblock %}
 {% block breadcrumbs_before_print %}
@@ -40,47 +40,49 @@
 
 {% block  content %}
 
-<form method="POST" action="{% url 'deduction_name' %}">
+    <form method="POST" action="{% url 'deduction_name' %}">
 
-    {% csrf_token %}
+        {% csrf_token %}
 
-    <div class="well">
-        {{ deduction_formset.non_form_errors.as_ul }}
-        <table id="formset" class="form table table-striped">
-        {% for form in deduction_formset.forms %}
-          {% if forloop.first %}
-          <thead><tr>
-            {% for field in form.visible_fields %}
-            <th>{{ field.label|capfirst }}</th>
-            {% endfor %}
-          </tr></thead>
-          {% endif %}
-          <tr class="{% cycle row1,row2 %} deduction-form">
-          {% for field in form.visible_fields %}
-            <td>
-            {# Include the hidden fields in the form #}
-            {% if forloop.first %}
-              {% for hidden in form.hidden_fields %}
-              {{ hidden }}
-              {% endfor %}
+        <div class="well">
+            {{ deduction_formset.non_form_errors.as_ul }}
+            <table id="formset" class="form table table-striped">
+                {% for form in deduction_formset.forms %}
+                    {% if forloop.first %}
+                        <thead>
+                        <tr>
+                            {% for field in form.visible_fields %}
+                                <th>{{ field.label|capfirst }}</th>
+                            {% endfor %}
+                        </tr>
+                        </thead>
+                    {% endif %}
+                    <tr class="{% cycle row1,row2 %} deduction-form">
+                        {% for field in form.visible_fields %}
+                            <td>
+                                {# Include the hidden fields in the form #}
+                                {% if forloop.first %}
+                                    {% for hidden in form.hidden_fields %}
+                                        {{ hidden }}
+                                    {% endfor %}
+                                {% endif %}
+                                {{ field.errors.as_ul }}
+                                {{ field }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+            {{ deduction_formset.management_form }}
+
+            {% conf_has_category as has_config %}
+            {% if has_config %}
+                <input class="btn btn-raised btn-primary" type="submit" value="Save">
+            {% else %}
+                {% include '_pconfig.html' %}
             {% endif %}
-              {{ field.errors.as_ul }}
-              {{ field }}
-            </td>
-          {% endfor %}
-          </tr>
-        {% endfor %}
-        </table>
-      {{ deduction_formset.management_form }}
-      
-      {% conf_has_category as has_config %}
-      {% if has_config %}
-      <input class="btn btn-raised btn-primary" type="submit" value="Save">
-      {% else %}
-          {% include '_pconfig.html' %}
-      {% endif %}
-    </div>
-</form>
+        </div>
+    </form>
 
-    
+
 {% endblock %}
