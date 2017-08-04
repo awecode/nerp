@@ -12,8 +12,8 @@ from core.models import FiscalYear, BudgetHead, Donor
 class AuthorityHandover(MPTTModel):
     beneficiary_designation = models.CharField(max_length=255)
     beneficiary_office = models.CharField(max_length=255)
-    fiscal_year = models.ForeignKey(FiscalYear, related_name="authority_handers")
-    budget_head = models.ForeignKey(BudgetHead, related_name="authority_handers")
+    fiscal_year = models.ForeignKey(FiscalYear, related_name="authority_handovers")
+    budget_head = models.ForeignKey(BudgetHead, related_name="authority_handovers")
     priority_code = models.CharField(max_length=10)
     date = models.DateField()
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
@@ -46,4 +46,4 @@ class BudgetDistribution(models.Model):
 
     def __str__(self):
         return "%s-%s" % (self.authority_handover, self.expenditure_head_name)
-    
+

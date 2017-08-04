@@ -66,6 +66,7 @@ INSTALLED_APPS = (
     'training',
     'key',
     'project',
+    'authority_handover',
 
 )
 
