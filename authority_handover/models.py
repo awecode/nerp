@@ -9,14 +9,13 @@ from core.models import FiscalYear, BudgetHead, Donor
 
 
 @python_2_unicode_compatible
-class AuthorityHandover(MPTTModel):
+class AuthorityHandover(models.Model):
     beneficiary_designation = models.CharField(max_length=255)
     beneficiary_office = models.CharField(max_length=255)
     fiscal_year = models.ForeignKey(FiscalYear, related_name="authority_handovers")
     budget_head = models.ForeignKey(BudgetHead, related_name="authority_handovers")
     priority_code = models.CharField(max_length=10)
     date = models.DateField()
-    parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True)
 
     def __str__(self):
         return "%s-%s-%s" % (self.date, self.beneficiary_designation, self.beneficiary_office)
