@@ -20,6 +20,7 @@ urlpatterns = [
     url(r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^froala_editor/', include('froala_editor.urls')),
     url(r'', include('core.urls')),
+    url(r'^authority-handover/', include('authority_handover.urls')),
 ]
 
 from django.conf.urls.static import static

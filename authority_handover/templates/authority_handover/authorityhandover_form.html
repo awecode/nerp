@@ -1,0 +1,78 @@
+{% extends base_template %}
+{% load i18n %}
+{% load staticfiles filters %}
+
+{% block title %}{{ scenario }} {% trans 'Authority Handover' %}{% endblock %}
+
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li><a href="{% url "authority-handover-list" %}">{% trans 'Authority Handovers' %}</a></li>
+    <li><span>{% trans scenario %} {% trans "Authority Handover" %}</span></li>
+{% endblock %}
+
+
+{% block content %}
+    <div class="restrict-width m-auto well">
+        <h1 class="mb-4">{% blocktrans %}{{ scenario }}{% endblocktrans %} {% trans 'Authority Handover' %}
+            {% if scenario == 'Edit' %}
+                "{{ form.instance }}"
+            {% endif %}
+        </h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form }}
+
+
+            {{ formset.non_form_errors.as_ul }}
+            <table id="formset" class="form table table-striped">
+                {% for form in formset.forms %}
+                    {% if forloop.first %}
+                        <thead>
+                        <tr>
+                            {% for field in form.visible_fields %}
+                                <th>{{ field.label|capfirst }}</th>
+                            {% endfor %}
+                        </tr>
+                        </thead>
+                    {% endif %}
+                    <tr class="formset-form">
+                        {% for field in form.visible_fields %}
+                            <td>
+                                {# Include the hidden fields in the form #}
+                                {% if forloop.first %}
+                                    {% for hidden in form.hidden_fields %}
+                                        {{ hidden }}
+                                    {% endfor %}
+                                {% endif %}
+                                {{ field.errors.as_ul }}
+                                {{ field }}
+                            </td>
+                        {% endfor %}
+
+                    </tr>
+                {% endfor %}
+            </table>
+
+            {{ formset.management_form }}
+
+
+            {% if scenario == 'Create' %}
+                <input type="submit" class="btn btn-success btn-lg" value="Save">
+            {% else %}
+                <input type="submit" class="btn btn-warning btn-lg" value="Save">
+            {% endif %}
+        </form>
+    </div>
+{% endblock %}
+{% block before_body_end %}
+    <script src="{% static 'js/jquery-formset.js' %}"></script>
+    {{ form.media }}
+    <script type="text/javascript">
+      $(function () {
+        $('.formset-form').formset({
+          prefix: '{{ formset.prefix }}'
+        });
+      });
+    </script>
+{% endblock %}

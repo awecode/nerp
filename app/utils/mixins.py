@@ -169,12 +169,12 @@ from django.conf import settings
 
 class ListView(BaseListView):
     def __init__(self, *args, **kwargs):
-        super(ListView).__init__(*args, **kwargs)
+        super(ListView, self).__init__(*args, **kwargs)
         self.redirect_url = None
         self.filter = None
 
     def get_queryset(self):
-        qs = super(ListView).get_queryset()
+        qs = super(ListView, self).get_queryset()
         if self.request.GET.get('q'):
             q = self.request.GET.get('q')
             # Search for exact match
@@ -195,7 +195,7 @@ class ListView(BaseListView):
         return qs
 
     def get_context_data(self, **kwargs):
-        context_data = super(ListView).get_context_data(**kwargs)
+        context_data = super(ListView, self).get_context_data(**kwargs)
         # Add filter to context data for filter form generation
         if self.filter:
             context_data['filter'] = self.filter
@@ -207,7 +207,7 @@ class ListView(BaseListView):
     def render_to_response(self, context):
         if self.redirect_url:
             return redirect(self.redirect_url)
-        return super(ListView).render_to_response(context)
+        return super(ListView, self).render_to_response(context)
 
 
 # class FormView(SuccessMessageMixin):
@@ -253,26 +253,26 @@ class ListView(BaseListView):
 #         return context
 
 
-class GroupRequiredMixin:
+class GroupRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_superuser:
-            return super(GroupRequiredMixin).dispatch(request, *args, **kwargs)
+            return super(GroupRequiredMixin, self).dispatch(request, *args, **kwargs)
         if request.user.is_authenticated():
             user_groups = list(self.request.user.groups.values_list('name', flat=True))
             if bool(set(user_groups) & set(self.group_required)):
-                return super(GroupRequiredMixin).dispatch(request, *args, **kwargs)
+                return super(GroupRequiredMixin, self).dispatch(request, *args, **kwargs)
         else:
             return redirect(settings.LOGIN_URL)
         raise PermissionDenied()
 
 
-class FormsetViewMixin:
+class FormsetViewMixin(object):
     def get_context_data(self, **kwargs):
-        data = super(FormsetViewMixin).get_context_data(**kwargs)
+        data = super(FormsetViewMixin, self).get_context_data(**kwargs)
 
         Formset = inlineformset_factory(self.model, self.child_model,
                                         form=self.child_form_class, extra=2)
-        instance = self.get_object() if self.scenario == "Edit" else self.model()
+        instance = self.get_object() if data['scenario'] == "Update" else self.model()
 
         if self.request.POST:
             data['formset'] = Formset(self.request.POST, self.request.FILES, instance=instance)
@@ -289,6 +289,6 @@ class FormsetViewMixin:
                 formset.instance = self.object
                 formset.save()
             else:
-                return super(FormsetViewMixin).form_invalid(form)
+                return super(FormsetViewMixin, self).form_invalid(form)
 
-        return super(FormsetViewMixin).form_valid(form)
+        return super(FormsetViewMixin, self).form_valid(form)
