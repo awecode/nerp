@@ -25,7 +25,7 @@
 
 
             {{ formset.non_form_errors.as_ul }}
-            <table id="formset" class="form table table-striped">
+            <table id="formset" class="table table-striped">
                 {% for form in formset.forms %}
                     {% if forloop.first %}
                         <thead>
@@ -58,9 +58,9 @@
 
 
             {% if scenario == 'Create' %}
-                <input type="submit" class="btn btn-success btn-lg" value="Save">
+                <input type="submit" class="btn btn-success btn-raised btn-lg" value="Save">
             {% else %}
-                <input type="submit" class="btn btn-warning btn-lg" value="Save">
+                <input type="submit" class="btn btn-warning btn-raised btn-lg" value="Update">
             {% endif %}
         </form>
     </div>

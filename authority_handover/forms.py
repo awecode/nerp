@@ -1,4 +1,4 @@
-from app.utils.forms import HTML5BootstrapModelForm
+from app.utils.forms import HTML5BootstrapModelForm, BootstrapModelForm
 from authority_handover.models import AuthorityHandover, BudgetDistribution
 
 
@@ -14,7 +14,7 @@ class AuthorityHandoverForm(HTML5BootstrapModelForm):
         )
 
 
-class BudgetDistributionForm(HTML5BootstrapModelForm):
+class BudgetDistributionForm(BootstrapModelForm):
     class Meta:
         model = BudgetDistribution
         fields = (

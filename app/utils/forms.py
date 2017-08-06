@@ -222,6 +222,10 @@ class BootstrapForm(Form):
                 widget.attrs['autofocus'] = True
 
 
+class BootstrapModelForm(BootstrapForm, forms.ModelForm):
+    pass
+
+
 class HTML5ModelForm(forms.ModelForm):
     required_css_class = 'required'
 

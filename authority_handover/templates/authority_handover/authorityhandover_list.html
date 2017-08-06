@@ -15,11 +15,12 @@
             <div class="col-md-8 mb-2">
                 {% include "_search_filter.html" %}
             </div>
-                    <div class="col-md-4 mb-4">
-                        <a class="btn btn-success btn-raised btn-lg" href="{% url 'authority-handover-create' %}"><span class="icon">+</span>Add New Authority Handover</a>
-{#                        <a class="btn btn-secondary" href="#"><i class="icon-export"></i>Export</a>#}
-{#                        <a class="btn btn-secondary" href="#"><i class="icon-import"></i>Import</a>#}
-                    </div>
+            <div class="col-md-4 mb-4">
+                <a class="btn btn-success btn-raised btn-lg" href="{% url 'authority-handover-create' %}"><span
+                        class="icon">+</span>Add New Authority Handover</a>
+                {#                        <a class="btn btn-secondary" href="#"><i class="icon-export"></i>Export</a>#}
+                {#                        <a class="btn btn-secondary" href="#"><i class="icon-import"></i>Import</a>#}
+            </div>
         </div>
 
 
@@ -29,52 +30,61 @@
         {% autosort object_list as sorted_objects %}
         {% autopaginate sorted_objects 25 as paginated_objects %}
 
-        <ul class="list-group">
-            <li class="list-group-item row header">
-                <div class="col-md-2">
-                    {% anchor budget_head _("Budget Head") %}
-                </div>
-                <div class="col-md-2">
-                    {% anchor fiscal_year _("Fiscal Year") %}
-                </div>
-                <div class="col-md-2">
-                    {% anchor beneficiary_office _("Beneficiary Office") %}
-                </div>
-                <div class="col-md-2">
-                    {% anchor date _("Date") %}
-                </div>
-            </li>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        {% anchor budget_head _("Budget Head") %}
+                    </th>
+                    <th>
+                        {% anchor fiscal_year _("Fiscal Year") %}
+                    </th>
+                    <th>
+                        {% anchor beneficiary_office _("Beneficiary Office") %}
+                    </th>
+                    <th>
+                        {% anchor date _("Date") %}
+                    </th>
+                    <th>
+                        {% trans "Controls" %}
+                    </th>
+                </tr>
+            </thead>
 
 
             {% for object in paginated_objects %}
-                <li class="list-group-item row">
-                    <div class="col-md-2">
-                        <a href="{% url 'authority-handover-detail' object.pk %}">{{ object.budget_head|default:'-' }}</a>
-                    </div>
-                    <div class="col-md-2">
-                        {{ object.fiscal_year|default:'-' }}
-                    </div>
-                    <div class="col-md-2">
-                        {{ object.beneficiary_office|default:'-' }}
-                    </div>
-                    <div class="col-md-2">
-                        {{ object.date|default:'-' }}
-                    </div>
-                    <div class="col-md-4">
-                        <a href="{% url 'authority-handover-detail' object.pk %}" class="btn btn-info btn-sm btn-raised"><i
-                                class="icon-view"></i>Details</a>
-                        <a href="{% url 'authority-handover-edit' object.pk %}" class="btn btn-warning btn-sm btn-raised"><i
-                                class="icon-edit"></i>Edit</a>
-                        <a href="{% url 'authority-handover-delete' object.pk %}"
-                           class="btn btn-danger btn-alert btn-sm btn-raised"><i
-                                class="icon-trash"></i>Delete</a>
-                    </div>
-                </li>
+                <tbody>
+                    <tr>
+                        <td>
+                            <a href="{% url 'authority-handover-detail' object.pk %}">{{ object.budget_head|default:'-' }}</a>
+                        </td>
+                        <td>
+                            {{ object.fiscal_year|default:'-' }}
+                        </td>
+                        <td>
+                            {{ object.beneficiary_office|default:'-' }}
+                        </td>
+                        <td>
+                            {{ object.date|default:'-' }}
+                        </td>
+                        <td>
+                            <a href="{% url 'authority-handover-detail' object.pk %}"
+                               class="btn btn-info btn-sm btn-raised"><i
+                                    class="icon-view"></i>Details</a>
+                            <a href="{% url 'authority-handover-edit' object.pk %}"
+                               class="btn btn-warning btn-sm btn-raised"><i
+                                    class="icon-edit"></i>Edit</a>
+                            <a href="{% url 'authority-handover-delete' object.pk %}"
+                               class="btn btn-danger btn-alert btn-sm btn-raised"><i
+                                    class="icon-trash"></i>Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
 
 
             {% endfor %}
 
-        </ul>
+        </table>
 
         {% paginate %}
     </div>
