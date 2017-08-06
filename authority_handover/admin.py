@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from authority_handover.models import AuthorityHandover, BudgetDistribution
+
+admin.site.register(AuthorityHandover)
+
+admin.site.register(BudgetDistribution)

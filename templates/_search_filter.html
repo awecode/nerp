@@ -1,0 +1,14 @@
+{% if search or filter %}
+    <form class="form-inline search-filters" method="get">
+        {% if search %}
+            <input class="form-control mr-sm-3" type="text" placeholder="Search..." name="q" autofocus
+                   value="{% if request.GET.q %}{{ request.GET.q }}{% endif %}">
+        {% endif %}
+        {% if filter %}
+            {{ filter.form }}
+        {% endif %}
+        <input type="submit" class="btn-info btn" value="Go!"/>
+
+    </form>
+
+{% endif %}

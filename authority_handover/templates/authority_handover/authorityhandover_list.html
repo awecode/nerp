@@ -1,73 +1,81 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% load custom_tags %}
 
 {% block breadcrumbs %}
-    <a class="breadcrumb-item active" href="{% url 'branch-list' %}">{% trans 'Branches' %}</a>
+    {{ block.super }}
+    <li><a class="breadcrumb-item active"
+           href="{% url 'authority-handover-list' %}">{% trans 'Authority Handovers' %}</a></li>
 {% endblock %}
 
-{% block title %}{% trans 'Branches' %} {% endblock %}
+{% block title %}{% trans 'Authority Handovers' %} {% endblock %}
 
 {% block content %}
-
-    <div class="filter-row row">
-        <div class="col-md-8 mb-2">
-            {% include "_partials/_search_filter.html" %}
+    <div class="well">
+        <div class="filter-row row">
+            <div class="col-md-8 mb-2">
+                {% include "_search_filter.html" %}
+            </div>
+                    <div class="col-md-4 mb-4">
+                        <a class="btn btn-success" href="{% url 'authority-handover-create' %}"><span class="icon">+</span>Add New Authority Handover</a>
+{#                        <a class="btn btn-secondary" href="#"><i class="icon-export"></i>Export</a>#}
+{#                        <a class="btn btn-secondary" href="#"><i class="icon-import"></i>Import</a>#}
+                    </div>
         </div>
-        <div class="col-md-4 mb-4">
-            <a class="btn btn-success" href="{% url 'branch-create' %}"><span class="icon">+</span>Add New Branch</a>
-            <a class="btn btn-secondary" href="#"><i class="icon-export"></i>Export</a>
-            <a class="btn btn-secondary" href="#"><i class="icon-import"></i>Import</a>
-        </div>
-    </div>
 
 
-    {% load sorting_tags %}
-    {% load pagination_tags %}
-    {% autosort object_list %}
-    {% autopaginate object_list %}
+        {% load pagination_tags %}
+        {% load sorting_tags %}
 
-    <ul class="list-group">
-        <li class="list-group-item row header">
-            <div class="col-md-2">
-                {% anchor name _("Name") %}
-            </div>
-            <div class="col-md-2">
-                {% anchor code _("Code") %}
-            </div>
-            <div class="col-md-2">
-                {% anchor district _("District") %}
-            </div>
-        </li>
+        {% autosort object_list as sorted_objects %}
+        {% autopaginate sorted_objects 25 as paginated_objects %}
 
-
-        {% for object in object_list %}
-            <li class="list-group-item row">
+        <ul class="list-group">
+            <li class="list-group-item row header">
                 <div class="col-md-2">
-
-                    <a href="{% url 'branch-detail' object.pk %}">{{ object.name|default:'-' }}</a>
+                    {% anchor budget_head _("Budget Head") %}
                 </div>
                 <div class="col-md-2">
-                    {{ object.code|default:'-'}}
+                    {% anchor fiscal_year _("Fiscal Year") %}
                 </div>
                 <div class="col-md-2">
-                    {{ object.district|default:'-' }}
+                    {% anchor beneficiary_office _("Beneficiary Office") %}
                 </div>
-                <div class="col-md-4">
-                    <a href="{% url 'branch-detail' object.pk %}" class="btn btn-blue btn-sm"><i class="icon-view"></i>Details</a>
-                    <a href="{% url 'branch-edit' object.pk %}" class="btn btn-warning btn-sm"><i class="icon-edit"></i>Edit</a>
-                    {% if request.user|has_group:"Office Admin" %}
-                        <a href="{% url 'branch-delete' object.pk %}" class="btn btn-danger btn-alert btn-sm"><i
-                                class="icon-trash"></i>Delete</a>
-                    {% endif %}
+                <div class="col-md-2">
+                    {% anchor date _("Date") %}
                 </div>
             </li>
 
 
-        {% endfor %}
+            {% for object in paginated_objects %}
+                <li class="list-group-item row">
+                    <div class="col-md-2">
+                        <a href="{% url 'authority-handover-detail' object.pk %}">{{ object.budget_head|default:'-' }}</a>
+                    </div>
+                    <div class="col-md-2">
+                        {{ object.fiscalyear|default:'-' }}
+                    </div>
+                    <div class="col-md-2">
+                        {{ object.beneficiary_office|default:'-' }}
+                    </div>
+                    <div class="col-md-2">
+                        {{ object.date|default:'-' }}
+                    </div>
+                    <div class="col-md-4">
+                        <a href="{% url 'authority-handover-detail' object.pk %}" class="btn btn-blue btn-sm"><i
+                                class="icon-view"></i>Details</a>
+                        <a href="{% url 'authority-handover-edit' object.pk %}" class="btn btn-warning btn-sm"><i
+                                class="icon-edit"></i>Edit</a>
+                        <a href="{% url 'authority-handover-delete' object.pk %}"
+                           class="btn btn-danger btn-alert btn-sm"><i
+                                class="icon-trash"></i>Delete</a>
+                    </div>
+                </li>
 
-    </ul>
 
-    {% paginate %}
+            {% endfor %}
 
+        </ul>
+
+        {% paginate %}
+    </div>
 {% endblock %}

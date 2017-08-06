@@ -202,7 +202,7 @@ class BootstrapForm(Form):
 
     def __init__(self, *args, **kwargs):
         self.exclude = kwargs.pop('exclude', None)
-        super(BootstrapForm).__init__(*args, **kwargs)
+        super(BootstrapForm, self).__init__(*args, **kwargs)
         if self.exclude:
             del self.fields[self.exclude]
         self.refine()
