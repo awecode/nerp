@@ -29,7 +29,7 @@ class BudgetDistributionForm(BootstrapModelForm):
             'foreign_fund_loan_cash',
             'foreign_fund_loan_reimbursable',
             'foreign_fund_loan_direct_payment',
-            'foreign_fund_loan_commodity',
+            # 'foreign_fund_loan_commodity',
             'donor',
             'remarks'
         )

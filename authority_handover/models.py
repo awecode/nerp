@@ -81,9 +81,9 @@ class BudgetDistribution(models.Model):
     foreign_fund_loan_direct_payment = models.PositiveIntegerField(
         verbose_name=_('Foreign Fund Loan Direct Payment')
     )
-    foreign_fund_loan_commodity = models.PositiveIntegerField(
-        verbose_name=_('Foreign Fund Loan Commodity')
-    )
+    # foreign_fund_loan_commodity = models.PositiveIntegerField(
+    #     verbose_name=_('Foreign Fund Loan Commodity')
+    # )
 
     donor = models.ForeignKey(
         Donor,
