@@ -39,4 +39,7 @@ class AuthorityHandoverDeleteView(AuthorityHandoverView, DeleteView):
 
 
 class AuthorityHandoverDetailView(AuthorityHandoverView, DetailView):
-    pass
+    def get_context_data(self, **kwargs):
+        context = super(AuthorityHandoverDetailView, self).get_context_data()
+        context['amount'] = 40000
+        return context

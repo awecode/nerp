@@ -1,210 +1,40 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% load custom_tags %}
 
 {% block breadcrumbs %}
-    <li class="breadcrumb-item"><a href="{% url 'branch-list' %}">{% trans 'Branches' %}</a></li>
+    {{ block.super }}
+    <li class="breadcrumb-item"><a href="{% url 'authority-handover-list' %}">{% trans 'Authority Handovers' %}</a></li>
     <li class="breadcrumb-item active"><span>{{ object }}</span></li>
 {% endblock %}
 
 {% block title %}{{ object }} {% endblock %}
-{% block extra_body %}
-    {% if object.location %}
-        <script src="https://maps.googleapis.com/maps/api/js?key={% get_gmap_key %}"></script>
-        <script>
-          function initialize() {
-            var lat_lng = new google.maps.LatLng({{ object.location }});
-            var mapCanvas = document.getElementById('map-canvas');
-            var mapOptions = {
-              center: lat_lng,
-              zoom: 14,
-              mapTypeId: google.maps.MapTypeId.ROADMAP
-            };
-            var map = new google.maps.Map(mapCanvas, mapOptions);
-            var marker = new google.maps.Marker({
-              position: lat_lng,
-              map: map
-            });
-          }
-          google.maps.event.addDomListener(window, 'load', initialize);
-        </script>
-    {% endif %}
-{% endblock %}
 
 {% block content %}
-    <div class="header-row row">
-        <div class="col-sm-8">
-            <h1>{{ object }}</h1>
-        </div>
-        <div class="col-sm-4">
-            <a href="javascript:window.print()" class="btn btn-secondary"><i class="icon-print"></i>{% trans 'Print' %}
-            </a>
-            <a href="{% url 'branch-edit' object.pk %}" class="btn btn-warning"><i
-                    class="icon-edit"></i>{% trans 'Edit' %}
-            </a>
-            {% if request.user|has_group:"Office Admin" %}
-                <a href="{% url 'branch-delete' object.pk %}" class="btn btn-danger btn-alert"><i
-                        class="icon-trash"></i>{% trans 'Delete' %}</a>
-            {% endif %}
-        </div>
-    </div>
-
-    <hr/>
-
-
-    <div class="row detail-cards">
-
-        <div class="col-sm-5 mt-3">
-            <h4>{% trans 'Details' %}</h4>
-            <div class="card container">
-
-                {% if object.name %}
-                    <div class="row">
-                        <div class="col-6">
-                            <strong>{% trans 'Name' %}</strong>:
-                        </div>
-                        <div class="col-6">
-                            {{ object.name }}
-                        </div>
-                    </div>
-                {% endif %}
-
-                {% if object.code %}
-                    <div class="row">
-                        <div class="col-6">
-                            <strong>{% trans 'Code' %}</strong>:
-                        </div>
-                        <div class="col-6">
-                            {{ object.code }}
-                        </div>
-                    </div>
-                {% endif %}
-
-                {% if object.district %}
-                    <div class="row">
-                        <div class="col-6">
-                            <strong>{% trans 'District' %}</strong>:
-                        </div>
-                        <div class="col-6">
-                            <a href="{% url 'branch-list' %}?district={{ object.district_id }}">{{ object.district }}</a>
-                        </div>
-                    </div>
-                {% endif %}
-                {% if object.company %}
-                    <div class="row">
-                        <div class="col-6">
-                            <strong>{% trans 'Company' %}</strong>:
-                        </div>
-                        <div class="col-6">
-                            <a href="{% url 'company-detail' object.company.id %}">{{ object.company }}</a>
-                        </div>
-                    </div>
-                {% endif %}
-                {% if object.address %}
-                    <div class="row">
-                        <div class="col-6">
-                            <strong>{% trans 'Address' %}</strong>:
-                        </div>
-                        <div class="col-6">
-                            {{ object.address }}
-                        </div>
-                    </div>
-                {% endif %}
-                {% if object.municipality_or_vdc %}
-                    <div class="row">
-                        <div class="col-6">
-                            <strong>{% trans 'Municipality/VDC' %}</strong>:
-                        </div>
-                        <div class="col-6">
-                            {{ object.municipality_or_vdc }}
-                        </div>
-                    </div>
-                {% endif %}
-                {% if object.municipal_or_village_council %}
-                    <div class="row">
-                        <div class="col-6">
-                            <strong>{% trans 'Municipal/Village Council' %}</strong>:
-                        </div>
-                        <div class="col-6">
-                            {{ object.municipal_or_village_council }}
-                        </div>
-                    </div>
-                {% endif %}
-
-                {% if object.village_or_tole %}
-                    <div class="row">
-                        <div class="col-6">
-                            <strong>{% trans 'Village/Tole' %}</strong>:
-                        </div>
-                        <div class="col-6">
-                            {{ object.village_or_tole }}
-                        </div>
-                    </div>
-                {% endif %}
-
-                {% if object.ward_no %}
-                    <div class="row">
-                        <div class="col-6">
-                            <strong>{% trans 'Ward Number' %}</strong>:
-                        </div>
-                        <div class="col-6">
-                            {{ object.ward_no }}
-                        </div>
-                    </div>
-                {% endif %}
-
+    <div class="well">
+        <div class="row">
+            <div class="col-md-6">
+                <p>पत्र संख्या :</p>
+                <p>च. न.</p>
+            </div>
+            <div class="col-md-6">
+                <p class="pull-right">मिति:</p>
+            </div>
+            <div class="col-md-12">
+                <h4 class="text-center">विषय: आ. ब {{ object.fiscal_year }} को बाडफाड र खर्चगर्ने आख्तियारी ।</h4>
+            </div>
+            <div class="col-md-12">
+                <h5>श्री: {{ object.beneficiary_designation }}</h5>
+                <h5>{{ object.beneficiary_office }},</h5>
+            </div>
+            <div class="col-md-12">
+                <p>आर्थिक वर्ष {{ object.fiscal_year }} को बजेट बजेट उपाशिर्षक नं. {{ object.budget_head }} (चालु ) राष्ट्रिय पुननिर्माण प्राधिकरणकोष तर्फ मन्त्रालयगत वजेट सुचना प्रणालीमा प्रविष्टी भएका आधारमा र यसै साथ संलग्न निर्देसन आनुसार गर्ने गरी आ. ब. {{ object.fiscal_year }} को बार्षिक व्यय अनुमान र सो मा थपघट हुने रकम समेत प्रचलित कानुन अनुसार निकासा लिई खर्च गर्न गराऊन र तेस्तो खर्च को लेखा राख्ने, प्रतिबेदन गर्ने , र लेखा परिक्षण गराउने जिम्मेबारी सहित आर्थिक कार्यविधि नियमावली २०६४ को नियम ३२ को उपनियम २ को बमोजिम तपाइलाई रु. {{ amount }} आक्ष्यरुपी {{ amount }} को वाडफाड र खर्च गर्ने आख्तियारी सुम्पेको छु। वजेट तथा कार्यक्रम कार्यन्वयन गर्दा राष्ट्रिय पुर्नानिर्मन प्राधिकरण तथा यस आयोजनाको वजेट कार्यन्वयन सम्बन्धि सर्त र वजेट खर्च गर्ने निर्देशन बमोजिम गर्नुहुन जानकारी गराएको छु।</p>
+            </div>
+            <div class="col-md-12">
+                <p>वजेट उ. शि. नं : {{ object.budget_head }}</p>
+                <p>कार्यक्रम: - राष्ट्रिय पुननिर्माण प्राधिकरण कोष। </p>
+                <p>प्राथमिकता संकेत : {{ object.priority_code }}</p>
             </div>
         </div>
-
-        <div class="col-sm-5 mt-3">
-            <h4>{% trans 'Responsible Person Information' %}</h4>
-            <div class="card container">
-
-                {% if object.responsible_person %}
-                    <div class="row">
-                        <div class="col-6">
-                            <strong>{% trans 'Responsible Person' %}</strong>:
-                        </div>
-                        <div class="col-6">
-                            {{ object.responsible_person }}
-                        </div>
-                    </div>
-                {% endif %}
-
-                {% if object.responsible_person_email %}
-                    <div class="row">
-                        <div class="col-6">
-                            <strong>{% trans 'Email' %}</strong>:
-                        </div>
-                        <div class="col-6">
-                            {{ object.responsible_person_email }}
-                        </div>
-                    </div>
-                {% endif %}
-
-                {% if object.responsible_person_phone_number %}
-                    <div class="row">
-                        <div class="col-6">
-                            <strong>{% trans 'Phone Number' %}</strong>:
-                        </div>
-                        <div class="col-6">
-                            {{ object.responsible_person_phone_number }}
-                        </div>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-
-        {% if object.location %}
-            <div class="col-sm-12 mt-3">
-                <h4>{% trans 'Location' %}</h4>
-                <section class="map">
-                    <div id="map-canvas"></div>
-                </section>
-            </div>
-        {% endif %}
-
 
     </div>
-
 {% endblock %}
