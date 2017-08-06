@@ -153,3 +153,142 @@ class TableObjectMixin(TemplateView):
         context['scenario'] = scenario
         context['obj'] = obj
         return context
+
+
+from functools import reduce
+from django.core.exceptions import PermissionDenied
+from django.db import transaction
+from django.db.models import Q
+from django.forms import inlineformset_factory
+from django.shortcuts import redirect
+from django.views.generic import ListView as BaseListView
+from django.utils.translation import ugettext_lazy as _
+from django.contrib import messages
+from django.conf import settings
+
+
+class ListView(BaseListView):
+    def __init__(self, *args, **kwargs):
+        super(ListView).__init__(*args, **kwargs)
+        self.redirect_url = None
+        self.filter = None
+
+    def get_queryset(self):
+        qs = super(ListView).get_queryset()
+        if self.request.GET.get('q'):
+            q = self.request.GET.get('q')
+            # Search for exact match
+            if self.request.GET.get('q') and hasattr(self, 'search_exact_fields') and self.search_exact_fields:
+                search_query = reduce(lambda qr, field: qr | Q(**{field + '__iexact': q}), self.search_fields, Q())
+                match_qs = qs.filter(search_query)
+                if match_qs.exists():
+                    self.redirect_url = match_qs.first().get_absolute_url()
+                    return self.model.objects.none()
+            # Filter by search query and search fields
+            if hasattr(self, 'search_fields') and self.search_fields:
+                search_query = reduce(lambda qr, field: qr | Q(**{field + '__icontains': q}), self.search_fields, Q())
+                qs = qs.filter(search_query)
+        # Use filters to filter the queryset
+        if hasattr(self, 'filter_set') and self.filter_set:
+            self.filter = self.filter_set(self.request.GET, queryset=qs)
+            qs = self.filter.qs
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context_data = super(ListView).get_context_data(**kwargs)
+        # Add filter to context data for filter form generation
+        if self.filter:
+            context_data['filter'] = self.filter
+        if (hasattr(self, 'search_fields') and self.search_fields) or (
+                    hasattr(self, 'search_exact_fields') and self.search_exact_fields):
+            context_data['search'] = True
+        return context_data
+
+    def render_to_response(self, context):
+        if self.redirect_url:
+            return redirect(self.redirect_url)
+        return super(ListView).render_to_response(context)
+
+
+# class FormView(SuccessMessageMixin):
+#     def get_success_url(self):
+#         return self.request.GET.get('next') + '?action=edit' if self.request.GET.get(
+#             'next') else super().get_success_url()
+#
+#     def get_form_class(self):
+#         if self.fields and not self.form_class:
+#             return modelform_factory(self.get_queryset().model, fields=self.fields)
+#         else:
+#             return super().get_form_class()
+#
+#     def get_success_message(self, cleaned_data):
+#         klass = self.object.__class__._meta.verbose_name.title().lower()
+#         st = str(self.object)
+#         if self.scenario == 'Create':
+#             return '%s %s "%s" %s.' % (_('New'), klass, st, _('successfully created'))
+#         elif self.scenario == 'Edit':
+#             return '%s %s "%s" %s.' % (_('Existing'), klass, st, _('successfully updated'))
+
+
+# class Export(object):
+#     def get(self, request, *args, **kwargs):
+#         file_name = self.file_name + ' ' + datetime.datetime.today().strftime('%Y-%m-%d') or 'Untitled'
+#         export = OpenpyxlExport(file_name)
+#         export.generate(self.fields, True)
+#         for object in self.queryset:
+#             values = [change_format(object, val) for val in self.fields]
+#             export.generate(values)
+#         export.set_width()
+#         return export.response()
+
+
+# class Import(object):
+#     template_name = 'import.html'
+#
+#     def get_context_data(self, **kwargs):
+#         from apps.plant.forms import ImportFile
+#
+#         context = super(Import, self).get_context_data(**kwargs)
+#         context['form'] = ImportFile()
+#         return context
+
+
+class GroupRequiredMixin:
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_superuser:
+            return super(GroupRequiredMixin).dispatch(request, *args, **kwargs)
+        if request.user.is_authenticated():
+            user_groups = list(self.request.user.groups.values_list('name', flat=True))
+            if bool(set(user_groups) & set(self.group_required)):
+                return super(GroupRequiredMixin).dispatch(request, *args, **kwargs)
+        else:
+            return redirect(settings.LOGIN_URL)
+        raise PermissionDenied()
+
+
+class FormsetViewMixin:
+    def get_context_data(self, **kwargs):
+        data = super(FormsetViewMixin).get_context_data(**kwargs)
+
+        Formset = inlineformset_factory(self.model, self.child_model,
+                                        form=self.child_form_class, extra=2)
+        instance = self.get_object() if self.scenario == "Edit" else self.model()
+
+        if self.request.POST:
+            data['formset'] = Formset(self.request.POST, self.request.FILES, instance=instance)
+        else:
+            data['formset'] = Formset(instance=instance)
+        return data
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context['formset']
+        with transaction.atomic():
+            if form.is_valid() and formset.is_valid():
+                self.object = form.save()
+                formset.instance = self.object
+                formset.save()
+            else:
+                return super(FormsetViewMixin).form_invalid(form)
+
+        return super(FormsetViewMixin).form_valid(form)

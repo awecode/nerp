@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load custom_tags %}
+
+{% block breadcrumbs %}
+    <a class="breadcrumb-item active" href="{% url 'branch-list' %}">{% trans 'Branches' %}</a>
+{% endblock %}
+
+{% block title %}{% trans 'Branches' %} {% endblock %}
+
+{% block content %}
+
+    <div class="filter-row row">
+        <div class="col-md-8 mb-2">
+            {% include "_partials/_search_filter.html" %}
+        </div>
+        <div class="col-md-4 mb-4">
+            <a class="btn btn-success" href="{% url 'branch-create' %}"><span class="icon">+</span>Add New Branch</a>
+            <a class="btn btn-secondary" href="#"><i class="icon-export"></i>Export</a>
+            <a class="btn btn-secondary" href="#"><i class="icon-import"></i>Import</a>
+        </div>
+    </div>
+
+
+    {% load sorting_tags %}
+    {% load pagination_tags %}
+    {% autosort object_list %}
+    {% autopaginate object_list %}
+
+    <ul class="list-group">
+        <li class="list-group-item row header">
+            <div class="col-md-2">
+                {% anchor name _("Name") %}
+            </div>
+            <div class="col-md-2">
+                {% anchor code _("Code") %}
+            </div>
+            <div class="col-md-2">
+                {% anchor district _("District") %}
+            </div>
+        </li>
+
+
+        {% for object in object_list %}
+            <li class="list-group-item row">
+                <div class="col-md-2">
+
+                    <a href="{% url 'branch-detail' object.pk %}">{{ object.name|default:'-' }}</a>
+                </div>
+                <div class="col-md-2">
+                    {{ object.code|default:'-'}}
+                </div>
+                <div class="col-md-2">
+                    {{ object.district|default:'-' }}
+                </div>
+                <div class="col-md-4">
+                    <a href="{% url 'branch-detail' object.pk %}" class="btn btn-blue btn-sm"><i class="icon-view"></i>Details</a>
+                    <a href="{% url 'branch-edit' object.pk %}" class="btn btn-warning btn-sm"><i class="icon-edit"></i>Edit</a>
+                    {% if request.user|has_group:"Office Admin" %}
+                        <a href="{% url 'branch-delete' object.pk %}" class="btn btn-danger btn-alert btn-sm"><i
+                                class="icon-trash"></i>Delete</a>
+                    {% endif %}
+                </div>
+            </li>
+
+
+        {% endfor %}
+
+    </ul>
+
+    {% paginate %}
+
+{% endblock %}

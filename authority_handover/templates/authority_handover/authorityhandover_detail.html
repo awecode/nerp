@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load custom_tags %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{% url 'branch-list' %}">{% trans 'Branches' %}</a></li>
+    <li class="breadcrumb-item active"><span>{{ object }}</span></li>
+{% endblock %}
+
+{% block title %}{{ object }} {% endblock %}
+{% block extra_body %}
+    {% if object.location %}
+        <script src="https://maps.googleapis.com/maps/api/js?key={% get_gmap_key %}"></script>
+        <script>
+          function initialize() {
+            var lat_lng = new google.maps.LatLng({{ object.location }});
+            var mapCanvas = document.getElementById('map-canvas');
+            var mapOptions = {
+              center: lat_lng,
+              zoom: 14,
+              mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            var map = new google.maps.Map(mapCanvas, mapOptions);
+            var marker = new google.maps.Marker({
+              position: lat_lng,
+              map: map
+            });
+          }
+          google.maps.event.addDomListener(window, 'load', initialize);
+        </script>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="header-row row">
+        <div class="col-sm-8">
+            <h1>{{ object }}</h1>
+        </div>
+        <div class="col-sm-4">
+            <a href="javascript:window.print()" class="btn btn-secondary"><i class="icon-print"></i>{% trans 'Print' %}
+            </a>
+            <a href="{% url 'branch-edit' object.pk %}" class="btn btn-warning"><i
+                    class="icon-edit"></i>{% trans 'Edit' %}
+            </a>
+            {% if request.user|has_group:"Office Admin" %}
+                <a href="{% url 'branch-delete' object.pk %}" class="btn btn-danger btn-alert"><i
+                        class="icon-trash"></i>{% trans 'Delete' %}</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <hr/>
+
+
+    <div class="row detail-cards">
+
+        <div class="col-sm-5 mt-3">
+            <h4>{% trans 'Details' %}</h4>
+            <div class="card container">
+
+                {% if object.name %}
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>{% trans 'Name' %}</strong>:
+                        </div>
+                        <div class="col-6">
+                            {{ object.name }}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if object.code %}
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>{% trans 'Code' %}</strong>:
+                        </div>
+                        <div class="col-6">
+                            {{ object.code }}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if object.district %}
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>{% trans 'District' %}</strong>:
+                        </div>
+                        <div class="col-6">
+                            <a href="{% url 'branch-list' %}?district={{ object.district_id }}">{{ object.district }}</a>
+                        </div>
+                    </div>
+                {% endif %}
+                {% if object.company %}
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>{% trans 'Company' %}</strong>:
+                        </div>
+                        <div class="col-6">
+                            <a href="{% url 'company-detail' object.company.id %}">{{ object.company }}</a>
+                        </div>
+                    </div>
+                {% endif %}
+                {% if object.address %}
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>{% trans 'Address' %}</strong>:
+                        </div>
+                        <div class="col-6">
+                            {{ object.address }}
+                        </div>
+                    </div>
+                {% endif %}
+                {% if object.municipality_or_vdc %}
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>{% trans 'Municipality/VDC' %}</strong>:
+                        </div>
+                        <div class="col-6">
+                            {{ object.municipality_or_vdc }}
+                        </div>
+                    </div>
+                {% endif %}
+                {% if object.municipal_or_village_council %}
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>{% trans 'Municipal/Village Council' %}</strong>:
+                        </div>
+                        <div class="col-6">
+                            {{ object.municipal_or_village_council }}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if object.village_or_tole %}
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>{% trans 'Village/Tole' %}</strong>:
+                        </div>
+                        <div class="col-6">
+                            {{ object.village_or_tole }}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if object.ward_no %}
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>{% trans 'Ward Number' %}</strong>:
+                        </div>
+                        <div class="col-6">
+                            {{ object.ward_no }}
+                        </div>
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+
+        <div class="col-sm-5 mt-3">
+            <h4>{% trans 'Responsible Person Information' %}</h4>
+            <div class="card container">
+
+                {% if object.responsible_person %}
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>{% trans 'Responsible Person' %}</strong>:
+                        </div>
+                        <div class="col-6">
+                            {{ object.responsible_person }}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if object.responsible_person_email %}
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>{% trans 'Email' %}</strong>:
+                        </div>
+                        <div class="col-6">
+                            {{ object.responsible_person_email }}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if object.responsible_person_phone_number %}
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>{% trans 'Phone Number' %}</strong>:
+                        </div>
+                        <div class="col-6">
+                            {{ object.responsible_person_phone_number }}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if object.location %}
+            <div class="col-sm-12 mt-3">
+                <h4>{% trans 'Location' %}</h4>
+                <section class="map">
+                    <div id="map-canvas"></div>
+                </section>
+            </div>
+        {% endif %}
+
+
+    </div>
+
+{% endblock %}
