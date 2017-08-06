@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import render
 
 # Create your views here.
@@ -16,6 +17,7 @@ class AuthorityHandoverView(GroupRequiredMixin):
     child_model = BudgetDistribution
     child_form_class = BudgetDistributionForm
     group_required = []
+    success_url = reverse_lazy('authority-handover-list')
 
 
 class AuthorityHandoverListView(AuthorityHandoverView, ListView):
