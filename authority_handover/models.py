@@ -13,15 +13,15 @@ from core.models import FiscalYear, BudgetHead, Donor
 class Beneficiary(models.Model):
     designation = models.CharField(
         max_length=255,
-        verbose_name=_('Beneficiary Designation')
+        verbose_name=_('Designation')
     )
     office = models.CharField(
         max_length=255,
-        verbose_name=_('Beneficiary Office')
+        verbose_name=_('Office')
     )
 
     def __str__(self):
-        return "%s-%s" % (self.beneficiary_designation, self.beneficiary_office)
+        return "%s-%s" % (self.designation, self.office)
 
     class Meta:
         verbose_name_plural = _('Beneficiaries')
