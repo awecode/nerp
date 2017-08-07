@@ -23,6 +23,9 @@ class Beneficiary(models.Model):
     def __str__(self):
         return "%s-%s" % (self.beneficiary_designation, self.beneficiary_office)
 
+    class Meta:
+        verbose_name_plural = _('Beneficiaries')
+
 
 @python_2_unicode_compatible
 class AuthorityHandover(models.Model):

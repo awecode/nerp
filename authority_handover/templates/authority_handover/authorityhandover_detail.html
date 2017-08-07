@@ -31,8 +31,8 @@
                 <h4 class="text-center">विषय: आ. ब {{ object.fiscal_year }} को बाडफाड र खर्चगर्ने आख्तियारी ।</h4>
             </div>
             <div class="col-md-12">
-                <h5>श्री: {{ object.beneficiary_designation }}</h5>
-                <h5>{{ object.beneficiary_office }},</h5>
+                <h5>श्री: {{ object.beneficiary.designation }}</h5>
+                <h5>{{ object.beneficiary.office }},</h5>
             </div>
             <div class="col-md-12">
                 <p>आर्थिक वर्ष {{ object.fiscal_year }} को बजेट बजेट उपाशिर्षक नं. {{ object.budget_head }} (चालु )
