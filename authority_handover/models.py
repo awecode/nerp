@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 from django.utils.encoding import python_2_unicode_compatible
+from django.db.models import Sum
 from django.utils.translation import ugettext_lazy as _
 # from mptt.fields import TreeForeignKey
 # from mptt.models import MPTTModel
@@ -57,6 +58,19 @@ class AuthorityHandover(models.Model):
     def __str__(self):
         return "%s-%s" % (self.date, self.beneficiary)
 
+    def total_budget(self):
+        result = self.budget_distributions.aggregate(
+            Sum('government_fund'),
+            Sum('foreign_fund_grant_cash'),
+            Sum('foreign_fund_grant_reimbursable'),
+            Sum('foreign_fund_grant_direct_payment'),
+            Sum('foreign_fund_grant_commodity'),
+            Sum('foreign_fund_loan_cash'),
+            Sum('foreign_fund_loan_reimbursable'),
+            Sum('foreign_fund_loan_direct_payment'),
+        )
+        return sum(result.values())
+
 
 @python_2_unicode_compatible
 class BudgetDistribution(models.Model):
@@ -70,33 +84,42 @@ class BudgetDistribution(models.Model):
         verbose_name=_('Expenditure Head Name')
     )
     permitted_budget = models.PositiveIntegerField(
-        verbose_name=_('Permitted Budget')
+        verbose_name=_('Permitted Budget'),
+        default=0
     )
     government_fund = models.PositiveIntegerField(
-        verbose_name=_('Government Fund')
+        verbose_name=_('Government Fund'),
+        default=0
     )
 
     foreign_fund_grant_cash = models.PositiveIntegerField(
-        verbose_name=_('Foreign Fund Grant Cash')
+        verbose_name=_('Foreign Fund Grant Cash'),
+        default=0
     )
     foreign_fund_grant_reimbursable = models.PositiveIntegerField(
-        verbose_name=_('Foreign Fund Grant Reimbursable')
+        verbose_name=_('Foreign Fund Grant Reimbursable'),
+        default=0
     )
     foreign_fund_grant_direct_payment = models.PositiveIntegerField(
-        verbose_name=_('Foreign Fund Grant Direct Payment')
+        verbose_name=_('Foreign Fund Grant Direct Payment'),
+        default=0
     )
     foreign_fund_grant_commodity = models.PositiveIntegerField(
-        verbose_name=_('Foreign Fund Grant Commodity')
+        verbose_name=_('Foreign Fund Grant Commodity'),
+        default=0
     )
 
     foreign_fund_loan_cash = models.PositiveIntegerField(
-        verbose_name=_('Foreign Fund Loan Cash')
+        verbose_name=_('Foreign Fund Loan Cash'),
+        default=0
     )
     foreign_fund_loan_reimbursable = models.PositiveIntegerField(
-        verbose_name=_('Foreign Fund Loan Reimbursable')
+        verbose_name=_('Foreign Fund Loan Reimbursable'),
+        default=0
     )
     foreign_fund_loan_direct_payment = models.PositiveIntegerField(
-        verbose_name=_('Foreign Fund Loan Direct Payment')
+        verbose_name=_('Foreign Fund Loan Direct Payment'),
+        default=0
     )
     # foreign_fund_loan_commodity = models.PositiveIntegerField(
     #     verbose_name=_('Foreign Fund Loan Commodity')
@@ -114,3 +137,14 @@ class BudgetDistribution(models.Model):
 
     def __str__(self):
         return "%s-%s" % (self.authority_handover, self.expenditure_head_name)
+
+    def total_fund(self):
+        return self.government_fund \
+               + self.foreign_fund_grant_cash \
+               + self.foreign_fund_grant_reimbursable \
+               + self.foreign_fund_grant_direct_payment \
+               + self.foreign_fund_grant_commodity \
+               + self.foreign_fund_grant_commodity \
+               + self.foreign_fund_loan_cash \
+               + self.foreign_fund_loan_reimbursable \
+               + self.foreign_fund_loan_direct_payment
