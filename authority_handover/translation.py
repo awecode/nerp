@@ -1,12 +1,12 @@
 from modeltranslation.translator import translator, TranslationOptions
 
-from authority_handover.models import AuthorityHandover, BudgetDistribution
+from authority_handover.models import AuthorityHandover, BudgetDistribution, Beneficiary
 
 
-class AuthorityHandoverTranslationOptions(TranslationOptions):
-    fields = ('beneficiary_designation', 'beneficiary_office')
+class BeneficiaryTranslationOptions(TranslationOptions):
+    fields = ('designation', 'office')
 
-translator.register(AuthorityHandover, AuthorityHandoverTranslationOptions)
+translator.register(Beneficiary, BeneficiaryTranslationOptions)
 
 
 class BudgetDistributionTranslationOptions(TranslationOptions):

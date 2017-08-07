@@ -6,8 +6,7 @@ class AuthorityHandoverForm(HTML5BootstrapModelForm):
     class Meta:
         model = AuthorityHandover
         fields = (
-            'beneficiary_designation',
-            'beneficiary_office',
+            'beneficiary',
             'fiscal_year',
             'budget_head',
             'priority_code', 'date'

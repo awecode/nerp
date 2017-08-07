@@ -10,14 +10,28 @@ from core.models import FiscalYear, BudgetHead, Donor
 
 
 @python_2_unicode_compatible
-class AuthorityHandover(models.Model):
-    beneficiary_designation = models.CharField(
+class Beneficiary(models.Model):
+    designation = models.CharField(
         max_length=255,
         verbose_name=_('Beneficiary Designation')
     )
-    beneficiary_office = models.CharField(
+    office = models.CharField(
         max_length=255,
         verbose_name=_('Beneficiary Office')
+    )
+
+    def __str__(self):
+        return "%s-%s" % (self.beneficiary_designation, self.beneficiary_office)
+
+
+@python_2_unicode_compatible
+class AuthorityHandover(models.Model):
+    beneficiary = models.ForeignKey(
+        Beneficiary,
+        related_name='authority_handovers',
+        verbose_name=_('Beneficiary'),
+        null=True,
+        blank=True
     )
     fiscal_year = models.ForeignKey(
         FiscalYear,
@@ -38,7 +52,7 @@ class AuthorityHandover(models.Model):
     )
 
     def __str__(self):
-        return "%s-%s-%s" % (self.date, self.beneficiary_designation, self.beneficiary_office)
+        return "%s-%s" % (self.date, self.beneficiary)
 
 
 @python_2_unicode_compatible
