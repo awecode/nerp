@@ -58,8 +58,9 @@ class AuthorityHandover(models.Model):
     def __str__(self):
         return "%s-%s" % (self.date, self.beneficiary)
 
-    def total_budget(self):
+    def individual_fund_sum(self):
         result = self.budget_distributions.aggregate(
+            Sum('permitted_budget'),
             Sum('government_fund'),
             Sum('foreign_fund_grant_cash'),
             Sum('foreign_fund_grant_reimbursable'),
@@ -69,6 +70,11 @@ class AuthorityHandover(models.Model):
             Sum('foreign_fund_loan_reimbursable'),
             Sum('foreign_fund_loan_direct_payment'),
         )
+        return result
+
+    def total_budget(self):
+        result = self.individual_fund_sum()
+        del result['permitted_budget__sum']
         return sum(result.values())
         # return 787887600075004
 
