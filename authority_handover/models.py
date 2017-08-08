@@ -6,6 +6,7 @@ from django.db.models import Sum
 from django.utils.translation import ugettext_lazy as _
 # from mptt.fields import TreeForeignKey
 # from mptt.models import MPTTModel
+from njango.fields import BSDateField
 
 from core.models import FiscalYear, BudgetHead, Donor
 
@@ -51,7 +52,7 @@ class AuthorityHandover(models.Model):
         max_length=10,
         verbose_name=_('Priority Code')
     )
-    date = models.DateField(
+    date = BSDateField(
         verbose_name=_('Date')
     )
 
