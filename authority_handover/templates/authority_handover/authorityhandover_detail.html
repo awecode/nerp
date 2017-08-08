@@ -28,7 +28,7 @@
                 <p class="pull-right">मिति:{{ object.date|localize }}</p>
             </div>
             <div class="col-md-12">
-                <h4 class="text-center">विषय: आ. ब {{ object.fiscal_year }} को बाडफाड र खर्चगर्ने आख्तियारी ।</h4>
+                <h4 class="text-center">विषय: आ. ब {{ object.fiscal_year|localize }} को बाडफाड र खर्चगर्ने आख्तियारी ।</h4>
             </div>
             <div class="col-md-12">
                 <h5>श्री: {{ object.beneficiary.designation }}</h5>
@@ -40,8 +40,8 @@
                     साथ संलग्न निर्देसन आनुसार गर्ने गरी आ. ब. {{ object.fiscal_year }} को बार्षिक व्यय अनुमान र सो मा
                     थपघट हुने रकम समेत प्रचलित कानुन अनुसार निकासा लिई खर्च गर्न गराऊन र तेस्तो खर्च को लेखा राख्ने,
                     प्रतिबेदन गर्ने , र लेखा परिक्षण गराउने जिम्मेबारी सहित आर्थिक कार्यविधि नियमावली २०६४ को नियम ३२ को
-                    उपनियम २ को बमोजिम तपाइलाई रु. <b>{{ object.total_budget|localize }}</b> आक्ष्यरुपी
-                    <b>{{ object.total_budget|nwords }}</b> को वाडफाड र खर्च गर्ने आख्तियारी
+                    उपनियम २ को बमोजिम तपाइलाई रु. {{ object.total_budget|localize }} आक्ष्यरुपी
+                    {{ object.total_budget|nwords }} को वाडफाड र खर्च गर्ने आख्तियारी
                     सुम्पेको छु। वजेट तथा कार्यक्रम कार्यन्वयन गर्दा राष्ट्रिय पुर्नानिर्मन प्राधिकरण तथा यस आयोजनाको
                     वजेट कार्यन्वयन सम्बन्धि सर्त र वजेट खर्च गर्ने निर्देशन बमोजिम गर्नुहुन जानकारी गराएको छु।</p>
             </div>
@@ -57,30 +57,30 @@
                 <table class="table table-bordered">
                     <thead>
                     <tr>
-                        <th rowspan="4">खर्च शिर्षक नं.</th>
-                        <th rowspan="4">खर्च शिर्षक</th>
-                        <th rowspan="4">स्वीकृत वजेट</th>
-                        <th colspan="9">रकम</th>
-                        <th rowspan="4">कौफियत</th>
+                        <td rowspan="4">खर्च शिर्षक नं.</td>
+                        <td rowspan="4">खर्च शिर्षक</td>
+                        <td rowspan="4">स्वीकृत वजेट</td>
+                        <td colspan="9">रकम</td>
+                        <td rowspan="4">कौफियत</td>
                     </tr>
                     <tr>
-                        <th rowspan="3">नेपाल सरकार को श्रोत</th>
-                        <th colspan="8">बैदेशिक श्रोत</th>
+                        <td rowspan="3">नेपाल सरकार को श्रोत</td>
+                        <td colspan="8">बैदेशिक श्रोत</td>
                     </tr>
                     <tr>
-                        <th colspan="4">अनुदान</th>
-                        <th colspan="3">ऋण</th>
-                        <th rowspan="2">देश वा संस्था</th>
+                        <td colspan="4">अनुदान</td>
+                        <td colspan="3">ऋण</td>
+                        <td rowspan="2">देश वा संस्था</td>
                     </tr>
                     <tr>
-                        <th>नगद</th>
-                        <th>शोधभर्ना हुने</th>
-                        <th>सोझै भुक्तानी</th>
-                        <th>बस्तुगत</th>
+                        <td>नगद</td>
+                        <td>शोधभर्ना हुने</td>
+                        <td>सोझै भुक्तानी</td>
+                        <td>बस्तुगत</td>
 
-                        <th>नगद</th>
-                        <th>शोधभर्ना हुने</th>
-                        <th>बस्तुगत</th>
+                        <td>नगद</td>
+                        <td>शोधभर्ना हुने</td>
+                        <td>बस्तुगत</td>
                     </tr>
                     </thead>
                     <tbody>
@@ -120,7 +120,7 @@
                 </table>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-sm-6">
                 <p>बोधार्थ:</p>
                 <p>श्री प्रधानमन्त्री तथा मन्त्रिपरिषदको कार्यालय , सिंहदरबार, काठमाडौँ</p>
                 <p>श्री राष्ट्रिय पुननिर्माण प्राधिकरण , सिंहदरबार, काठमाडौँ</p>
@@ -130,20 +130,20 @@
                 <p>श्री कोष तथा लेखा नियन्त्रण कार्यालय, खोटांङ</p>
                 <p>श्री कोष तथा लेखा नियन्त्रण कार्यालय, ललितपुर</p>
             </div>
-            <div class="col-md-6">
+            <div class="col-sm-6">
                 <div class="signature">
                     <p>________________</p>
                     <p>आयोजना निर्देशक</p>
                 </div>
             </div>
 
-            <div class="col-md-12">
+            <div class="col-sm-12">
                 <ul class="list-group">
                     {% for handover in previous_handovers %}
                         <li class="list-group-item">
                             <p>यस आघि मिति {{ handover.date|localize }} मा रु.
-                                <b>{{ handover.total_budget|localize }}</b> आक्ष्यरुपी
-                                <b>{{ handover.total_budget|nwords }}</b></p>
+                                {{ handover.total_budget|localize }} आक्ष्यरुपी
+                                {{ handover.total_budget|nwords }}</p>
                         </li>
                     {% endfor %}
                 </ul>
