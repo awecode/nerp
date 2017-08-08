@@ -140,7 +140,9 @@
             <div class="col-md-12">
                 <ul class="list-group">
                     {% for handover in previous_handovers %}
-                        <li class="list-group-item">{{ handover }}</li>
+                        <li class="list-group-item">
+                            <p>यस आघि मिति  {{ handover.date|localize }}  मा रु. <b>{{ handover.total_budget|localize }}</b> आक्ष्यरुपी <b>{{ handover.total_budget|nwords }}</b></p>
+                        </li>
                     {% endfor %}
                 </ul>
             </div>

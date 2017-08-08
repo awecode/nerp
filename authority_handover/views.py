@@ -41,6 +41,7 @@ class AuthorityHandoverDeleteView(AuthorityHandoverView, DeleteView):
 class AuthorityHandoverDetailView(AuthorityHandoverView, DetailView):
     def get_context_data(self, **kwargs):
         context = super(AuthorityHandoverDetailView, self).get_context_data()
+        detail_object = self.get_object()
         context['previous_handovers'] = AuthorityHandover.objects.filter(
-            beneficiary=self.get_object().beneficiary).order_by('-id')
+            date__lt=detail_object.date).order_by('-id')
         return context
