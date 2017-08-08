@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n nwords filters%}
 
 {% block breadcrumbs %}
     {{ block.super }}
@@ -40,7 +40,7 @@
                     साथ संलग्न निर्देसन आनुसार गर्ने गरी आ. ब. {{ object.fiscal_year }} को बार्षिक व्यय अनुमान र सो मा
                     थपघट हुने रकम समेत प्रचलित कानुन अनुसार निकासा लिई खर्च गर्न गराऊन र तेस्तो खर्च को लेखा राख्ने,
                     प्रतिबेदन गर्ने , र लेखा परिक्षण गराउने जिम्मेबारी सहित आर्थिक कार्यविधि नियमावली २०६४ को नियम ३२ को
-                    उपनियम २ को बमोजिम तपाइलाई रु. {{ object.total_budget }} आक्ष्यरुपी {{ object.total_budget }} को वाडफाड र खर्च गर्ने आख्तियारी
+                    उपनियम २ को बमोजिम तपाइलाई रु. <b>{{ object.total_budget|localize }}</b> आक्ष्यरुपी <b>{{ object.total_budget|nwords }}</b> को वाडफाड र खर्च गर्ने आख्तियारी
                     सुम्पेको छु। वजेट तथा कार्यक्रम कार्यन्वयन गर्दा राष्ट्रिय पुर्नानिर्मन प्राधिकरण तथा यस आयोजनाको
                     वजेट कार्यन्वयन सम्बन्धि सर्त र वजेट खर्च गर्ने निर्देशन बमोजिम गर्नुहुन जानकारी गराएको छु।</p>
             </div>
@@ -86,17 +86,17 @@
 
                     {% for row in object.budget_distributions.all %}
                         <tr>
-                            <td>{{ row.expenditure_head_number }}</td>
+                            <td>{{ row.expenditure_head_number|localize }}</td>
                             <td>{{ row.expenditure_head_name }}</td>
-                            <td>{{ row.permitted_budget }}</td>
-                            <td>{{ row.government_fund }}</td>
-                            <td>{{ row.foreign_fund_grant_cash }}</td>
-                            <td>{{ row.foreign_fund_grant_reimbursable }}</td>
-                            <td>{{ row.foreign_fund_grant_direct_payment }}</td>
-                            <td>{{ row.foreign_fund_grant_commodity }}</td>
-                            <td>{{ row.foreign_fund_loan_cash }}</td>
-                            <td>{{ row.foreign_fund_loan_reimbursable }}</td>
-                            <td>{{ row.foreign_fund_loan_direct_payment }}</td>
+                            <td>{{ row.permitted_budget|localize }}</td>
+                            <td>{{ row.government_fund|localize }}</td>
+                            <td>{{ row.foreign_fund_grant_cash|localize }}</td>
+                            <td>{{ row.foreign_fund_grant_reimbursable|localize }}</td>
+                            <td>{{ row.foreign_fund_grant_direct_payment|localize }}</td>
+                            <td>{{ row.foreign_fund_grant_commodity|localize }}</td>
+                            <td>{{ row.foreign_fund_loan_cash|localize }}</td>
+                            <td>{{ row.foreign_fund_loan_reimbursable|localize }}</td>
+                            <td>{{ row.foreign_fund_loan_direct_payment|localize }}</td>
                             <td>{{ row.donor }}</td>
                             <td>{{ row.remarks }}</td>
                         </tr>

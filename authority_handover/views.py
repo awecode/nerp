@@ -41,9 +41,6 @@ class AuthorityHandoverDeleteView(AuthorityHandoverView, DeleteView):
 class AuthorityHandoverDetailView(AuthorityHandoverView, DetailView):
     def get_context_data(self, **kwargs):
         context = super(AuthorityHandoverDetailView, self).get_context_data()
-        context['amount'] = 40000
-        import ipdb
-        ipdb.set_trace()
         context['previous_handovers'] = AuthorityHandover.objects.filter(
             beneficiary=self.get_object().beneficiary).order_by('-id')
         return context

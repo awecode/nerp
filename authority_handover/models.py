@@ -70,6 +70,7 @@ class AuthorityHandover(models.Model):
             Sum('foreign_fund_loan_direct_payment'),
         )
         return sum(result.values())
+        # return 787887600075004
 
 
 @python_2_unicode_compatible
