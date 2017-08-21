@@ -59,6 +59,8 @@ class AuthorityHandover(models.Model):
     def __str__(self):
         return "%s-%s" % (self.date, self.beneficiary)
 
+    # todo below two methods based on changed model
+    # todo start
     def individual_fund_sum(self):
         result = self.budget_distributions.aggregate(
             Sum('permitted_budget'),
@@ -78,19 +80,30 @@ class AuthorityHandover(models.Model):
         del result['permitted_budget__sum']
         return sum(result.values())
         # return 787887600075004
+        # todo end
+
+
+@python_2_unicode_compatible
+class ExpenditureHead(models.Model):
+    number = models.CharField(
+        max_length=20,
+        verbose_name=_('Expenditure Head Number')
+    )
+    name = models.CharField(
+        max_length=20,
+        verbose_name=_('Expenditure Head Name')
+    )
+
+    def __str__(self):
+        return "%s-%s" % (self.number, self.name)
 
 
 @python_2_unicode_compatible
 class BudgetDistribution(models.Model):
     authority_handover = models.ForeignKey(AuthorityHandover, related_name='budget_distributions')
-    expenditure_head_number = models.CharField(
-        max_length=20,
-        verbose_name=_('Expenditure Head Number')
-    )
-    expenditure_head_name = models.CharField(
-        max_length=20,
-        verbose_name=_('Expenditure Head Name')
-    )
+
+    expenditure_head = models.ForeignKey(ExpenditureHead, related_name="budget_distributions", blank=True, null=True)
+
     permitted_budget = models.PositiveIntegerField(
         verbose_name=_('Permitted Budget'),
         default=0
@@ -100,53 +113,16 @@ class BudgetDistribution(models.Model):
         default=0
     )
 
-    foreign_fund_grant_cash = models.PositiveIntegerField(
-        verbose_name=_('Foreign Fund Grant Cash'),
-        default=0
-    )
-    foreign_fund_grant_reimbursable = models.PositiveIntegerField(
-        verbose_name=_('Foreign Fund Grant Reimbursable'),
-        default=0
-    )
-    foreign_fund_grant_direct_payment = models.PositiveIntegerField(
-        verbose_name=_('Foreign Fund Grant Direct Payment'),
-        default=0
-    )
-    foreign_fund_grant_commodity = models.PositiveIntegerField(
-        verbose_name=_('Foreign Fund Grant Commodity'),
-        default=0
-    )
-
-    foreign_fund_loan_cash = models.PositiveIntegerField(
-        verbose_name=_('Foreign Fund Loan Cash'),
-        default=0
-    )
-    foreign_fund_loan_reimbursable = models.PositiveIntegerField(
-        verbose_name=_('Foreign Fund Loan Reimbursable'),
-        default=0
-    )
-    foreign_fund_loan_direct_payment = models.PositiveIntegerField(
-        verbose_name=_('Foreign Fund Loan Direct Payment'),
-        default=0
-    )
-    # foreign_fund_loan_commodity = models.PositiveIntegerField(
-    #     verbose_name=_('Foreign Fund Loan Commodity')
-    # )
-
-    donor = models.ForeignKey(
-        Donor,
-        verbose_name=_('Donor')
-    )
-
     remarks = models.CharField(
         max_length=255,
         verbose_name=_('Remarks')
     )
 
     def __str__(self):
-        return "%s-%s" % (self.authority_handover, self.expenditure_head_name)
+        return "%s" % (self.authority_handover)
 
     def total_fund(self):
+        # todo update below calculation based on new model
         return self.government_fund \
                + self.foreign_fund_grant_cash \
                + self.foreign_fund_grant_reimbursable \
@@ -156,3 +132,44 @@ class BudgetDistribution(models.Model):
                + self.foreign_fund_loan_cash \
                + self.foreign_fund_loan_reimbursable \
                + self.foreign_fund_loan_direct_payment
+
+
+@python_2_unicode_compatible
+class ForeignFund(models.Model):
+    TYPE_CHOICES = (
+        ('grant', 'Grant'),
+        ('loan', 'Loan')
+    )
+
+    SUB_TYPE_CHOICES = (
+        ('cash', 'Cash'),
+        ('reimbursable', 'Reimbursable'),
+        ('direct payment', 'Direct Payment'),
+        ('commodity', 'Commodity'),
+    )
+    budget_distribution = models.ForeignKey(
+        BudgetDistribution,
+        related_name="foreign_funds",
+        verbose_name=_('Budget Distribution')
+    )
+    donor = models.ForeignKey(
+        Donor,
+        verbose_name=_('Donor'),
+        related_name=_('foreign_funds')
+    )
+    amount = models.PositiveIntegerField(
+        verbose_name=_('Amount')
+    )
+    type = models.CharField(
+        max_length=5,
+        choices=TYPE_CHOICES,
+        verbose_name=_('Type')
+    )
+    sub_type = models.CharField(
+        max_length=15,
+        choices=SUB_TYPE_CHOICES,
+        verbose_name=_('Sub Type')
+    )
+
+    def __str__(self):
+        return "%s-%s-%s" % (self.budget_distribution, self.doner, self.amount)

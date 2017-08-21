@@ -1,6 +1,6 @@
 from modeltranslation.translator import translator, TranslationOptions
 
-from authority_handover.models import AuthorityHandover, BudgetDistribution, Beneficiary
+from authority_handover.models import AuthorityHandover, BudgetDistribution, Beneficiary, ExpenditureHead
 
 
 class BeneficiaryTranslationOptions(TranslationOptions):
@@ -9,7 +9,8 @@ class BeneficiaryTranslationOptions(TranslationOptions):
 translator.register(Beneficiary, BeneficiaryTranslationOptions)
 
 
-class BudgetDistributionTranslationOptions(TranslationOptions):
-    fields = ('expenditure_head_number', 'expenditure_head_name',)
+class ExpenditureHeadTranslationOptions(TranslationOptions):
+    fields = ('number', 'name',)
 
-translator.register(BudgetDistribution, BudgetDistributionTranslationOptions)
+translator.register(BudgetDistribution)
+translator.register(ExpenditureHead, ExpenditureHeadTranslationOptions)
