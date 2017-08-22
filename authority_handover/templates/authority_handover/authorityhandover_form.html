@@ -1,4 +1,4 @@
-{% extends base_template %}
+{% extends 'base.html' %}
 {% load i18n %}
 {% load staticfiles filters %}
 
@@ -11,13 +11,12 @@
     <li><span>{% trans scenario %} {% trans "Authority Handover" %}</span></li>
 {% endblock %}
 
-<div id="app">
-
-</div>
-
 {% block content %}
+    <div id="app">
+
+    </div>
 
 {% endblock %}
 {% block before_body_end %}
-<script src="{% static 'output.js' %}"></script>
+    <script src="{% static 'output.js' %}"></script>
 {% endblock %}

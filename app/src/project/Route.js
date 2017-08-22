@@ -1,5 +1,6 @@
 import React from 'react';
 import {Route, Switch} from 'react-router-dom';
+import AuthorityHandoverForm from '../apps/authority_handover/components/AuthorityHandoverForm'
 
 // import {App} from './RouteSync'
 // import {CollegeList} from './RouteSync'
@@ -44,7 +45,7 @@ class AppRoute extends React.Component {
   render() {
     return (
       <div>
-
+        <AuthorityHandoverForm/>
       </div>
     )
   }
