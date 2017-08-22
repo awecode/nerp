@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import render
 
 # Create your views here.
-from django.views.generic import DetailView
+from django.views.generic import DetailView, TemplateView
 
 from app.utils.mixins import GroupRequiredMixin, ListView, CreateView, UpdateView, DeleteView, FormsetViewMixin
 from authority_handover.filters import AuthorityHandoverFilter
@@ -14,8 +14,6 @@ class AuthorityHandoverView(GroupRequiredMixin):
     model = AuthorityHandover
     form_class = AuthorityHandoverForm
 
-    child_model = BudgetDistribution
-    child_form_class = BudgetDistributionForm
     group_required = []
     success_url = reverse_lazy('authority-handover-list')
 
@@ -24,14 +22,6 @@ class AuthorityHandoverListView(AuthorityHandoverView, ListView):
     search_fields = []
     search_exact_fields = []
     filter_set = AuthorityHandoverFilter
-
-
-class AuthorityHandoverCreateView(AuthorityHandoverView, FormsetViewMixin, CreateView):
-    pass
-
-
-class AuthorityHandoverUpdateView(AuthorityHandoverView, FormsetViewMixin, UpdateView):
-    pass
 
 
 class AuthorityHandoverDeleteView(AuthorityHandoverView, DeleteView):
@@ -45,3 +35,8 @@ class AuthorityHandoverDetailView(AuthorityHandoverView, DetailView):
         context['previous_handovers'] = AuthorityHandover.objects.filter(
             date__lt=detail_object.date).order_by('-id')
         return context
+
+
+class AuthorityHandoverCreate(TemplateView):
+    template_name = "authority_handover/authorityhandover_form.html"
+
