@@ -11,10 +11,13 @@
     <li><span>{% trans scenario %} {% trans "Authority Handover" %}</span></li>
 {% endblock %}
 
+<div id="app">
+
+</div>
 
 {% block content %}
 
 {% endblock %}
 {% block before_body_end %}
-
+<script src="{% static 'output.js' %}"></script>
 {% endblock %}
