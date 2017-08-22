@@ -9,3 +9,4 @@ gunicorn-error.log
 gunicorn-access.log
 
 app/local_settings.py
+node_modules
