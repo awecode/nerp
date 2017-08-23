@@ -1,6 +1,10 @@
 import React from 'react'
 
 class ForeignFundForm extends React.Component {
+
+  fund_type = ['grant', 'loan'];
+  fund_sub_type = ['cash', 'reimbursable', 'direct payment', 'commodity'];
+
   render () {
     return (
       <div>

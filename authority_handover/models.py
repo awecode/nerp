@@ -184,15 +184,15 @@ class BudgetDistribution(models.Model):
 @python_2_unicode_compatible
 class ForeignFund(models.Model):
     TYPE_CHOICES = (
-        ('grant', 'Grant'),
-        ('loan', 'Loan')
+        ('grant', _('Grant')),
+        ('loan', _('Loan'))
     )
 
     SUB_TYPE_CHOICES = (
-        ('cash', 'Cash'),
-        ('reimbursable', 'Reimbursable'),
-        ('direct payment', 'Direct Payment'),
-        ('commodity', 'Commodity'),
+        ('cash', _('Cash')),
+        ('reimbursable', _('Reimbursable')),
+        ('direct payment', _('Direct Payment')),
+        ('commodity', _('Commodity')),
     )
     budget_distribution = models.ForeignKey(
         BudgetDistribution,
