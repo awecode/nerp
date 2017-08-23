@@ -12,6 +12,32 @@ from core.models import FiscalYear, BudgetHead, Donor
 
 
 @python_2_unicode_compatible
+class District(models.Model):
+    name = models.CharField(
+        max_length=30,
+        verbose_name=_('Name')
+    )
+
+    def __str__(self):
+        return self.name
+
+
+@python_2_unicode_compatible
+class Office(models.Model):
+    name = models.CharField(
+        max_length=255,
+        verbose_name=_('Name')
+    )
+    district = models.ForeignKey(
+        District,
+        verbose_name=_('District')
+    )
+
+    def __str__(self):
+        return "%s-%s" % (self.name, self.district)
+
+
+@python_2_unicode_compatible
 class Beneficiary(models.Model):
     designation = models.CharField(
         max_length=255,
@@ -31,6 +57,21 @@ class Beneficiary(models.Model):
 
 @python_2_unicode_compatible
 class AuthorityHandover(models.Model):
+    AH_TYPE = (
+        ('first', _('First')),
+        ('addition', _('Addition')),
+        ('edited', _('Edited')),
+    )
+    type = models.CharField(
+        max_length=15,
+        choices=AH_TYPE
+    )
+    parent = models.OneToOneField(
+        "self",
+        related_name="child",
+        null=True,
+        blank=True
+    )
     beneficiary = models.ForeignKey(
         Beneficiary,
         related_name='authority_handovers',
@@ -81,6 +122,12 @@ class AuthorityHandover(models.Model):
         return sum(result.values())
         # return 787887600075004
         # todo end
+
+    def save(self, *args, **kwargs):
+        if not self.parent:
+            self.type = 'first'
+        super(AuthorityHandover, self).save(*args, **kwargs)
+
 
 
 @python_2_unicode_compatible
