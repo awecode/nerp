@@ -3,10 +3,24 @@ import React from 'react'
 class ForeignFundForm extends React.Component {
 
   fund_type = ['grant', 'loan'];
+  fund_sub_type = ['cash', 'reimbursable', 'direct payment', 'commodity'];
 
   render () {
     return (
       <div>
+        <div>
+          <label htmlFor="firstName">First Name</label>
+          <Field name="firstName" component="input" type="text"/>
+        </div>
+        <div>
+          <label htmlFor="lastName">Last Name</label>
+          <Field name="lastName" component="input" type="text"/>
+        </div>
+        <div>
+          <label htmlFor="email">Email</label>
+          <Field name="email" component="input" type="email"/>
+        </div>
+        <div>
           <Field name="fund_type" component="select">
             <option></option>
             <option value="#ff0000">Red</option>
