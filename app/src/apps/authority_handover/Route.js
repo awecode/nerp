@@ -1,6 +1,6 @@
 import React from 'react';
 import {Route, Switch} from 'react-router-dom';
-import AuthorityHandoverForm from './components/AuthorityHandoverForm'
+import AuthorityHandoverForm from './containers/AuthorityHandoverForm'
 
 // import {App} from './RouteSync'
 

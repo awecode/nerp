@@ -1,40 +1,49 @@
 import React from 'react'
+import Select from 'react-select'
 
 class ForeignFundForm extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      fund_sub_type: [
+        {value: 'cash', label: 'Cash'},
+        {value: 'reimbursable', label: 'Reimbursable'},
+        {value: 'direct payment', label: 'Direct Payment'},
+        {value: 'commodity', label: 'Commodity'}
+      ],
+      // donors: this.props.donors
+    }
+    this.handleInputChange = this.handleInputChange.bind(this)
+  }
 
-  fund_type = ['grant', 'loan'];
-  fund_sub_type = ['cash', 'reimbursable', 'direct payment', 'commodity'];
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    // this.setState({
+    //   [name]: value
+    // });
+
+  }
 
   render () {
+
     return (
       <div>
-        <div>
-          <label htmlFor="firstName">First Name</label>
-          <Field name="firstName" component="input" type="text"/>
-        </div>
-        <div>
-          <label htmlFor="lastName">Last Name</label>
-          <Field name="lastName" component="input" type="text"/>
-        </div>
-        <div>
-          <label htmlFor="email">Email</label>
-          <Field name="email" component="input" type="email"/>
-        </div>
-        <div>
-          <Field name="fund_type" component="select">
-            <option></option>
-            <option value="#ff0000">Red</option>
-            <option value="#00ff00">Green</option>
-            <option value="#0000ff">Blue</option>
-          </Field> >
-          <Field name="fund_sub_type" component="select">
-            <option></option>
-            <option value="#ff0000">Red</option>
-            <option value="#00ff00">Green</option>
-            <option value="#0000ff">Blue</option>
-          </Field>
-
-        </div>
+        <Select
+          name="form-field-name"
+          value="one"
+          options={this.state.fund_sub_type}
+          onChange={this.handleInputChange}
+        />
+        <Select
+          name="form-field-name"
+          value="one"
+          options={this.state.fund_sub_type}
+          onChange={this.handleInputChange}
+        />
+        <Field name="amount" component="text"/>
       </div>
     )
   }

@@ -4,7 +4,6 @@
 
 {% block title %}{{ scenario }} {% trans 'Authority Handover' %}{% endblock %}
 
-
 {% block breadcrumbs %}
     {{ block.super }}
     <li><a href="{% url "authority-handover-list" %}">{% trans 'Authority Handovers' %}</a></li>
@@ -12,7 +11,7 @@
 {% endblock %}
 
 {% block content %}
-    <div id="app">
+    <div id="app" class="well">
 
     </div>
 
