@@ -1,21 +1,45 @@
-const path = require('path');
+const path = require('path')
+const process = require('process')
 const webpack = require('webpack')
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const AssetsPlugin = require('assets-webpack-plugin')
 
-var PATH = {
-  "index": path.join(__dirname, 'app', 'src')
-};
+const PATH = {
+  'src': path.join(__dirname, 'app', 'src'),
+  'static': path.join(__dirname, 'static', 'webpack'),
+}
+
+const assetsPluginInstance = new AssetsPlugin({
+  filename:'assets.json',
+  path: path.join(__dirname)
+})
 
 const extractSass = new ExtractTextPlugin({
-    filename: "[name].[contenthash].css",
-    disable: process.env.NODE_ENV === "development"
-});
+  filename: '[name].[chunkhash].css',
+  disable: process.env.NODE_ENV === 'development'
+})
+
+const commonChunkPlugin = new webpack.optimize.CommonsChunkPlugin({
+      name: "common",
+      filename: 'common.[chunkhash].bundle.js'
+    })
 
 let config = {
-  entry: './app/src/project/index.js',
-  output: {
-    filename: './static/output.js'
+  entry: {
+    index: './app/src/project/index.js',
+    common: [
+      'react',
+      'react-dom',
+      'react-redux',
+      'redux-form',
+      'react-router-dom',
+    ]
   },
+  output: {
+    path: PATH['static'],
+    filename: '[name].[chunkhash].bundle.js'
+  },
+  devtool: "source-map",
   module: {
     rules: [
       {
@@ -24,26 +48,30 @@ let config = {
         loader: 'babel-loader' // use this (babel-core) loader
       },
       {
-        test: /\.scss$/,
+        test: /\.(scss)$/,
         use: extractSass.extract({
-                use: [{
-                    loader: "css-loader", options:{
-                      sourceMap: true
-                  }
-                }, {
-                    loader: "sass-loader", options:{
-                      sourceMap: true
-                  }
-                }],
-                // use style-loader in development
-                fallback: "style-loader"
-            })
+          use: [{
+            loader: 'css-loader', options: {
+              sourceMap: true,
+              minimize: true
+            }
+          }, {
+            loader: 'sass-loader', options: {
+              sourceMap: true,
+              minimize: true
+            }
+          }],
+          // use style-loader in development
+          fallback: 'style-loader'
+        })
       }
     ]
   },
   plugins: [
-        extractSass
-    ]
+    extractSass,
+    commonChunkPlugin,
+    assetsPluginInstance
+  ]
 
 }
 

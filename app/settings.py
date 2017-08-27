@@ -125,3 +125,5 @@ MESSAGE_TAGS = {
 }
 
 FROALA_INCLUDE_JQUERY = False
+
+WEBPACK_ASSET_JSON = os.path.join(BASE_DIR, 'assets.json')

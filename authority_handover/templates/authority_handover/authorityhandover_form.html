@@ -1,8 +1,16 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load staticfiles filters %}
+{% load webpack_assets %}
 
 {% block title %}{{ scenario }} {% trans 'Authority Handover' %}{% endblock %}
+
+
+
+{% block head_end %}
+    {# todo this should be at base page#}
+    <link rel="stylesheet" href="{% assets 'index' 'css' path='webpack/' %}"/>
+{% endblock %}
 
 {% block breadcrumbs %}
     {{ block.super }}
@@ -11,11 +19,13 @@
 {% endblock %}
 
 {% block content %}
+    {{ assets }}
     <div id="app" class="well">
 
     </div>
 
 {% endblock %}
 {% block before_body_end %}
-    <script src="{% static 'output.js' %}"></script>
+    <script src="{% assets 'common' 'js' path='webpack/' %}"></script>
+    <script src="{% assets 'index' 'js' path='webpack/' %}"></script>
 {% endblock %}

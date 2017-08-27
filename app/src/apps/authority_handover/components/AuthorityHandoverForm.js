@@ -20,8 +20,6 @@ class AuthorityHandoverForm extends React.Component {
           <label htmlFor="parent">Parent</label>
           <Field name="parent" component={renderReactSelectWrapper}
                  options={this.fund_sub_type}
-                 placeholder="Hey this is something"
-
           />
         </div>
         <div>
