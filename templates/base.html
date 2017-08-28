@@ -14,30 +14,32 @@
 
     <title>{% block title %}{% endblock %}</title>
 
-    <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
-    <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/vendors/selectize.bootstrap3.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
-    <link rel="stylesheet" href="{% static 'css/print.css' %}" media="print">
-{#    <link rel="stylesheet" href="{% static 'css/print.debug.css' %}" media="screen">#}
-    <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap-material-design.min.css' %}">
+    {% block head %}
+        <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
+        <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/vendors/selectize.bootstrap3.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+        <link rel="stylesheet" href="{% static 'css/print.css' %}" media="print">
+        {#    <link rel="stylesheet" href="{% static 'css/print.debug.css' %}" media="screen">#}
+        <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap-material-design.min.css' %}">
 
-    <link rel="stylesheet" href="{% static 'css/bootstrap/ripples.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/bootstrap/ripples.min.css' %}">
 
-    <script src="{% static 'js/vendors/jquery.js' %}"></script>
-    <script src="{% static 'js/vendors/selectize.js' %}"></script>
-    <script src="{% static 'js/base.js' %}"></script>
-    <script src="{% static 'js/vendors/knockout.js' %}"></script>
-    <script src="{% static 'js/ko_lib.js' %}"></script>
+        <script src="{% static 'js/vendors/jquery.js' %}"></script>
+        <script src="{% static 'js/vendors/selectize.js' %}"></script>
+        <script src="{% static 'js/base.js' %}"></script>
+        <script src="{% static 'js/vendors/knockout.js' %}"></script>
+        <script src="{% static 'js/ko_lib.js' %}"></script>
 
 
-    {% block head_end %}{% endblock %}
+        {% block head_end %}{% endblock %}
 
-    <script src="{% static 'js/vendors/custom.modernizr.js' %}"></script>
-    <script src="{% static 'js/vendors/jquery.autosize.input.js' %}"></script>
+        <script src="{% static 'js/vendors/custom.modernizr.js' %}"></script>
+        <script src="{% static 'js/vendors/jquery.autosize.input.js' %}"></script>
+    {% endblock %}
     {% get_current_language as LANGUAGE_CODE %}
     <script>
-        window.lang = '{{ LANGUAGE_CODE }}';
+      window.lang = '{{ LANGUAGE_CODE }}'
     </script>
 
     {% load filters %}
@@ -49,26 +51,26 @@
 <div class="container-fluid">
     <div class="header row">
         <div class="col-lg-12 col-md-12">
-        <div class="navbar">
-            <div class="nav-bar pull-right">
-                <div class="btn-group nav-btn" role="group" aria-label="...">
-                    {% if user.is_authenticated %}
-                        <a href="/admin" class="btn btn-default btn-lg">{% trans 'Control Panel' %}</a>
-                    {% endif %}
-                    {% include '_change_language.html' %}
-                    {% include '_change_calendar.html' %}
-                    {% if user.is_authenticated %}
-                        <a href="{% url 'logout' %}" class="btn btn-default btn-lg">{% trans 'Log out' %}</a>
-                    {% else %}
-                        <a href="{% url 'login' %}" class="btn btn-default btn-lg">{% trans 'Log in' %}</a>
-                    {% endif %}
+            <div class="navbar">
+                <div class="nav-bar pull-right">
+                    <div class="btn-group nav-btn" role="group" aria-label="...">
+                        {% if user.is_authenticated %}
+                            <a href="/admin" class="btn btn-default btn-lg">{% trans 'Control Panel' %}</a>
+                        {% endif %}
+                        {% include '_change_language.html' %}
+                        {% include '_change_calendar.html' %}
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'logout' %}" class="btn btn-default btn-lg">{% trans 'Log out' %}</a>
+                        {% else %}
+                            <a href="{% url 'login' %}" class="btn btn-default btn-lg">{% trans 'Log in' %}</a>
+                        {% endif %}
+                    </div>
                 </div>
-            </div>
-            <ul class="nav navbar-nav">
-            {% get_solo 'core.AppSetting' as app_setting %}
-            <li><a href="/"><h3>{{ app_setting.site_name }}</h3></a></li>
+                <ul class="nav navbar-nav">
+                    {% get_solo 'core.AppSetting' as app_setting %}
+                    <li><a href="/"><h3>{{ app_setting.site_name }}</h3></a></li>
 
-            </ul>
+                </ul>
             </div>
         </div>
     </div>
@@ -136,19 +138,20 @@
 
 <!-- End Footer -->
 {# <script src="{% static 'js/foundation/foundation.min.js' %}"></script> #}
+{% block body_end %}
+    <script src="{% static 'js/bootstrap/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/vendors/bootstrap-notify.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap/material/material.min.js' %}"></script>
 
-<script src="{% static 'js/bootstrap/bootstrap.min.js' %}"></script>
-<script src="{% static 'js/vendors/bootstrap-notify.min.js' %}"></script>
-<script src="{% static 'js/bootstrap/material/material.min.js' %}"></script>
-
-<script src="{% static 'js/bootstrap/material/ripples.min.js' %}"></script>
-<script>
-    $.material.init()
-</script>
-<!--script src="{% static 'js/foundation/foundation.dropdown.js' %}"></script>
+    <script src="{% static 'js/bootstrap/material/ripples.min.js' %}"></script>
+    <script>
+      $.material.init()
+    </script>
+    <!--script src="{% static 'js/foundation/foundation.dropdown.js' %}"></script>
 <script>
     $(document).foundation();
 </script-->
-{% block before_body_end %}{% endblock %}
+    {% block before_body_end %}{% endblock %}
+{% endblock %}
 </body>
 </html>

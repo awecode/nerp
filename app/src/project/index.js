@@ -7,10 +7,7 @@ import AppRoute from './Route';
 // import ScrollToTop from './ScrollToTop';
 import {store} from './store';
 
-// import '../sass/bootstrap.scss'
-// import '../sass/es.scss';
-//
-// import '../static/bootstrap/bootstrap';
+import './scss/project.scss'
 
 // React devtool for preact
 // import 'preact/devtools';

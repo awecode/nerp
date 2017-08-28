@@ -10,7 +10,7 @@ const PATH = {
 }
 
 const assetsPluginInstance = new AssetsPlugin({
-  filename:'assets.json',
+  filename: 'assets.json',
   path: path.join(__dirname)
 })
 
@@ -19,10 +19,19 @@ const extractSass = new ExtractTextPlugin({
   disable: process.env.NODE_ENV === 'development'
 })
 
+const provide = new webpack.ProvidePlugin({
+  jQuery: 'jquery',
+  $: 'jquery',
+  jquery: 'jquery',
+  'window.jQuery': 'jquery',
+  Popper: 'popper.js',
+  Tether: 'tether'
+})
+
 const commonChunkPlugin = new webpack.optimize.CommonsChunkPlugin({
-      name: "common",
-      filename: 'common.[chunkhash].bundle.js'
-    })
+  name: 'common',
+  filename: 'common.[chunkhash].bundle.js'
+})
 
 let config = {
   entry: {
@@ -33,13 +42,17 @@ let config = {
       'react-redux',
       'redux-form',
       'react-router-dom',
+      'jquery',
+      'popper.js',
+      'bootstrap'
     ]
   },
   output: {
     path: PATH['static'],
-    filename: '[name].[chunkhash].bundle.js'
+    filename: '[name].[chunkhash].bundle.js',
+    publicPath: 'webpack/'
   },
-  devtool: "source-map",
+  devtool: 'source-map',
   module: {
     rules: [
       {
@@ -68,6 +81,7 @@ let config = {
     ]
   },
   plugins: [
+    provide,
     extractSass,
     commonChunkPlugin,
     assetsPluginInstance

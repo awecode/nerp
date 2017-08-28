@@ -7,9 +7,9 @@
 
 
 
-{% block head_end %}
+{% block head %}
     {# todo this should be at base page#}
-    <link rel="stylesheet" href="{% assets 'index' 'css' path='webpack/' %}"/>
+    <link rel="stylesheet" href="{% assets 'index' 'css' %}"/>
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -25,7 +25,7 @@
     </div>
 
 {% endblock %}
-{% block before_body_end %}
-    <script src="{% assets 'common' 'js' path='webpack/' %}"></script>
-    <script src="{% assets 'index' 'js' path='webpack/' %}"></script>
+{% block body_end %}
+    <script src="{% assets 'common' 'js' %}"></script>
+    <script src="{% assets 'index' 'js' %}"></script>
 {% endblock %}

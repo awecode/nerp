@@ -14,7 +14,7 @@ def static(path):
 
 
 @register.simple_tag
-def assets(*args, **kwargs):
+def assets(*args):
     try:
         with open(WEBPACK_ASSET_JSON) as assetfile:
             assets_ = json.load(assetfile)
@@ -23,6 +23,10 @@ def assets(*args, **kwargs):
                     assets_ = assets_.get(arg)
                 else:
                     return ''
-            return static(os.path.join(kwargs.get('path'), assets_))
+
+            if assets_:
+                return static(assets_)
+            else:
+                return ''
     except:
         return ''
