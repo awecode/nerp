@@ -1,0 +1,9 @@
+{
+  "app": {
+    "js": "dist/js/app.bundle-e17122cc9a1d8092c582.js",
+    "css": "dist/css/app-e17122cc9a1d8092c582.css"
+  },
+  "common": {
+    "js": "dist/js/common.bundle-e17122cc9a1d8092c582.js"
+  }
+}
