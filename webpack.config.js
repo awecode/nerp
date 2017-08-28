@@ -1,58 +1,35 @@
-const path = require('path')
-const process = require('process')
-const webpack = require('webpack')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const AssetsPlugin = require('assets-webpack-plugin')
+const webpack = require('webpack');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const AssetsPlugin = require('assets-webpack-plugin');
 
-const PATH = {
-  'src': path.join(__dirname, 'app', 'src'),
-  'static': path.join(__dirname, 'static', 'webpack'),
-}
 
-const assetsPluginInstance = new AssetsPlugin({
+const outputPath = __dirname + '/static/dist/';
+
+// const path = require('path');
+
+
+// the path(s) that should be cleaned
+let pathsToClean = [outputPath];
+
+let commonsPlugin = new webpack.optimize.CommonsChunkPlugin({name: 'common', filename: 'js/common.bundle-[hash].js'});
+
+let extractTextPlugin = new ExtractTextPlugin({filename: 'css/[name]-[hash].css', allChunks: true})
+
+let assetsPluginInstance = new AssetsPlugin({
   filename: 'assets.json',
-  path: path.join(__dirname)
+  path: __dirname
 })
 
-const extractSass = new ExtractTextPlugin({
-  filename: '[name].[chunkhash].css',
-  disable: process.env.NODE_ENV === 'development'
-})
-
-const provide = new webpack.ProvidePlugin({
-  jQuery: 'jquery',
-  $: 'jquery',
-  jquery: 'jquery',
-  'window.jQuery': 'jquery',
-  Popper: 'popper.js',
-  Tether: 'tether'
-})
-
-const commonChunkPlugin = new webpack.optimize.CommonsChunkPlugin({
-  name: 'common',
-  filename: 'common.[chunkhash].bundle.js'
-})
-
-let config = {
-  entry: {
-    index: './app/src/project/index.js',
-    common: [
-      'react',
-      'react-dom',
-      'react-redux',
-      'redux-form',
-      'react-router-dom',
-      'jquery',
-      'popper.js',
-      'bootstrap'
-    ]
+module.exports = {
+  entry:{
+    app: './app/src/project/index.js'
   },
   output: {
-    path: PATH['static'],
-    filename: '[name].[chunkhash].bundle.js',
-    publicPath: 'webpack/'
+    path: outputPath,
+    publicPath: 'dist/',
+    filename: "js/[name].bundle-[hash].js"
   },
-  devtool: 'source-map',
   module: {
     rules: [
       {
@@ -61,32 +38,20 @@ let config = {
         loader: 'babel-loader' // use this (babel-core) loader
       },
       {
-        test: /\.(scss)$/,
-        use: extractSass.extract({
-          use: [{
-            loader: 'css-loader', options: {
-              sourceMap: true,
-              minimize: true
-            }
-          }, {
-            loader: 'sass-loader', options: {
-              sourceMap: true,
-              minimize: true
-            }
-          }],
-          // use style-loader in development
-          fallback: 'style-loader'
+        test: /\.s?css$/,
+        use: extractTextPlugin.extract({
+          fallback: "style-loader",
+          use: "css-loader!sass-loader"
         })
-      }
+      },
+      { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url-loader?limit=10000&mimetype=application/font-woff" },
+      { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file-loader" }
     ]
   },
   plugins: [
-    provide,
-    extractSass,
-    commonChunkPlugin,
+    new CleanWebpackPlugin(pathsToClean),
+    commonsPlugin,
+    extractTextPlugin,
     assetsPluginInstance
   ]
-
-}
-
-module.exports = config
+};

@@ -1,0 +1,36 @@
+@page {
+  size: A4 landscape;
+  margin: 5mm;
+}
+
+@media print {
+
+  html, body {
+    height: 100%;
+  }
+
+  footer .footerlinks, footer .powered-by-opta, footer img {
+    display: none;
+  }
+
+  html .container,
+  body .container {
+    width: auto;
+  }
+
+  a[href]:after {
+    content: none;
+  }
+
+  /* Auto expand */
+  i.fa.fa-plus-square-o {
+    display: none;
+  }
+
+  .collapse {
+    display: block;
+    height: auto !important;
+  }
+}
+
+/* EO Auto expand */
