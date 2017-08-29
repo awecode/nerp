@@ -1,5 +1,4 @@
 import React from 'react'
-import { Field } from 'redux-form'
 import Select from 'react-select'
 import 'react-select/scss/default.scss'
 
@@ -32,6 +31,4 @@ export class ReactSelectWrapper extends React.Component {
 
 }
 
-// export default ReactSelectWrapper
-//
 export const renderReactSelectWrapper = props => (<ReactSelectWrapper {...props}/>)
