@@ -21,11 +21,14 @@ export class ReactSelectWrapper extends React.Component {
   render = () => {
 
     return (
+      <div>
       <Select {...this.props}
               onBlur={this.onBlur}
               onChange={this.onChange}
               value={this.props.input.value}
       />
+      {this.props.meta.touched && this.props.meta.error && <div>{this.props.meta.error}</div>}
+      </div>
     )
   }
 

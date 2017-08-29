@@ -26,10 +26,6 @@ class AuthorityHandoverForm extends React.Component {
   ]
 
 
-  handleChange(value) {
-    onChange(value)
-  }
-
   render () {
     return (
       <form>
@@ -57,6 +53,11 @@ class AuthorityHandoverForm extends React.Component {
           <div className="col-sm-6 col-md-3">
             <label htmlFor="priority">Priority</label><br/>
             <Field name="priority" component="input" type="text"/>
+          </div>
+        </div>
+        <div className="row">
+          <div>
+
           </div>
         </div>
       </form>
