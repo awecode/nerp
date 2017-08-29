@@ -9,9 +9,10 @@ export class ReactSelectWrapper extends React.Component {
     super(props);
   }
 
+
   render = () => {
 
-    return (<Select {...this.props}/>);
+    return (<Select {...this.props} />);
   }
 
 }

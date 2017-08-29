@@ -6,12 +6,23 @@ import { renderReactSelectWrapper } from '../../../project/utils/ReduxFormSelect
 // todo translation
 
 class AuthorityHandoverForm extends React.Component {
+  // constructor(props){
+  //   super(props)
+  //   // const { priority, handleSubmit, load, pristine, reset, submitting } = props;
+  //   const priority = props.priority
+  // }
+
   fund_sub_type = [
     {value: 'cash', label: 'Cash'},
     {value: 'reimbursable', label: 'Reimbursable'},
     {value: 'direct payment', label: 'Direct Payment'},
     {value: 'commodity', label: 'Commodity'}
   ]
+
+
+  handleChange(value) {
+    onChange(value)
+  }
 
   render () {
     return (
@@ -21,11 +32,14 @@ class AuthorityHandoverForm extends React.Component {
             <label htmlFor="parent">Parent</label>
             <Field name="parent" component={renderReactSelectWrapper}
                    options={this.fund_sub_type}
+                   onChange={this.handleChange}
             />
           </div>
           <div className="col-sm-6 col-md-3">
             <label htmlFor="beneficiary">Beneficiary Office</label>
-            <Field name="beneficiary" component={renderReactSelectWrapper} options={this.fund_sub_type}/>
+            <Field name="beneficiary" component={renderReactSelectWrapper}
+                   options={this.fund_sub_type}
+            />
           </div>
           <div className="col-sm-6 col-md-3">
             <label htmlFor="fiscal_year">Fiscal Year</label>
