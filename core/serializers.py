@@ -9,6 +9,15 @@ class EmployeeSerializer(serializers.ModelSerializer):
         model = Employee
 
 
+class DonorChoiceSerializer(serializers.ModelSerializer):
+    label = serializers.ReadOnlyField(source='__unicode__')
+    value = serializers.ReadOnlyField(source='id')
+
+    class Meta:
+        model = Donor
+        fields = ('label', 'value')
+
+
 class DonorSerializer(serializers.ModelSerializer):
     # name = serializers.Field(source='name')
 
