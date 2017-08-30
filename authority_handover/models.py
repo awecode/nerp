@@ -43,8 +43,8 @@ class Beneficiary(models.Model):
         max_length=255,
         verbose_name=_('Designation')
     )
-    office = models.CharField(
-        max_length=255,
+    office = models.ForeignKey(
+        Office,
         verbose_name=_('Office')
     )
 

@@ -6,11 +6,11 @@ from authority_handover.models import AuthorityHandover, BudgetDistribution, Ben
 class BeneficiaryTranslationOptions(TranslationOptions):
     fields = ('designation', 'office')
 
-translator.register(Beneficiary, BeneficiaryTranslationOptions)
 
 
 class ExpenditureHeadTranslationOptions(TranslationOptions):
     fields = ('number', 'name',)
 
+translator.register(Beneficiary, BeneficiaryTranslationOptions)
 translator.register(BudgetDistribution)
 translator.register(ExpenditureHead, ExpenditureHeadTranslationOptions)
