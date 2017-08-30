@@ -3,6 +3,7 @@ import logger from 'redux-logger';
 import {routerReducer, syncHistoryWithStore} from 'react-router-redux';
 import {createStore, combineReducers, applyMiddleware, compose} from 'redux';
 import { reducer as formReducer } from 'redux-form'
+import { serverData } from '../apps/server_data/reducers/getListAndDetail'
 
 const middleware = applyMiddleware(thunk, logger);
 // const middleware = applyMiddleware(thunk);
@@ -17,6 +18,7 @@ if (typeof(window) !== 'undefined') {
 
 const appReducer = combineReducers({
   routing: routerReducer,
+  server_data: serverData,
   form: formReducer
 });
 
