@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from rest_framework import serializers
 
-from core.models import Employee, Donor, Activity, BudgetHead, TaxScheme, BudgetBalance, Language
+from core.models import Employee, Donor, Activity, BudgetHead, TaxScheme, BudgetBalance, Language, FiscalYear
 
 
 class EmployeeSerializer(serializers.ModelSerializer):
@@ -66,3 +66,18 @@ class TaxSchemeSerializer(serializers.ModelSerializer):
 class LanguageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Language
+
+
+class FiscalYearChoiceSerializer(serializers.ModelSerializer):
+    label = serializers.ReadOnlyField(source='__unicode__')
+    value = serializers.ReadOnlyField(source='id')
+
+    class Meta:
+        model = FiscalYear
+        fields = ('label', 'value')
+
+
+class FiscalYearSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = FiscalYear

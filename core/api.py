@@ -1,8 +1,9 @@
 from rest_framework import viewsets
 
 from app.utils.mixins import InputChoiceMixin
-from core.models import BudgetHead, Donor
-from core.serializers import BudgetSerializer, BudgetHeadChoiceSerializer, DonorSerializer, DonorChoiceSerializer
+from core.models import BudgetHead, Donor, FiscalYear
+from core.serializers import BudgetSerializer, BudgetHeadChoiceSerializer, DonorSerializer, DonorChoiceSerializer, \
+    FiscalYearSerializer, FiscalYearChoiceSerializer
 
 
 class BudgetHeadViewSet(InputChoiceMixin, viewsets.ModelViewSet):
@@ -24,3 +25,8 @@ class DonorViewSet(InputChoiceMixin, viewsets.ModelViewSet):
     # filter_fields = ('first_name', 'last_name', 'email', 'username')
     # permission_classes = (UserAccountManagementPerm,)
 
+
+class FiscalYearViewSet(InputChoiceMixin, viewsets.ModelViewSet):
+    queryset = FiscalYear.objects.all()
+    serializer_class = FiscalYearSerializer
+    choice_serializer_class = FiscalYearChoiceSerializer

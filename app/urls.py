@@ -16,6 +16,7 @@ router.register('authority-handover', authority_handover_api.AuthorityHandoverVi
 router.register('beneficiary', authority_handover_api.BeneficiaryViewSet)
 router.register('budget-head', core_api.BudgetHeadViewSet)
 router.register('donor', core_api.DonorViewSet)
+router.register('fiscal-year', core_api.FiscalYearViewSet)
 # router.register('beneficiary', authority_handover_api.BeneficiaryViewSet)
 
 

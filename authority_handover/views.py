@@ -1,3 +1,5 @@
+import collections
+
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import render
 
@@ -7,7 +9,10 @@ from django.views.generic import DetailView, TemplateView
 from app.utils.mixins import GroupRequiredMixin, ListView, CreateView, UpdateView, DeleteView, FormsetViewMixin
 from authority_handover.filters import AuthorityHandoverFilter
 from authority_handover.forms import AuthorityHandoverForm, BudgetDistributionForm
-from authority_handover.models import AuthorityHandover, BudgetDistribution
+from authority_handover.models import AuthorityHandover, BudgetDistribution, Beneficiary
+from authority_handover.serializers import BeneficiaryChoiceSerializer
+from core.models import Donor, BudgetHead
+from core.serializers import DonorChoiceSerializer, BudgetHeadChoiceSerializer
 
 
 class AuthorityHandoverView(GroupRequiredMixin):
@@ -39,4 +44,27 @@ class AuthorityHandoverDetailView(AuthorityHandoverView, DetailView):
 
 class AuthorityHandoverCreate(TemplateView):
     template_name = "authority_handover/authorityhandover_form.html"
+
+    def get_context_data(self, **kwargs):
+        context = dict()
+        context['server_data'] = dict()
+        context['server_data'] = dict()
+        context['server_data']['options'] = dict()
+        context['server_data']['options']['core'] = dict()
+        context['server_data']['options']['authority_handover'] = dict()
+        context['server_data']['options']['core']['donor'] = DonorChoiceSerializer(
+            Donor.objects.all(),
+            many=True
+        ).data
+        context['server_data']['options']['core']['budget_head'] = BudgetHeadChoiceSerializer(
+            BudgetHead.objects.all(),
+            many=True
+        ).data
+        context['server_data']['options']['authority_handover']['beneficiary'] = BeneficiaryChoiceSerializer(
+            Beneficiary.objects.all(),
+            many=True
+        ).data
+        import ipdb
+        ipdb.set_trace()
+        return context
 
