@@ -7,12 +7,14 @@ from rest_framework.routers import DefaultRouter
 from users import views as users_views
 
 from authority_handover import  api as authority_handover_api
+from core import api as core_api
 
 admin.autodiscover()
 
 router = DefaultRouter()
 router.register('authority-handover', authority_handover_api.AuthorityHandoverViewSet)
 router.register('beneficiary', authority_handover_api.BeneficiaryViewSet)
+router.register('budget-head', core_api.BudgetHeadViewSet)
 # router.register('beneficiary', authority_handover_api.BeneficiaryViewSet)
 
 

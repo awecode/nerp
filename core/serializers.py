@@ -30,6 +30,15 @@ class BudgetBalanceSerializer(serializers.ModelSerializer):
                    'foreign_compensating_grant', 'foreign_compensating_loan', 'foreign_substantial_aid']
 
 
+class BudgetHeadChoiceSerializer(serializers.ModelSerializer):
+    label = serializers.ReadOnlyField(source='__unicode__')
+    value = serializers.ReadOnlyField(source='id')
+
+    class Meta:
+        model = BudgetHead
+        fields = ('label', 'value')
+
+
 class BudgetSerializer(serializers.ModelSerializer):
     name = serializers.ReadOnlyField(source='__unicode__')
     current_balance = BudgetBalanceSerializer()
@@ -47,4 +56,4 @@ class TaxSchemeSerializer(serializers.ModelSerializer):
 
 class LanguageSerializer(serializers.ModelSerializer):
     class Meta:
-        model= Language
+        model = Language

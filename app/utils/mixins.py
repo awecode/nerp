@@ -10,6 +10,7 @@ from django.template.loader import get_template
 from django.template import RequestContext
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import TemplateView
+from rest_framework.decorators import list_route
 from weasyprint import HTML, CSS
 
 
@@ -292,3 +293,14 @@ class FormsetViewMixin(object):
                 return super(FormsetViewMixin, self).form_invalid(form)
 
         return super(FormsetViewMixin, self).form_valid(form)
+
+class InputChoiceMixin(object):
+    def get_serializer_class(self):
+        if self.action in ('choices',):
+            return self.choice_serializer_class
+        else:
+            return self.serializer_class
+
+    @list_route(methods=['get'])
+    def choices(self, request):
+        return self.list(request)

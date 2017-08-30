@@ -1,23 +1,10 @@
 from rest_framework import viewsets
-from rest_framework.decorators import list_route
-from rest_framework.response import Response
 
+from app.utils.mixins import InputChoiceMixin
 from authority_handover.models import Office, Beneficiary, AuthorityHandover, ExpenditureHead
 from authority_handover.serializers import OfficeSerializer, BeneficiarySerializer, AuthorityHandoverSerializer, \
     ExpenditureHeadSerializer, BeneficiaryChoiceSerializer, OfficeChoiceSerializer, AuthorityHandoverChoiceSerializer, \
     ExpenditureHeadChoiceSerializer
-
-
-class InputChoiceMixin(object):
-    def get_serializer_class(self):
-        if self.action in ('choices',):
-            return self.choice_serializer_class
-        else:
-            return self.serializer_class
-
-    @list_route(methods=['get'])
-    def choices(self, request):
-        return self.list(request)
 
 
 class OfficeViewSet(InputChoiceMixin, viewsets.ModelViewSet):
