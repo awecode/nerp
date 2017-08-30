@@ -13,7 +13,7 @@ admin.autodiscover()
 router = DefaultRouter()
 router.register('authority-handover', authority_handover_api.AuthorityHandoverViewSet)
 router.register('beneficiary', authority_handover_api.BeneficiaryViewSet)
-router.register('beneficiary', authority_handover_api.BeneficiaryViewSet)
+# router.register('beneficiary', authority_handover_api.BeneficiaryViewSet)
 
 
 urlpatterns = [
