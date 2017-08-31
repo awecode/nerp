@@ -1,54 +1,60 @@
 import React from 'react'
-import { Field, reduxForm } from 'redux-form'
-import { renderReactSelectWrapper } from '../../../project/utils/ReduxFormSelect'
+import { Field, FieldArray } from 'redux-form'
+import { renderField, renderReactSelectWrapper } from '../../../project/utils/ReduxFormFieldComponents'
 
-// todo translation
+export class BudgetDistributionForm extends React.Component {
 
-class BudgetDistributionForm extends React.Component {
-  // constructor(props){
-  //   super(props)
-  // }
-
-
-
-  fund_sub_type = [
-    {value: 'cash', label: 'Cash'},
-    {value: 'reimbursable', label: 'Reimbursable'},
-    {value: 'direct payment', label: 'Direct Payment'},
-    {value: 'commodity', label: 'Commodity'}
-  ]
-  sub_type = [
-    {value: 'cash', label: 'Cash'},
-    {value: 'reimbursable', label: 'Reimbursable'},
-    {value: 'direct payment', label: 'Direct Payment'},
-    {value: 'commodity', label: 'Commodity'}
-  ]
-
-
-  render () {
+  render = () => {
+    // debugger;
     return (
-      <form>
-        <div className="row">
-          <div className="col-sm-6 col-md-3">
-            <label htmlFor="parent">Parent</label>
-            <Field name="parent" component={renderReactSelectWrapper}
-                   options={this.fund_sub_type}
-            />
-          </div>
-        </div>
-        <div className="row">
-          <div>
+      <div>
+        <button type="button" onClick={() => this.props.fields.push({})}>
+          Add Budget Distribution
+        </button>
+        {this.props.meta.error && <span>{this.props.meta.error}</span>}
+        {this.props.fields.map(
+          (budget_distribution, index) =>
+            <div className="row" key={index}>
+              <div className="col-sm-6 col-md-3">
+                <Field name={`${budget_distribution}.budget_head`} component={renderReactSelectWrapper}
+                       label="Budget Head"
+                />
+              </div>
+              <div className="col-sm-6 col-md-3">
+                <Field name={`${budget_distribution}.permitted_budget`} component={renderField}
+                       label="Permitted Budget"
+                       type="number"
+                />
+              </div>
+              <div className="col-sm-6 col-md-3">
+                <Field name={`${budget_distribution}.government_fund`} component={renderField}
+                       label="Government Fund"
+                       type="number"
+                />
+              </div>
+              <div className="col-sm-6 col-md-3">
+                <Field name={`${budget_distribution}.remarks`} component={renderField}
+                       label="Remarks"
+                       type="text"
+                />
+              </div>
+              <div className="col-lg-4 col-md-6 col-sm-12">
+                  <FieldArray name="foreign_funds" component={renderForeignFundForm} />
+              </div>
+              <div className="col-sm-6 col-md-3">
+                <button
+                  type="button"
+                  title="Remove Distribution"
+                  onClick={() => this.props.fields.remove(index)}
+                >Remove Distribution
+                </button>
+              </div>
 
-          </div>
-        </div>
-      </form>
+            </div>
+        )}
+      </div>
     )
   }
 }
 
-const BudgetDistribution = reduxForm({
-  // a unique name for the form
-  form: 'budget_distribution'
-})(BudgetDistributionForm)
-
-export default BudgetDistribution
+export const renderBudgetDistributions = props => (<BudgetDistributionForm {...props}/>)

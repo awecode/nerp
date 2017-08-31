@@ -1,73 +1,60 @@
 import React from 'react'
-import { Field, reduxForm } from 'redux-form'
-import Select from 'react-select'
-import { renderReactSelectWrapper } from '../../../project/utils/ReduxFormSelect'
+import { Field, FieldArray } from 'redux-form'
+import { renderField, renderReactSelectWrapper } from '../../../project/utils/ReduxFormFieldComponents'
 
-// todo translation
+export class ForeignFundForm extends React.Component {
 
-class ForeignFundDetailForm extends React.Component {
-  // constructor(props){
-  //   super(props)
-  // }
-
-
-
-  fund_sub_type = [
-    {value: 'cash', label: 'Cash'},
-    {value: 'reimbursable', label: 'Reimbursable'},
-    {value: 'direct payment', label: 'Direct Payment'},
-    {value: 'commodity', label: 'Commodity'}
-  ]
-  sub_type = [
-    {value: 'cash', label: 'Cash'},
-    {value: 'reimbursable', label: 'Reimbursable'},
-    {value: 'direct payment', label: 'Direct Payment'},
-    {value: 'commodity', label: 'Commodity'}
-  ]
-
-
-  render () {
+  render = () => {
+    // debugger;
     return (
-      <form>
-        <div className="row">
-          <div className="col-sm-6 col-md-3">
-            <label htmlFor="parent">Parent</label>
-            <Field name="parent" component={renderReactSelectWrapper}
-                   options={this.fund_sub_type}
-            />
-          </div>
-          <div className="col-sm-6 col-md-3">
-            <label htmlFor="beneficiary">Beneficiary Office</label>
-            <Field name="beneficiary" component={renderReactSelectWrapper}
-                   options={this.sub_type}
-            />
-          </div>
-          <div className="col-sm-6 col-md-3">
-            <label htmlFor="fiscal_year">Fiscal Year</label>
-            <Field name="fiscal_year" component={renderReactSelectWrapper} options={this.fund_sub_type}/>
-          </div>
-          <div className="col-sm-6 col-md-3">
-            <label htmlFor="budget_head">Budget Head</label>
-            <Field name="budget_head" component={renderReactSelectWrapper} options={this.fund_sub_type}/>
-          </div>
-          <div className="col-sm-6 col-md-3">
-            <label htmlFor="priority">Priority</label><br/>
-            <Field name="priority" component="input" type="text"/>
-          </div>
-        </div>
-        <div className="row">
-          <div>
+      <div>
+        <button type="button" onClick={() => this.props.fields.push({})}>
+          Add Foreign Fund
+        </button>
+        {this.props.meta.error && <span>{this.props.meta.error}</span>}
+        {this.props.fields.map(
+          (budget_distribution, index) =>
+            <div className="row" key={index}>
+              <div className="col-sm-6 col-md-3">
+                <Field name={`${budget_distribution}.budget_head`} component={renderReactSelectWrapper}
+                       label="Budget Head"
+                />
+              </div>
+              <div className="col-sm-6 col-md-3">
+                <Field name={`${budget_distribution}.permitted_budget`} component={renderField}
+                       label="Permitted Budget"
+                       type="number"
+                />
+              </div>
+              <div className="col-sm-6 col-md-3">
+                <Field name={`${budget_distribution}.government_fund`} component={renderField}
+                       label="Government Fund"
+                       type="number"
+                />
+              </div>
+              <div className="col-sm-6 col-md-3">
+                <Field name={`${budget_distribution}.remarks`} component={renderField}
+                       label="Remarks"
+                       type="text"
+                />
+              </div>
+              <div className="col-lg-4 col-md-6 col-sm-12">
+                  <FieldArray name="foreign_funds" component={renderForeignFundForm} />
+              </div>
+              <div className="col-sm-6 col-md-3">
+                <button
+                  type="button"
+                  title="Remove Distribution"
+                  onClick={() => this.props.fields.remove(index)}
+                >Remove Distribution
+                </button>
+              </div>
 
-          </div>
-        </div>
-      </form>
+            </div>
+        )}
+      </div>
     )
   }
 }
 
-const ForeignFundDetail = reduxForm({
-  // a unique name for the form
-  form: 'foreign_fund_detail'
-})(ForeignFundDetailForm)
-
-export default ForeignFundDetail
+export const renderForeignFundForm = props => (<ForeignFundForm {...props}/>)

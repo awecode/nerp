@@ -97,13 +97,13 @@ class AuthorityHandoverCreate(TemplateView):
                 'data': fiscal_year_choices,
                 'status': status
             },
-            {
-                'type': 'LOAD_CHOICES',
-                'app_name': 'core',
-                'model_name': 'budget_head',
-                'data': budget_head_choices,
-                'status': status
-            },
+            # {
+            #     'type': 'LOAD_CHOICES',
+            #     'app_name': 'core',
+            #     'model_name': 'budget_head',
+            #     'data': budget_head_choices,
+            #     'status': status
+            # },
             {
                 'type': 'LOAD_CHOICES',
                 'app_name': 'core',

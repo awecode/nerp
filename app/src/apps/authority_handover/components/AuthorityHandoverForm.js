@@ -1,7 +1,7 @@
 import React from 'react'
-import { Field, reduxForm } from 'redux-form'
-import Select from 'react-select'
-import { renderReactSelectWrapper } from '../../../project/utils/ReduxFormSelect'
+import { Field, FieldArray, reduxForm } from 'redux-form'
+import { renderField, renderReactSelectWrapper } from '../../../project/utils/ReduxFormFieldComponents'
+import { renderBudgetDistributions } from './BudgetDistributionForm'
 
 // todo translation
 
@@ -10,55 +10,61 @@ class AuthorityHandoverForm extends React.Component {
   //   super(props)
   // }
 
-
-
   fund_sub_type = [
     {value: 'cash', label: 'Cash'},
     {value: 'reimbursable', label: 'Reimbursable'},
     {value: 'direct payment', label: 'Direct Payment'},
     {value: 'commodity', label: 'Commodity'}
   ]
-  sub_type = [
-    {value: 'cash', label: 'Cash'},
-    {value: 'reimbursable', label: 'Reimbursable'},
-    {value: 'direct payment', label: 'Direct Payment'},
-    {value: 'commodity', label: 'Commodity'}
+  authority_handover_type = [
+    {value: 'first', label: 'First'},
+    {value: 'addition', label: 'Addition'},
+    {value: 'edited', label: 'Edited'},
   ]
-
 
   render () {
     return (
       <form>
         <div className="row">
           <div className="col-sm-6 col-md-3">
-            <label htmlFor="parent">Parent</label>
+            <Field name="type" component={renderReactSelectWrapper}
+                   options={this.authority_handover_type}
+                   label="Handover Type"
+            />
+          </div>
+          <div className="col-sm-6 col-md-3">
             <Field name="parent" component={renderReactSelectWrapper}
                    options={this.props.parent_options}
+                   label="Parent Handover"
             />
           </div>
           <div className="col-sm-6 col-md-3">
-            <label htmlFor="beneficiary">Beneficiary Office</label>
             <Field name="beneficiary" component={renderReactSelectWrapper}
                    options={this.props.beneficiary_options}
+                   label="Beneficiary Office"
             />
           </div>
           <div className="col-sm-6 col-md-3">
-            <label htmlFor="fiscal_year">Fiscal Year</label>
-            <Field name="fiscal_year" component={renderReactSelectWrapper} options={this.props.fiscal_year_options}/>
+            <Field name="fiscal_year" component={renderReactSelectWrapper}
+                   options={this.props.fiscal_year_options}
+                   label="Fiscal Year"
+            />
           </div>
           <div className="col-sm-6 col-md-3">
-            <label htmlFor="budget_head">Budget Head</label>
-            <Field name="budget_head" component={renderReactSelectWrapper} options={this.props.budget_head_options}/>
+            <Field name="budget_head" component={renderReactSelectWrapper}
+                   options={this.props.budget_head_options}
+                   label="Budget Head"
+            />
           </div>
           <div className="col-sm-6 col-md-3">
-            <label htmlFor="priority">Priority</label><br/>
-            <Field name="priority" component="input" type="text"/>
+            <Field name="priority_code" type="text" label="Priority" component={renderField}/>
+          </div>
+          <div className="col-sm-6 col-md-3">
+            <Field name="date" type="date" label="Date" component={renderField}/>
           </div>
         </div>
-        <div className="row">
-          <div>
-
-          </div>
+        <div>
+          <FieldArray name="budget_distributions" component={renderBudgetDistributions} />
         </div>
       </form>
     )
