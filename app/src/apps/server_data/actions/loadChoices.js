@@ -21,6 +21,7 @@ export  const startLoadingChoices = (app_name, model_name) => {
   }
 }
 
+// todo below is not applied yet
 export  const updateLoadingChoicesError = (app_name, model_name, error) => {
   return {
     type: 'LOAD_CHOICES_ERROR',
