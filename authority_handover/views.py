@@ -10,9 +10,9 @@ from app.utils.mixins import GroupRequiredMixin, ListView, CreateView, UpdateVie
 from authority_handover.filters import AuthorityHandoverFilter
 from authority_handover.forms import AuthorityHandoverForm, BudgetDistributionForm
 from authority_handover.models import AuthorityHandover, BudgetDistribution, Beneficiary
-from authority_handover.serializers import BeneficiaryChoiceSerializer
-from core.models import Donor, BudgetHead
-from core.serializers import DonorChoiceSerializer, BudgetHeadChoiceSerializer
+from authority_handover.serializers import BeneficiaryChoiceSerializer, AuthorityHandoverChoiceSerializer
+from core.models import Donor, BudgetHead, FiscalYear
+from core.serializers import DonorChoiceSerializer, BudgetHeadChoiceSerializer, FiscalYearChoiceSerializer
 
 
 class AuthorityHandoverView(GroupRequiredMixin):
@@ -46,25 +46,71 @@ class AuthorityHandoverCreate(TemplateView):
     template_name = "authority_handover/authorityhandover_form.html"
 
     def get_context_data(self, **kwargs):
-        context = dict()
-        context['server_data'] = dict()
-        context['server_data'] = dict()
-        context['server_data']['options'] = dict()
-        context['server_data']['options']['core'] = dict()
-        context['server_data']['options']['authority_handover'] = dict()
-        context['server_data']['options']['core']['donor'] = DonorChoiceSerializer(
+        context = {}
+
+        donor_choices = DonorChoiceSerializer(
             Donor.objects.all(),
             many=True
         ).data
-        context['server_data']['options']['core']['budget_head'] = BudgetHeadChoiceSerializer(
+        budget_head_choices = BudgetHeadChoiceSerializer(
             BudgetHead.objects.all(),
             many=True
         ).data
-        context['server_data']['options']['authority_handover']['beneficiary'] = BeneficiaryChoiceSerializer(
+
+        fiscal_year_choices = FiscalYearChoiceSerializer(
+            FiscalYear.objects.all(),
+            many=True
+        ).data
+
+        beneficiary_choices = BeneficiaryChoiceSerializer(
             Beneficiary.objects.all(),
             many=True
         ).data
-        import ipdb
-        ipdb.set_trace()
-        return context
 
+        authority_handover_choices = AuthorityHandoverChoiceSerializer(
+            AuthorityHandover.objects.all(),
+            many=True
+        ).data
+        status = {
+            'is_loading': False,
+            'error': None,
+        }
+        context['init_actions'] = [
+            {
+                'type': 'LOAD_CHOICES',
+                'app_name': 'authority_handover',
+                'model_name': 'authority_handover',
+                'data': authority_handover_choices,
+                'status': status
+            },
+            {
+                'type': 'LOAD_CHOICES',
+                'app_name': 'authority_handover',
+                'model_name': 'beneficiary',
+                'data': beneficiary_choices,
+                'status': status
+            },
+            {
+                'type': 'LOAD_CHOICES',
+                'app_name': 'core',
+                'model_name': 'fiscal_year',
+                'data': fiscal_year_choices,
+                'status': status
+            },
+            {
+                'type': 'LOAD_CHOICES',
+                'app_name': 'core',
+                'model_name': 'budget_head',
+                'data': budget_head_choices,
+                'status': status
+            },
+            {
+                'type': 'LOAD_CHOICES',
+                'app_name': 'core',
+                'model_name': 'donor',
+                'data': donor_choices,
+                'status': status
+            },
+        ]
+
+        return context

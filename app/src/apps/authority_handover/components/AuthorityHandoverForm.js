@@ -33,22 +33,22 @@ class AuthorityHandoverForm extends React.Component {
           <div className="col-sm-6 col-md-3">
             <label htmlFor="parent">Parent</label>
             <Field name="parent" component={renderReactSelectWrapper}
-                   options={this.fund_sub_type}
+                   options={this.props.parent_options}
             />
           </div>
           <div className="col-sm-6 col-md-3">
             <label htmlFor="beneficiary">Beneficiary Office</label>
             <Field name="beneficiary" component={renderReactSelectWrapper}
-                   options={this.sub_type}
+                   options={this.props.beneficiary_options}
             />
           </div>
           <div className="col-sm-6 col-md-3">
             <label htmlFor="fiscal_year">Fiscal Year</label>
-            <Field name="fiscal_year" component={renderReactSelectWrapper} options={this.fund_sub_type}/>
+            <Field name="fiscal_year" component={renderReactSelectWrapper} options={this.props.fiscal_year_options}/>
           </div>
           <div className="col-sm-6 col-md-3">
             <label htmlFor="budget_head">Budget Head</label>
-            <Field name="budget_head" component={renderReactSelectWrapper} options={this.fund_sub_type}/>
+            <Field name="budget_head" component={renderReactSelectWrapper} options={this.props.budget_head_options}/>
           </div>
           <div className="col-sm-6 col-md-3">
             <label htmlFor="priority">Priority</label><br/>

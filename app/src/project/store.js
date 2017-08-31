@@ -3,7 +3,7 @@ import logger from 'redux-logger';
 import {routerReducer, syncHistoryWithStore} from 'react-router-redux';
 import {createStore, combineReducers, applyMiddleware, compose} from 'redux';
 import { reducer as formReducer } from 'redux-form'
-import { serverData } from '../apps/server_data/reducers/getListAndDetail'
+import { choiceReducer } from '../apps/server_data/reducers/choiceReducer'
 
 const middleware = applyMiddleware(thunk, logger);
 // const middleware = applyMiddleware(thunk);
@@ -18,7 +18,9 @@ if (typeof(window) !== 'undefined') {
 
 const appReducer = combineReducers({
   routing: routerReducer,
-  server_data: serverData,
+  server_data: combineReducers({
+    choices: choiceReducer
+  }),
   form: formReducer
 });
 
@@ -41,6 +43,7 @@ export const store = createStore(
   preloadedState,
   composeEnhancers(middleware)
 );
+
 
 // const getInitialState = () => {
 //   const idbKeyVal = openDB();

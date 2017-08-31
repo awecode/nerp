@@ -11,11 +11,19 @@ export class ReactSelectWrapper extends React.Component {
   }
 
   onChange(value){
-    this.props.input.onChange(value.value)
+    if(value){
+      this.props.input.onChange(value.value)
+    }else{
+      this.props.input.onChange('')
+    }
   }
 
   onBlur(value){
-     this.props.input.onBlur(value.value)
+     if(value){
+      this.props.input.onBlur(value.value)
+    }else{
+      this.props.input.onBlur('')
+    }
   }
 
   render = () => {

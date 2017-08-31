@@ -26,6 +26,10 @@
 
 {% endblock %}
 {% block body_end %}
+    <script>
+      window.user_id = {{ request.user.id | default:'null' }}
+      window.init_actions = {{ init_actions |jsonify }}
+    </script>
     <script src="{% assets 'common' 'js' %}"></script>
     <script src="{% assets 'app' 'js' %}"></script>
 {% endblock %}

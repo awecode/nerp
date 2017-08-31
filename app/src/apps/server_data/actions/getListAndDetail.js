@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-fetch'
+import { startLoadingChoices } from './loadChoices'
 
 export const startGetRequest = (store_location) => {
   return {
@@ -31,25 +32,26 @@ export const receiveGetRequest = (store_location, received_data) => {
   }
 }
 
-function handleErrors(response) {
-    if (!response.ok) {
-        throw Error(response.statusText);
-    }
-    return response;
+function handleErrors (response) {
+  if (!response.ok) {
+    throw Error(response.statusText)
+  }
+  return response
 }
 
-
-export const fetchData = (url, store_location) => {
+export const fetchData = (url, onStartCallbackAction, onLoadCallbackAction, actionArguments) => {
   return dispatch => {
-    dispatch(startGetRequest(store_location))
+    dispatch(onStartCallbackAction(...actionArguments))
     return fetch(url)
-      .then(handleErrors)
+    // .then(handleErrors)
       .then(response => response.json())
-      .then(received_data =>
-        dispatch(receiveGetRequest(store_location, received_data)),
-        dispatch(endGetRequest(store_location))
+      .then(received_data => {
+          let args = [...actionArguments, received_data, {is_loading: false, error: null}]
+          debugger;
+          dispatch(onLoadCallbackAction(...args))
+        }
       )
-      // .catch(error => console.log(error) )
+    // .catch(error => console.log(error) )
   }
 }
 
