@@ -1,35 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'react_base.html' %}
 {% load i18n %}
-{% load staticfiles filters %}
-{% load webpack_assets %}
+{% block title %} {% trans 'Authority Handover' %}{% endblock %}
 
-{% block title %}{{ scenario }} {% trans 'Authority Handover' %}{% endblock %}
-
-
-
-{% block head %}
-    {# todo this should be at base page#}
-    <link rel="stylesheet" href="{% assets 'app' 'css' %}"/>
-{% endblock %}
-
-{% block breadcrumbs %}
-    {{ block.super }}
-    <li><a href="{% url "authority-handover-list" %}">{% trans 'Authority Handovers' %}</a></li>
-    <li><span>{% trans scenario %} {% trans "Authority Handover" %}</span></li>
-{% endblock %}
-
-{% block content %}
-    {{ assets }}
-    <div id="app" class="well">
-
-    </div>
-
-{% endblock %}
-{% block body_end %}
-    <script>
-      window.user_id = {{ request.user.id | default:'null' }}
-      window.init_actions = {{ init_actions |jsonify }}
-    </script>
-    <script src="{% assets 'common' 'js' %}"></script>
-    <script src="{% assets 'app' 'js' %}"></script>
-{% endblock %}

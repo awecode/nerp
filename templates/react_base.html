@@ -1,0 +1,36 @@
+{% load i18n %}
+{% load staticfiles webpack_assets filters %}
+<!DOCTYPE html>
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+
+    <link rel="icon" type="image/png" href="{% block favicon_url %}{% static 'favicon.ico' %}{% endblock %}"/>
+
+    <title>{% block title %}{% endblock %}</title>
+
+    {% block head %}
+        <link rel="stylesheet" href="{% assets 'app' 'css' %}"/>
+    {% endblock %}
+</head>
+<body>
+
+{% block content %}
+    <div id="app">
+
+    </div>
+{% endblock %}
+
+{% block body_end %}
+    <script>
+      window.user_id = {{ request.user.id | default:'null' }}
+        window.init_actions = {{ init_actions |jsonify }}
+    </script>
+    <script src="{% assets 'common' 'js' %}"></script>
+    <script src="{% assets 'app' 'js' %}"></script>
+{% endblock %}
+</body>
+</html>

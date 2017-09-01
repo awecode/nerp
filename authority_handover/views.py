@@ -9,8 +9,9 @@ from django.views.generic import DetailView, TemplateView
 from app.utils.mixins import GroupRequiredMixin, ListView, CreateView, UpdateView, DeleteView, FormsetViewMixin
 from authority_handover.filters import AuthorityHandoverFilter
 from authority_handover.forms import AuthorityHandoverForm, BudgetDistributionForm
-from authority_handover.models import AuthorityHandover, BudgetDistribution, Beneficiary
-from authority_handover.serializers import BeneficiaryChoiceSerializer, AuthorityHandoverChoiceSerializer
+from authority_handover.models import AuthorityHandover, BudgetDistribution, Beneficiary, ExpenditureHead
+from authority_handover.serializers import BeneficiaryChoiceSerializer, AuthorityHandoverChoiceSerializer, \
+    ExpenditureHeadChoiceSerializer
 from core.models import Donor, BudgetHead, FiscalYear
 from core.serializers import DonorChoiceSerializer, BudgetHeadChoiceSerializer, FiscalYearChoiceSerializer
 
@@ -71,6 +72,11 @@ class AuthorityHandoverCreate(TemplateView):
             AuthorityHandover.objects.all(),
             many=True
         ).data
+
+        expenditure_head_choices = ExpenditureHeadChoiceSerializer(
+            ExpenditureHead.objects.all(),
+            many=True
+        ).data
         status = {
             'is_loading': False,
             'error': None,
@@ -97,18 +103,25 @@ class AuthorityHandoverCreate(TemplateView):
                 'data': fiscal_year_choices,
                 'status': status
             },
-            # {
-            #     'type': 'LOAD_CHOICES',
-            #     'app_name': 'core',
-            #     'model_name': 'budget_head',
-            #     'data': budget_head_choices,
-            #     'status': status
-            # },
+            {
+                'type': 'LOAD_CHOICES',
+                'app_name': 'core',
+                'model_name': 'budget_head',
+                'data': budget_head_choices,
+                'status': status
+            },
             {
                 'type': 'LOAD_CHOICES',
                 'app_name': 'core',
                 'model_name': 'donor',
                 'data': donor_choices,
+                'status': status
+            },
+            {
+                'type': 'LOAD_CHOICES',
+                'app_name': 'authority_handover',
+                'model_name': 'expenditure_head',
+                'data': expenditure_head_choices,
                 'status': status
             },
         ]

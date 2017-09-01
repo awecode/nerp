@@ -1,6 +1,6 @@
 import React from 'react'
 import { Field, FieldArray, reduxForm } from 'redux-form'
-import { renderField, renderReactSelectWrapper } from '../../../project/utils/ReduxFormFieldComponents'
+import { renderField, renderReactSelectWrapper } from '../../../project/components/ReduxFormFieldComponents'
 import { renderBudgetDistributions } from './BudgetDistributionForm'
 
 // todo translation

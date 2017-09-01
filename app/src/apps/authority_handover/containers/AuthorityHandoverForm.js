@@ -21,6 +21,7 @@ const AuthorityHandoverForm = connect(state => {
     beneficiary_options: getOptions(state, 'authority_handover', 'beneficiary', '/api/v1/beneficiary/choices/'),
     fiscal_year_options: getOptions(state, 'core', 'fiscal_year', '/api/v1/fiscal-year/choices/'),
     budget_head_options: getOptions(state, 'core', 'budget_head', '/api/v1/budget-head/choices/'),
+    expenditure_head_options: getOptions(state, 'authority_handover', 'expenditure_head', '/api/v1/expenditure-head/choices/'),
   }
 })(AuthorityHandover)
 
