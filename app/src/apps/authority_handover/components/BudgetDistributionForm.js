@@ -2,6 +2,7 @@ import React from 'react'
 import { Field, FieldArray } from 'redux-form'
 import { renderField, renderReactSelectWrapper } from '../../../project/components/ReduxFormFieldComponents'
 import { renderForeignFundForm } from './ForeignFundDetailForm'
+import { getOptions } from '../../server_data/actions/query'
 
 class BudgetDistributionForm extends React.Component {
 
@@ -27,6 +28,7 @@ class BudgetDistributionForm extends React.Component {
                   <td>
                     <Field name={`${budget_distribution}.expenditure_head`} component={renderReactSelectWrapper}
                            label="Expenditure Head"
+                           options={getOptions('authority_handover', 'expenditure_head', '/api/v1/expenditure-head/choices/')}
                     />
                   </td>
                   <td>
@@ -59,7 +61,7 @@ class BudgetDistributionForm extends React.Component {
                 </tr>
                 </tbody>
               </table>
-              <FieldArray name="foreign_funds" component={renderForeignFundForm}/>
+              <FieldArray name={`${budget_distribution}.foreign_funds`} component={renderForeignFundForm}/>
             </div>
         )}
         <button type="button" onClick={() => this.props.fields.push({})} className="btn btn-success">

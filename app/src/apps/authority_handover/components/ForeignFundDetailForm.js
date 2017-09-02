@@ -1,6 +1,7 @@
 import React from 'react'
 import { Field, FieldArray } from 'redux-form'
 import { renderField, renderReactSelectWrapper } from '../../../project/components/ReduxFormFieldComponents'
+import { getOptions } from '../../server_data/actions/query'
 
 class ForeignFundForm extends React.Component {
   // constructor(props){
@@ -27,15 +28,18 @@ class ForeignFundForm extends React.Component {
         {this.props.meta.error && <span>{this.props.meta.error}</span>}
         <table className="table table-striped input-table table-bordered">
           <thead>
-          <th>Type</th>
-          <th>Sub Type</th>
-          <th>Donor</th>
-          <th>Amount</th>
+          <tr>
+            <th>Type</th>
+            <th>Sub Type</th>
+            <th>Donor</th>
+            <th>Amount</th>
+            <th></th>
+          </tr>
           </thead>
           <tbody>
           {this.props.fields.map(
             (foreign_fund, index) =>
-              <tr>
+              <tr key={index}>
                 <td>
                   <Field name={`${foreign_fund}.type`} component={renderReactSelectWrapper}
                          label="Type"
@@ -51,6 +55,7 @@ class ForeignFundForm extends React.Component {
                 <td>
                   <Field name={`${foreign_fund}.donor`} component={renderReactSelectWrapper}
                          label="Donor"
+                         options={getOptions('core', 'donor', '/api/v1/donor/choices/')}
                   />
                 </td>
                 <td>

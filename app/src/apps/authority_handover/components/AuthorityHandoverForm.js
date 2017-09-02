@@ -2,6 +2,7 @@ import React from 'react'
 import { Field, FieldArray, reduxForm } from 'redux-form'
 import { renderField, renderReactSelectWrapper } from '../../../project/components/ReduxFormFieldComponents'
 import { renderBudgetDistributions } from './BudgetDistributionForm'
+import { getOptions } from '../../server_data/actions/query'
 
 // todo translation
 
@@ -34,25 +35,25 @@ class AuthorityHandoverForm extends React.Component {
           </div>
           <div className="col-sm-6 col-md-3">
             <Field name="parent" component={renderReactSelectWrapper}
-                   options={this.props.parent_options}
+                   options={getOptions('authority_handover', 'authority_handover', '/api/v1/authority-handover/choices/')}
                    label="Parent Handover"
             />
           </div>
           <div className="col-sm-6 col-md-3">
             <Field name="beneficiary" component={renderReactSelectWrapper}
-                   options={this.props.beneficiary_options}
+                   options={getOptions('authority_handover', 'beneficiary', '/api/v1/beneficiary/choices/')}
                    label="Beneficiary Office"
             />
           </div>
           <div className="col-sm-6 col-md-3">
             <Field name="fiscal_year" component={renderReactSelectWrapper}
-                   options={this.props.fiscal_year_options}
+                   options={getOptions('core', 'fiscal_year', '/api/v1/fiscal-year/choices/')}
                    label="Fiscal Year"
             />
           </div>
           <div className="col-sm-6 col-md-3">
             <Field name="budget_head" component={renderReactSelectWrapper}
-                   options={this.props.budget_head_options}
+                   options={getOptions('core', 'budget_head', '/api/v1/budget-head/choices/')}
                    label="Budget Head"
             />
           </div>
