@@ -24,56 +24,58 @@ class ForeignFundForm extends React.Component {
     // debugger;
     return (
       <div>
-        <div className="col-12">
-          <button type="button" onClick={() => this.props.fields.push({})} className="btn btn-success">
-            Add Foreign Fund
-          </button>
-        </div>
-
         {this.props.meta.error && <span>{this.props.meta.error}</span>}
-        {this.props.fields.map(
-          (foreign_fund, index) =>
-            <div className="card">
-              <div className="card-block">
-                <div className="row" key={index}>
-                  <div className="col-sm-6 col-md-3">
-                    <Field name={`${foreign_fund}.type`} component={renderReactSelectWrapper}
-                           label="Type"
-                           options={this.type_options}
-                    />
-                  </div>
-                  <div className="col-sm-6 col-md-3">
-                    <Field name={`${foreign_fund}.subtype`} component={renderReactSelectWrapper}
-                           label="Sub Type"
-                           options={this.sub_type_options}
-                    />
-                  </div>
-                  <div className="col-sm-6 col-md-3">
-                    <Field name={`${foreign_fund}.donor`} component={renderReactSelectWrapper}
-                           label="Donor"
-                    />
-                  </div>
+        <table className="table table-striped input-table table-bordered">
+          <thead>
+          <th>Type</th>
+          <th>Sub Type</th>
+          <th>Donor</th>
+          <th>Amount</th>
+          </thead>
+          <tbody>
+          {this.props.fields.map(
+            (foreign_fund, index) =>
+              <tr>
+                <td>
+                  <Field name={`${foreign_fund}.type`} component={renderReactSelectWrapper}
+                         label="Type"
+                         options={this.type_options}
+                  />
+                </td>
+                <td>
+                  <Field name={`${foreign_fund}.subtype`} component={renderReactSelectWrapper}
+                         label="Sub Type"
+                         options={this.sub_type_options}
+                  />
+                </td>
+                <td>
+                  <Field name={`${foreign_fund}.donor`} component={renderReactSelectWrapper}
+                         label="Donor"
+                  />
+                </td>
+                <td>
+                  <Field name={`${foreign_fund}.amount`} component={renderField}
+                         label="Amount"
+                         type="number"
+                  />
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    title="Remove Fund"
+                    className="btn btn-danger"
+                    onClick={() => this.props.fields.remove(index)}
+                  >Remove
+                  </button>
+                </td>
+              </tr>
+          )}
 
-                  <div className="col-sm-6 col-md-3">
-                    <Field name={`${foreign_fund}.amount`} component={renderField}
-                           label="Amount"
-                           type="number"
-                    />
-
-                  </div>
-                  <div className="col-sm-6 col-md-3">
-                    <button
-                      type="button"
-                      title="Remove Fund"
-                      className="btn btn-danger"
-                      onClick={() => this.props.fields.remove(index)}
-                    >Remove Foreign Fund
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-        )}
+          </tbody>
+        </table>
+        <button type="button" onClick={() => this.props.fields.push({})} className="btn btn-success">
+          Add Foreign Fund
+        </button>
       </div>
     )
   }

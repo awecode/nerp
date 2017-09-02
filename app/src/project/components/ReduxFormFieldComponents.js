@@ -29,9 +29,7 @@ export class ReactSelectWrapper extends React.Component {
   render = () => {
     return (
       <div className="form-group">
-        <label>
-          {this.props.label}
-        </label>
+
         <Select {...this.props}
                 onBlur={this.onBlur}
                 onChange={this.onChange}
@@ -47,16 +45,10 @@ export const renderReactSelectWrapper = props => (<ReactSelectWrapper {...props}
 
 export const renderField = ({input, label, type, meta: {touched, error}}) =>
   <div>
-
-    <div className="form-group">
-      <label>
-        {label}
-      </label><br/>
-      <input {...input} type={type} placeholder={label}/>
-      {touched &&
+    <input {...input} type={type} placeholder={label} />
+    {touched &&
       error &&
-      <span>
+        <span>
           {error}
         </span>}
-    </div>
   </div>
