@@ -25,7 +25,9 @@ class AuthorityHandoverForm extends React.Component {
 
   render () {
     return (
-      <form>
+      <div className="card">
+        <div className="card-block">
+          <form>
         <div className="row">
           <div className="col-sm-6 col-md-3">
             <Field name="type" component={renderReactSelectWrapper}
@@ -68,6 +70,8 @@ class AuthorityHandoverForm extends React.Component {
           <FieldArray name="budget_distributions" component={renderBudgetDistributions} />
         </div>
       </form>
+        </div>
+      </div>
     )
   }
 }
