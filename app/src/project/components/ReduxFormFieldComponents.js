@@ -28,7 +28,7 @@ export class ReactSelectWrapper extends React.Component {
 
   render = () => {
     return (
-      <div className="form-group">
+      <div className="form-group" >
 
         <Select {...this.props}
                 onBlur={this.onBlur}

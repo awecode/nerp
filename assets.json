@@ -1,1 +1,9 @@
-{"app":{"js":"dist/js/app.bundle-8b27577eba90e8788dd7.js","css":"dist/css/app-8b27577eba90e8788dd7.css"},"common":{"js":"dist/js/common.bundle-8b27577eba90e8788dd7.js"}}
+{
+  "app": {
+    "js": "dist/js/app.bundle-c698deee8fa06636307f.js",
+    "css": "dist/css/app-c698deee8fa06636307f.css"
+  },
+  "common": {
+    "js": "dist/js/common.bundle-c698deee8fa06636307f.js"
+  }
+}
