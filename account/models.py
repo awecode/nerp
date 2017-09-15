@@ -10,13 +10,15 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
+from django.db.models import Q
 
 from app.utils.helpers import zero_for_none, none_for_zero, model_exists_in_db
 from core.models import FiscalYear, Donor, Activity, BudgetHead, TaxScheme
+from django.db.models import F
 
 
 class Category(MPTTModel):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     description = models.CharField(max_length=254, null=True, blank=True)
     parent = TreeForeignKey('self', blank=True, null=True, related_name='children')
     # company = models.ForeignKey(Company)
@@ -255,6 +257,8 @@ def set_transactions(submodel, date, *args):
                     zero_for_none(transaction.account.current_dr) + transaction.dr_amount)
                 alter(arg[1], date, float(arg[2]), 0)
             if arg[0] == 'cr':
+                # import ipdb
+                # ipdb.set_trace()
                 transaction.cr_amount = float(zero_for_none(arg[2]))
                 transaction.dr_amount = None
                 transaction.account.current_cr = none_for_zero(
@@ -281,6 +285,8 @@ def set_transactions(submodel, date, *args):
 
             # save new dr_amount and add it to current_dr/cr
             if arg[0] == 'dr':
+                # import ipdb
+                # ipdb.set_trace()
                 dr_difference = float(arg[2]) - zero_for_none(transaction.dr_amount)
                 cr_difference = zero_for_none(transaction.cr_amount) * -1
                 alter(arg[1], transaction.journal_entry.date, dr_difference, cr_difference)
@@ -363,11 +369,11 @@ class Node(object):
         return self.name
 
 
-@receiver(post_save, sender=FiscalYear)
-def fy_add(sender, instance, created, **kwargs):
-    if created:
-        Account.objects.create(name='Ka-7-15', fy=instance)
-        Account.objects.create(name='Ka-7-17', fy=instance)
+# @receiver(post_save, sender=FiscalYear)
+# def fy_add(sender, instance, created, **kwargs):
+#     if created:
+#         Account.objects.create(name='Ka-7-15', fy=instance)
+#         Account.objects.create(name='Ka-7-17', fy=instance)
 
 
 @receiver(pre_delete, sender=Transaction)
@@ -391,9 +397,27 @@ from django.db.models.signals import post_save
 
 @receiver(post_save, sender=FiscalYear)
 def fy_add(sender, instance, created, **kwargs):
-    if created and model_exists_in_db(Account):
-        Account.objects.create(name='Ka-7-15', fy=instance)
-        Account.objects.create(name='Ka-7-17', fy=instance)
+
+    from hr.models import EmployeeAccount
+    if created and model_exists_in_db(Account) and model_exists_in_db(EmployeeAccount):
+        employee_accounts = Account.objects.filter(~Q(employee_account=None))
+        for emp_acc in employee_accounts:
+            EmployeeAccount.objects.get_or_create(
+                employee=emp_acc.employee_account.employee,
+                account=Account.objects.get_or_create(
+                    name=emp_acc.name,
+                    category=emp_acc.category,
+                    fy=instance
+                )[0]
+            )
+
+        non_employee_accounts = Account.objects.filter(employee_account=None)
+        for non_emp_acc in non_employee_accounts:
+            Account.objects.get_or_create(
+                name=non_emp_acc.name,
+                category=non_emp_acc.category,
+                fy=instance
+            )
 
 
 class Party(models.Model):

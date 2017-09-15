@@ -1,0 +1,132 @@
+{% extends "hr_base.html" %}
+{% load i18n %}
+{% load filters %}
+{% load staticfiles %}
+
+{% block title %} {% trans 'PayRoll' %}{% endblock %}
+
+
+{% block head_end %}
+    {#    <script src="{% static 'js/ils/outgoing.js' %}"></script>#}
+
+{% endblock %}
+
+
+{% block content %}
+    <div class="well">
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="listing-box">
+                    <p class="text-center">{% trans 'Payroll' %}</p>
+                    <ul class="list-unstyled">
+                        <li class="text-center">
+                            <a href="{% url 'payroll_entry' %}">{% trans "Generate Payroll" %}</a>
+                        </li>
+                        <li class="text-center">
+                            <a href="{% url 'entry_list' %}">{% trans "Payroll Entry List" %}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="listing-box">
+                    <p class="text-center">{% trans 'Employee' %}</p>
+                    <ul class="list-unstyled">
+                        <li class="text-center">
+                            <a href="{% url 'employee_grade_group' %}">{% trans "Employee Grade Group" %}</a>
+                        </li>
+                        <li class="text-center">
+                            <a href="{% url 'employee_grade' %}">{% trans "Employee Grade" %}</a>
+                        </li>
+                        <li class="text-center">
+                            <a href="{% url 'employee_designation' %}">{% trans "Designation Entry" %}</a>
+                        </li>
+                        <li class="text-center">
+                            <a href="{% url 'add_employee' %}">{% trans "Employee Add" %}</a>
+                        </li>
+                        <li class="text-center">
+                            <a href="{% url 'list_employee' %}">{% trans "Employee List" %}</a>
+                        </li>
+                        <li class="text-center">
+                            <a href="{% url 'grade-scale-entry' %}">{% trans "Grade Scale Entry" %}</a>
+                        </li>
+                        <li class="text-center">
+                            <a href="#">{% trans "Import Existing Employee" %}</a>
+                        </li>
+                        <li class="text-center">
+                            <a href="{% url 'facility_curd' %}">{% trans "Add Employee Facility" %}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="listing-box">
+                    <p class="text-center">{% trans 'Allowances/ Incentives and Deductions' %}</p>
+                    <ul class="list-unstyled">
+                        <li class="text-center">
+                            <a href="{% url 'add_allowance' %}">{% trans "Allowance Add" %}</a>
+                        </li>
+                        <li class="text-center">
+                            <a href="{% url 'incentivename_curd' %}">{% trans "Incentive Name Entry" %}</a>
+                        </li>
+                        <li class="text-center">
+                            <a href="{% url 'deduction_name' %}">{% trans "Deduction Name Entry" %}</a>
+                        </li>
+                        <li class="text-center">
+                            <a href="{% url 'deduction' %}">{% trans "Deduction Detail Entry" %}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="listing-box">
+                    <p class="text-center">{% trans 'Tax' %}</p>
+                    <ul class="list-unstyled">
+                        <li class="text-center">
+                            <a href="{% url 'taxdeduction_list' %}">{% trans "Tax Deduction List" %}</a>
+                        </li>
+                        <li class="text-center">
+                            <a href="{% url 'list_tax_scheme' %}">{% trans "Tax Scheme List" %}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="listing-box">
+                    <p class="text-center">{% trans 'Report' %}</p>
+                    <ul class="list-unstyled">
+                        <li class="text-center">
+                            <a href="{% url 'get_report' %}">{% trans "Generate" %} {% trans "Report" %}</a>
+                        </li>
+                        <li class="text-center">
+                            <a href="{% url 'list_report_setting' %}">{% trans "Report" %} {% trans "Settings" %} {% trans "List" %}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="listing-box">
+                    <p class="text-center">{% trans 'Branch' %} {% trans 'and' %} {% trans 'Accountant' %}</p>
+                    <ul class="list-unstyled">
+                        <li class="text-center">
+                            <a href="{% url 'branch_list' %}">{% trans "List" %} {% trans "Branch" %}</a>
+                        </li>
+                        <li class="text-center">
+                            <a href="{% url 'payroll_accountant_list' %}">{% trans "List" %} {% trans "Payroll" %} {% trans 'Accountant' %}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="listing-box">
+                    <p class="text-center">{% trans 'Pro Tempore' %}</p>
+                    <ul class="list-unstyled">
+                        <li class="text-center">
+                            <a href="{% url 'protempore_list' %}">{% trans "Pro Tempore" %} {% trans "List" %}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

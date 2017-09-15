@@ -1,0 +1,12 @@
+{
+  "_comment": "title: social security tax detail table",
+  "fields": {
+    "tax_amount": "tax_details___tax_deduction__code_name=Social Security Tax;__amount",
+    "designation": "paid_employee__designation__designation_name",
+    "pan_number": "paid_employee__pan_number",
+    "employee_name": "paid_employee__name"
+  },
+  "totalling_fields": {
+    "tax_amount": "tax_details___tax_deduction__code_name=Social Security Tax;__amount"
+  }
+}

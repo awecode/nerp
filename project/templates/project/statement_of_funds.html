@@ -17,11 +17,13 @@
             {% csrf_token %}
             <table class="table table-striped table-responsive table-bordered center-headings">
                 <thead>
-                <th>{% trans "Particulars" %}</th>
-                <th>{% trans "Previous Year" %}</th>
-                <th>{% trans "Cumulative up to previous year" %}</th>
-                <th>{% trans "Current Year" %}</th>
-                <th>{% trans "Cumulative up to Current Year" %}</th>
+                <tr>
+                    <th>{% trans "Particulars" %}</th>
+                    <th>{% trans "Previous Year" %}</th>
+                    <th>{% trans "Cumulative up to previous year" %}</th>
+                    <th>{% trans "Current Year" %}</th>
+                    <th>{% trans "Cummulative up to Current Year" %}</th>
+                </tr>
                 </thead>
                 <tbody>
                 <tr>

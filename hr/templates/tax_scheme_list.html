@@ -1,0 +1,87 @@
+{% extends 'hr_base.html' %}
+{% load staticfiles %}
+
+{% load filters %}
+{% load i18n %}
+
+{% block head_end %}
+
+{% endblock %}
+{% block breadcrumbs %}
+    {{ block.super }}
+        <li><a href="{% url 'payroll_entry' %}">{% trans 'Payroll Entry' %}</a>
+        <li><a href="{% url 'entry_list' %}">{% trans 'Entry List' %}</a>
+
+{% endblock %}
+{% block breadcrumbs_before_print %}
+{% endblock %}
+
+{% block alert %}
+
+    <!-- <div id="alert_placeholder">
+        <ul data-bind="foreach: errors.items" class="alert-error">
+            <li>
+                Budget for "<span data-bind="text: budget.name()"></span>" from source "<span data-bind="text: source"></span>" exceeds
+            </li>
+        </ul>
+    </div> -->
+{% endblock %}
+
+{% block  content %}
+    <table class="table table-striped" >
+        
+        {% if m_objects %}
+        <tr>
+            <td colspan="100%" class="active"><a href={% url 'edit_taxscheme' m_objects.0.marital_status.id %}>MARRIED</a> <span class="pull-right"><a href={% url 'delete_taxscheme' m_objects.0.marital_status.id %}><input class="btn btn-raised btn-danger" type="button" value="Delete"></a></span></td>
+        </tr>
+        <tr class="active">
+            <th>From</th>
+            <th>To</th>
+            
+        </tr>
+        {% endif %}
+        {% for obj in m_objects %}
+            <tr>
+                
+                <td><a href={% url 'edit_tax_scheme' obj.id %}>{{ obj.start_from }}</a></td>
+                {% if obj.end_to %}
+                    <td><a href={% url 'edit_tax_scheme' obj.id %}>{{ obj.end_to }}</a></td>
+                {% else %}
+                    <td><a href={% url 'edit_tax_scheme' obj.id %}>Infinity</a></td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        {% if u_objects %}
+        <tr>
+            <td colspan="100%" class="active">
+                <a href={% url 'edit_taxscheme' u_objects.0.marital_status.id %}>UNMARRIED</a>
+                <span class="pull-right">
+                    <a href={% url 'delete_taxscheme' u_objects.0.marital_status.id %}>
+                        <input class="btn btn-raised btn-danger" type="button" value="Delete">
+                    </a>
+                </span>
+            </td>
+        </tr>
+        <tr class="active">
+            <th>From</th>
+            <th>To</th>
+            
+        </tr>
+        {% endif %}
+        {% for obj1 in u_objects %}
+            <tr>
+                
+                <td><a href={% url 'edit_tax_scheme' obj1.id %}>{{ obj1.start_from }}</a></td>
+                {% if obj1.end_to %}
+                    <td><a href={% url 'edit_tax_scheme' obj1.id %}>{{ obj1.end_to }}</a></td>
+                {% else %}
+                    <td><a href={% url 'edit_tax_scheme' obj1.id %}>Infinity</a></td>
+                {% endif %}
+
+            </tr>
+        {% endfor %}
+    </table>
+    <a href={% url 'add_taxscheme' %}><input class="btn btn-raised btn-primary" type="button" value="Add New Scheme"></a>
+    
+    
+{% endblock %}

@@ -1,0 +1,31 @@
+.inline-calendar input {
+    display: inline-block;
+}
+
+.td-input-calendar {
+    width: 70% !important;
+}
+
+.fbox.well{
+	margin: 0 auto;
+	padding: 10px;
+	height: auto;
+
+}
+
+.ftable > table > tbody > tr > td{
+	padding-left: 10px;
+	border: 0px;
+}
+
+
+/*.fbox > form > div > label{*/
+	/*padding-left: 20px;*/
+/*}*/
+
+/*.fbox > form > div > select{*/
+	/*margin-left: 10px !important;*/
+/*}*/
+/*.datepicker {*/
+    /*z-index: 1151 !important;*/
+/*}*/

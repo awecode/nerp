@@ -1,0 +1,110 @@
+{% extends 'hr_base.html' %}
+{% load staticfiles %}
+
+{% load filters %}
+{% load i18n %}
+
+{% block head_end %}
+
+    <link rel="stylesheet" href="{% static 'hr/css/plugins/toastr/toastr.css' %}">
+    <script src="{% static 'hr/js/plugins/toastr/toastr.js' %}"></script>
+    <script src="{% static 'hr/js/plugins/blockUI/jquery.blockUI.js' %}"></script>
+    <script src="{% static 'hr/js/App.js' %}"></script>
+
+
+
+    <script src="{% static 'js/vendors/knockout-mapping-plugin.js' %}"></script>
+    <script src="{% static 'hr/js/report_field_chooser.js' %}"></script>
+    <script src="{% static 'hr/js/hr_report_cu.js' %}"></script>
+    <script>
+        ko_data = {{ko_data|jsonify}}
+                $(document).on('click', '.dropdown-menu', function (e) {
+                    e.stopPropagation();
+                });
+    </script>
+
+{% endblock %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li><a href="{% url 'payroll_entry' %}">{% trans 'Payroll Entry' %}</a>
+    <li><a href="{% url 'entry_list' %}">{% trans 'Entry List' %}</a>
+    <li><a href="{% url 'list_report_setting' %}">{% trans 'Report Setting List' %}</a>
+
+{% endblock %}
+{% block breadcrumbs_before_print %}
+{% endblock %}
+
+{% block alert %}
+
+    <!-- <div id="alert_placeholder">
+        <ul data-bind="foreach: errors.items" class="alert-error">
+            <li>
+                Budget for "<span data-bind="text: budget.name()"></span>" from source "<span data-bind="text: source"></span>" exceeds
+            </li>
+        </ul>
+    </div> -->
+{% endblock %}
+
+{% block content %}
+    <div class="well">
+        <form method="POST" data-bind="submit: save_report">
+            {% csrf_token %}
+            {{ hr_report_form }}
+
+            <h3>{% trans 'Report Tables' %}</h3>
+            <!-- ko foreach: report_tables -->
+            <button class="btn btn-raised btn-danger" data-bind="click: $root.remove_table">{% trans 'Remove Table' %}</button>
+            <table class="table table-stripped table-bordered">
+                <thead>
+                <tr>
+                    <th colspan="1">{{ report_table_form.title.label }}</th>
+                    <th data-bind="editableText: title" colspan="4"></th>
+                </tr>
+                <tr>
+                    <th>
+                        {{ report_table_detail_form.field_name.label }}
+                    </th>
+                    <th>
+                        {{ report_table_detail_form.field_description.label }}
+                    </th>
+                    <th>
+                        {{ report_table_detail_form.order.label }}
+                    </th>
+                    <th>
+                        {{ report_table_detail_form.need_total.label }}
+                    </th>
+                    <th>
+                        {% trans 'Remove' %}
+                    </th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <!-- ko foreach: table_details -->
+                <tr>
+                    <td data-bind="editableText: field_name"></td>
+                    <td>
+                        <report-field-chooser params="{
+                            value_obs : field_description
+                        }"></report-field-chooser>
+                    </td>
+                    <td data-bind="editableText: order, numeric: true"></td>
+                    <td>{{ report_table_detail_form.need_total }}</td>
+                    <td><button class="btn btn-raised btn-danger" data-bind="click: $parent.remove_field">{% trans 'Remove' %}</button></td>
+                </tr>
+                <!-- /ko -->
+                <tr>
+                    <td colspan="5">
+                        <button class='btn btn-primary btn-raised'
+                                data-bind="click: add_new_field">{% trans 'Add New Table Field' %}</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <!-- /ko -->
+
+            <button class='btn btn-primary btn-raised' data-bind="click: add_new_table">{% trans 'Add New Table' %}</button>
+            <input type="submit" class="btn btn-primary btn-raised" value="Save">
+        </form>
+    </div>
+{% endblock %}

@@ -116,7 +116,7 @@ class CreateView(BaseCreateView):
         if self.request.is_ajax():
             base_template = 'modal.html'
         else:
-            base_template = 'base.html'
+            base_template = 'hr_report_base.html'
         context['base_template'] = base_template
         return context
 

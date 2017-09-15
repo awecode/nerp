@@ -24,3 +24,5 @@ WeasyPrint
 requests
 django-admin-sortable2
 django-solo
+
+django-import-export==0.5.1

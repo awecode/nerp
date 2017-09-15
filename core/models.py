@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+    # -*- coding: utf-8 -*-
 from django.core.exceptions import ValidationError
 from django.db import models
 from njango.models import TranslatableNumberModel
@@ -14,6 +14,7 @@ FISCAL_YEARS = (
     (2070, "2070/71"),
     (2071, "2071/72"),
     (2072, "2072/73"),
+    (2073, "2073/74"),
 )
 
 SOURCES = [('nepal_government', 'Nepal Government'), ('foreign_cash_grant', 'Foreign Cash Grant'),
@@ -49,25 +50,38 @@ class FiscalYear(models.Model):
         return fy
 
     @staticmethod
-    def start(year=None):
+    def start(year=None, for_payroll=None):
         if not year:
             year = AppSetting.get_solo().fiscal_year
         fiscal_year_start = str(year) + '-04-01'
+        print fiscal_year_start
         tuple_value = tuple_from_string(fiscal_year_start)
-        calendar = get_calendar()
-        if calendar == 'ad':
-            tuple_value = bs2ad(tuple_value)
+        if for_payroll:
+            from hr.models import PayrollConfig
+            calendar = PayrollConfig.get_solo().hr_calendar
+            if calendar == 'AD':
+                tuple_value = bs2ad(tuple_value)
+        else:
+            calendar = get_calendar()
+            if calendar == 'ad':
+                tuple_value = bs2ad(tuple_value)
         return tuple_value
 
     @staticmethod
-    def end(year=None):
+    def end(year=None, for_payroll=None):
         if not year:
             year = AppSetting.get_solo().fiscal_year
         fiscal_year_end = str(int(year) + 1) + '-03-' + str(bs[int(year) + 1][2])
         tuple_value = tuple_from_string(fiscal_year_end)
-        calendar = get_calendar()
-        if calendar == 'ad':
-            tuple_value = bs2ad(tuple_value)
+        if for_payroll:
+            from hr.models import PayrollConfig
+            calendar = PayrollConfig.get_solo().hr_calendar
+            if calendar == 'AD':
+                tuple_value = bs2ad(tuple_value)
+        else:
+            calendar = get_calendar()
+            if calendar == 'ad':
+                tuple_value = bs2ad(tuple_value)
         return tuple_value
 
     def __unicode__(self):

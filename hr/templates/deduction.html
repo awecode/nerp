@@ -1,0 +1,115 @@
+{% extends 'hr_base.html' %}
+{% load staticfiles %}
+
+{% load filters %}
+{% load i18n %}
+
+{% block head_end %}
+    {{ block.super }}
+
+    <link rel="stylesheet" href="{% static 'hr/css/plugins/toastr/toastr.css' %}">
+    <script src="{% static 'hr/js/plugins/toastr/toastr.js' %}"></script>
+    <script src="{% static 'hr/js/plugins/blockUI/jquery.blockUI.js' %}"></script>
+    <script src="{% static 'hr/js/App.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap/datepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'css/vendors/nepali.datepicker.v2.1.min.css' %}">
+    <script src="{% static 'js/vendors/knockout-mapping-plugin.js' %}"></script>
+    <script src="{% static 'js/vendors/nepali.datepicker.v2.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap/bootstrap-datepicker.js' %}"></script>
+
+    <script src="{% static 'hr/js/deduction.js' %}"></script>
+    <script src="{% static 'hr/js/select_item_modal.js' %}"></script>
+
+    <script>
+        $(document).ready(function () {
+            vm = new deduction.vm();
+            ko.applyBindings(vm);
+        });
+
+    </script>
+{% endblock %}
+{% block title %}
+    {% trans 'Add or Remove Deductions' %}
+{% endblock %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li><a href="{% url 'payroll_entry' %}">{% trans 'Payroll Entry' %}</a></li>
+    <li><a href="{% url 'entry_list' %}">{% trans 'Entry List' %}</a></li>
+
+{% endblock %}
+{% block breadcrumbs_before_print %}
+{% endblock %}
+
+{% block alert %}
+
+    <!-- <div id="alert_placeholder">
+        <ul data-bind="foreach: errors.items" class="alert-error">
+            <li>
+                Budget for "<span data-bind="text: budget.name()"></span>" from source "<span data-bind="text: source"></span>" exceeds
+            </li>
+        </ul>
+    </div> -->
+{% endblock %}
+
+
+{% block  content %}
+
+    <div class="well">
+        {#    This is validity Modal#}
+        <select-crud-modal params="{
+            api_url: validity_api_url,
+            modal_name: 'Deduction Validity',
+            select_list_obs: available_deduction_validities,
+            selected_item_obs: selected_validity,
+            optionsText : function(item){return 'Valid From: ' + item.valid_from()},
+            optionsCaption: 'Select Deduction Validity..',
+
+            form_observables: function(){
+                var self = this;
+                self.id = ko.observable();
+                self.valid_from = ko.observable();
+                self.note = ko.observable();
+            }
+        }">
+            <form>
+                {{ dv_form.media }}
+                <div class="inline-calendar">
+                    {{ dv_form }}
+                </div>
+            </form>
+
+        </select-crud-modal>
+        {#    End This is validity Modal#}
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>{% trans 'Name' %}</th>
+                <th>{% trans 'Deduction' %} {% trans 'Type' %}</th>
+                <th>{% trans 'Value' %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- ko foreach: deductions  -->
+            <tr data-bind="with: deduction">
+                <td data-bind="text: $parent.name"></td>
+                <td><select class="form-control"
+                            data-bind="options: [{name: 'Amount', value: 'AMOUNT'}, {name: 'Rate', value: 'RATE'}], optionsText: 'name', optionsValue: 'value', value: deduct_type"></select>
+                </td>
+                <td data-bind="editableText: value, numeric:true"></td>
+
+            </tr>
+            <!-- /ko -->
+            </tbody>
+        </table>
+
+        <button class="btn btn-primary btn-raised"
+                data-bind="click: save, visible: typeof(selected_validity()) != 'undefined'">{% trans 'Save' %}
+        </button>
+
+
+    </div>
+
+
+{% endblock %}

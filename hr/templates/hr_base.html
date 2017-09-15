@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load staticfiles %}
+
+{#{% block breadcrumbs %}#}
+{#    {{ block.super }}#}
+{#    <a href="{% url 'training_index' %}">{% trans 'Human Resource' %}</a>#}
+{#{% endblock %}#}
+
+{% block head_end %}
+    {#    FIXME the below script source has no use make it use#}
+    <script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
+    <script src="{% static 'js/vendors/knockout_validation.js' %}"></script>
+
+{% endblock %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li><a href="{% url 'payroll_index' %}">{% trans 'Payroll' %}</a>
+    </li>
+{% endblock %}
+
+{% block breadcrumbs_before_print %}
+    <li class="pull-right">
+        <a href="{% url 'payroll_config' %}">{% trans "Payroll" %} {% trans "Configuration" %}</a>
+    </li>
+{% endblock %}
+
+{% block calendar %}
+{% endblock %}

@@ -1,5 +1,7 @@
 import json
 
+from django.db.models import Q
+from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView as BaseCreateView
 from django.http.response import HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy, reverse
@@ -8,18 +10,21 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView
 from django.utils.translation import ugettext_lazy as _
+
+from account.models import Account
 from core.serializers import BudgetSerializer
 from account.serializers import AccountSerializer
 from app.utils.helpers import save_model, invalid, empty_to_none
-from core.models import FiscalYear, BudgetHead
+from core.models import BudgetHead
 from inventory.models import delete_rows
 from models import Aid, ProjectFy, ImprestJournalVoucher, BudgetAllocationItem, BudgetReleaseItem, Expenditure, \
-    Reimbursement
-from project.forms import AidForm, ProjectForm, ExpenseCategoryForm, ExpenseForm, ImprestJVForm, ReimbursementForm
-from models import ImprestTransaction, ExpenseRow, ExpenseCategory, Expense, Project
-from serializers import ImprestTransactionSerializer, ExpenseRowSerializer, ExpenseCategorySerializer, \
-    ExpenseSerializer, AidSerializer, BaseStatementSerializer, ImprestJVSerializer
-from app.utils.mixins import AjaxableResponseMixin, UpdateView, DeleteView
+    Reimbursement, DisbursementDetail, DisbursementParticulars
+from project.forms import AidForm, ProjectForm, ExpenseCategoryForm, ExpenseForm, ImprestJVForm, ReimbursementForm, \
+    DisbursementDetailForm
+from models import ExpenseRow, ExpenseCategory, Expense, Project
+from serializers import ExpenseRowSerializer, ExpenseCategorySerializer, \
+    ExpenseSerializer, AidSerializer, BaseStatementSerializer, ImprestJVSerializer, DisbursementDetailSerializer
+from app.utils.mixins import AjaxableResponseMixin, UpdateView, DeleteView, json_from_object
 
 
 class ProjectCreateView(BaseCreateView):
@@ -67,66 +72,66 @@ def index(request):
     return render(request, 'project_index.html', {'projects': projects})
 
 
-def imprest_ledger(request, project_id):
-    project = Project.objects.get(pk=project_id)
-    context = {
-        'fy': FiscalYear.get(),
-        'project': project,
-    }
-    return render(request, 'imprest_ledger.html', context)
-
-
-class ImprestLedger(ProjectFYView, ListView):
-    model = ImprestTransaction
-    template_name = 'imprest_ledger.html'
-    fy = None
-
-    def get_context_data(self, **kwargs):
-        context_data = super(ImprestLedger, self).get_context_data(**kwargs)
-        context_data['data'] = {
-            'rows': ImprestTransactionSerializer(context_data['object_list'], many=True).data,
-        }
-        return context_data
-
-    def get_queryset(self):
-        qs = super(ImprestLedger, self).get_queryset()
-        qs = qs.filter(fy=self.get_fy())
-        return qs
-
-
-@login_required
-def save_imprest_ledger(request):
-    params = json.loads(request.body)
-    dct = {'rows': {}}
-    model = ImprestTransaction
-    fy_id = params.get('fy_id')
-    try:
-        for ind, row in enumerate(params.get('table_view').get('rows')):
-            if invalid(row, ['date']):
-                continue
-            values = {'date': row.get('date', ''),
-                      'name': row.get('name'),
-                      'type': row.get('type'),
-                      'date_of_payment': row.get('date_of_payment', ''),
-                      'wa_no': row.get('wa_no'),
-                      'amount_nrs': row.get('amount_nrs', None),
-                      'amount_usd': row.get('amount_usd', None),
-                      'exchange_rate': row.get('exchange_rate', None),
-                      'fy_id': fy_id
-                      }
-            submodel, created = model.objects.get_or_create(id=row.get('id'), defaults=values)
-            if not created:
-                submodel = save_model(submodel, values)
-            dct['rows'][ind] = submodel.id
-    except Exception as e:
-        if hasattr(e, 'messages'):
-            dct['error_message'] = '; '.join(e.messages)
-        elif str(e) != '':
-            dct['error_message'] = str(e)
-        else:
-            dct['error_message'] = 'Error in form data!'
-    delete_rows(params.get('table_view').get('deleted_rows'), model)
-    return JsonResponse(dct)
+# def imprest_ledger(request, project_id):
+#     project = Project.objects.get(pk=project_id)
+#     context = {
+#         'fy': FiscalYear.get(),
+#         'project': project,
+#     }
+#     return render(request, 'imprest_ledger.html', context)
+# 
+# 
+# class ImprestLedger(ProjectFYView, ListView):
+#     model = ImprestTransaction
+#     template_name = 'imprest_ledger.html'
+#     fy = None
+# 
+#     def get_context_data(self, **kwargs):
+#         context_data = super(ImprestLedger, self).get_context_data(**kwargs)
+#         context_data['data'] = {
+#             'rows': ImprestTransactionSerializer(context_data['object_list'], many=True).data,
+#         }
+#         return context_data
+# 
+#     def get_queryset(self):
+#         qs = super(ImprestLedger, self).get_queryset()
+#         qs = qs.filter(fy=self.get_fy())
+#         return qs
+# 
+# 
+# @login_required
+# def save_imprest_ledger(request):
+#     params = json.loads(request.body)
+#     dct = {'rows': {}}
+#     model = ImprestTransaction
+#     fy_id = params.get('fy_id')
+#     try:
+#         for ind, row in enumerate(params.get('table_view').get('rows')):
+#             if invalid(row, ['date']):
+#                 continue
+#             values = {'date': row.get('date', ''),
+#                       'name': row.get('name'),
+#                       'type': row.get('type'),
+#                       'date_of_payment': row.get('date_of_payment', ''),
+#                       'wa_no': row.get('wa_no'),
+#                       'amount_nrs': row.get('amount_nrs', None),
+#                       'amount_usd': row.get('amount_usd', None),
+#                       'exchange_rate': row.get('exchange_rate', None),
+#                       'fy_id': fy_id
+#                       }
+#             submodel, created = model.objects.get_or_create(id=row.get('id'), defaults=values)
+#             if not created:
+#                 submodel = save_model(submodel, values)
+#             dct['rows'][ind] = submodel.id
+#     except Exception as e:
+#         if hasattr(e, 'messages'):
+#             dct['error_message'] = '; '.join(e.messages)
+#         elif str(e) != '':
+#             dct['error_message'] = str(e)
+#         else:
+#             dct['error_message'] = 'Error in form data!'
+#     delete_rows(params.get('table_view').get('deleted_rows'), model)
+#     return JsonResponse(dct)
 
 
 class Application(ProjectFYView, ListView):
@@ -191,6 +196,8 @@ class ProjectMixin(object):
 
     def post(self, request, *args, **kwargs):
         super(ProjectMixin, self).post(request, *args, **kwargs)
+        if self.request.is_ajax():
+            return json_from_object(self.object)
         return HttpResponseRedirect(reverse(self.success_url, kwargs={'project_id': self.kwargs['project_id']}))
 
     def get_context_data(self, **kwargs):
@@ -437,6 +444,20 @@ class ImprestJVList(ImprestJVView, ListView):
     pass
 
 
+class ImprestLedger(ImprestJVView, ListView):
+    template_name = 'project/imprestledger_list.html'
+
+    def get_queryset(self):
+        qs = super(ImprestLedger, self).get_queryset()
+        return qs.filter(Q(dr_id=self.kwargs.get('account_id')) | Q(cr_id=self.kwargs.get('account_id')))
+
+    def get_context_data(self, **kwargs):
+        context = super(ImprestLedger, self).get_context_data()
+        account_id = self.kwargs.get('account_id')
+        context['account'] = Account.objects.get(id=account_id)
+        return context
+
+
 class ImprestJVDelete(ImprestJVView, DeleteView):
     pass
 
@@ -476,3 +497,109 @@ def statement_of_fund_template(request, project_fy_id):
 
 def memorandum_statement(request, project_fy_id):
     return render(request, 'project/memorandum_statement.html')
+
+
+def ledgers(request, project_fy_id):
+    project_fy = ProjectFy.objects.get(id=project_fy_id)
+    context = {'accounts': project_fy.get_ledgers(), 'project_fy': project_fy}
+    return render(request, 'project/ledger_list.html', context)
+
+
+def aid_disbursement(request, project_fy_id):
+    return render(request, 'project/aid_disbursement.html')
+
+
+class DisbursementDetailView(ProjectFYView):
+    model = DisbursementDetail
+    form_class = DisbursementDetailForm
+
+    def get_success_url(self):
+        return reverse_lazy('disbursement_detail_list', kwargs={'project_fy_id': self.project_fy.id})
+
+    def get_context_data(self, **kwargs):
+        context = super(DisbursementDetailView, self).get_context_data(**kwargs)
+        if 'form' in context:
+            form = context['form']
+            form.fields['aid'].widget.attrs.update(
+                {'data-url': reverse_lazy('aid_add', kwargs={'project_id': context['project_fy'].project.id})})
+        return context
+
+
+class DisbursementDetailList(DisbursementDetailView, ListView):
+    pass
+
+
+class DisbursementDetailCreate(DisbursementDetailView, TemplateView):
+    serializer_class = DisbursementDetailSerializer
+    template_name = "project/disbursementdetail_form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(DisbursementDetailCreate, self).get_context_data(**kwargs)
+        if 'pk' in self.kwargs:
+            pk = int(self.kwargs.get('pk'))
+            obj = get_object_or_404(self.model, pk=pk, project_fy=context['project_fy'])
+            scenario = 'Update'
+        else:
+            obj = self.model(project_fy=context['project_fy'])
+            scenario = 'Create'
+        data = self.serializer_class(obj).data
+        aids = Aid.objects.filter(active=True, project=context['project_fy'].project)
+        expense_category = ExpenseCategory.objects.all()
+        context['data'] = data
+        context['scenario'] = scenario
+        context['obj'] = obj
+        context['data']['aids'] = AidSerializer(aids, many=True).data
+        context['data']['expense_category'] = ExpenseCategorySerializer(expense_category, many=True).data
+        return context
+
+
+class DisbursementDetailUpdate(DisbursementDetailView, UpdateView):
+    pass
+
+
+class DisbursementDetailDelete(DisbursementDetailView, DeleteView):
+    pass
+
+
+def save_disbursement_detail(request):
+    params = json.loads(request.body)
+    project_fy_id = params.get('project_fy')
+    dct = {'rows': {}}
+    object_values = {'wa_no': empty_to_none(params.get('wa_no')),
+                     'requested_date': params.get('requested_date'), 'project_fy_id': project_fy_id,
+                     'aid_id': params.get('aid_id'), 'remarks': params.get('remarks'),
+                     'disbursement_method': params.get('disbursement_method'), }
+    if params.get('id'):
+        obj = DisbursementDetail.objects.get(id=params.get('id'))
+    else:
+        obj = DisbursementDetail()
+    try:
+        obj = save_model(obj, object_values)
+        dct['id'] = obj.id
+        model = DisbursementParticulars
+        for ind, row in enumerate(params.get('table_view').get('rows')):
+            if invalid(row, ['expense_category_id']):
+                continue
+            # else:
+            values = {'expense_category_id': row.get('expense_category_id'),
+                      'request_nrs': row.get('request_nrs'), 'request_usd': row.get('request_usd'),
+                      'request_sdr': row.get('request_sdr'),
+                      'response_nrs': row.get('response_nrs'), 'response_usd': row.get('response_usd'),
+                      'response_sdr': row.get('response_sdr'),
+                      'with_held_nrs': row.get('with_held_nrs'), 'with_held_usd': row.get('with_held_usd'),
+                      'with_held_sdr': row.get('with_held_sdr'),
+                      'disbursement_detail': obj}
+
+            submodel, created = model.objects.get_or_create(id=row.get('id'), defaults=values)
+            if not created:
+                submodel = save_model(submodel, values)
+            dct['rows'][ind] = submodel.id
+        delete_rows(params.get('table_view').get('deleted_rows'), model)
+    except Exception as e:
+        if hasattr(e, 'messages'):
+            dct['error_message'] = '; '.join(e.messages)
+        elif str(e) != '':
+            dct['error_message'] = str(e)
+        else:
+            dct['error_message'] = 'Error in form data!'
+    return JsonResponse(dct)

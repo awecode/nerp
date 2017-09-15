@@ -1,10 +1,10 @@
 # Development only
-pyinotify
+
 git-pylint-commit-hook
 django-debug-toolbar
 
 # Development and Production
-Django
+Django==1.9
 psycopg2
 django-mptt
 https://github.com/zyga/django-pagination/tarball/master#egg=linaro-django-pagination
@@ -17,7 +17,7 @@ pyelasticsearch
 django-froala-editor
 # https://github.com/helber/django-dbsettings/tarball/master#egg=django-dbsettings
 django-modeltranslation
-https://github.com/awecode/njango/tarball/master#egg=njango
+-e git+https://github.com/awecode/njango.git@master#egg=njango
 sorl-thumbnail==11.12.1b
 django-redis
 jsonfield
@@ -26,3 +26,5 @@ WeasyPrint
 requests
 django-admin-sortable2
 django-solo
+
+django-import-export==0.5.1

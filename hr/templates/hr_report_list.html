@@ -1,0 +1,60 @@
+{% extends 'hr_base.html' %}
+{% load staticfiles %}
+
+{% load filters %}
+{% load i18n %}
+
+{% block head_end %}
+
+{% endblock %}
+{% block title %}
+    {% trans 'HR Report List' %}
+{% endblock %}
+{% block breadcrumbs %}
+    {{ block.super }}
+        <li><a href="{% url 'payroll_entry' %}">{% trans 'Payroll Entry' %}</a>
+        <li><a href="{% url 'entry_list' %}">{% trans 'Entry List' %}</a>
+
+{% endblock %}
+{% block breadcrumbs_before_print %}
+{% endblock %}
+
+{% block alert %}
+
+    <!-- <div id="alert_placeholder">
+        <ul data-bind="foreach: errors.items" class="alert-error">
+            <li>
+                Budget for "<span data-bind="text: budget.name()"></span>" from source "<span data-bind="text: source"></span>" exceeds
+            </li>
+        </ul>
+    </div> -->
+{% endblock %}
+
+{% block  content %}
+    <div class="well">
+
+    <table class="table table-striped" >
+        <thead>
+            <tr>
+                <th>Report Name</th>
+                <th>Controls</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for obj in objects %}
+                <tr>
+                    <td><a href={% url 'edit_report_setting' obj.id %}>{{ obj }}</a></td>
+                    <td><a href={% url 'delete_report_setting' obj.id %} class="btn btn-raised btn-danger">Delete</a></td>
+
+                </tr>
+                {% empty %}
+                <tr><td colspan="100%"><strong>{% trans 'No report Added Yet' %}</strong></td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href={% url 'add_report_setting' %}><input class="btn btn-raised btn-primary" type="button" value="Add New Report"></a>
+    </div>
+    
+
+
+{% endblock %}

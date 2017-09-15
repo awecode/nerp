@@ -1,0 +1,51 @@
+{
+  "_comment": "title: payment detail",
+  "fields": {
+    "designation": "paid_employee__designation__designation_name",
+    "employee_name": "paid_employee__name",
+    "salary_scale": "salary",
+
+    "grade_amount": "grade_amount",
+
+    "pf_addition_in_deduction": "deduction_details___deduction__code_name=pf-deduction;__amount_added_before_deduction",
+    "bima_addition_in_deduction": "deduction_details___deduction__code_name=nala-bima;__amount_added_before_deduction",
+
+    "festival_expenditure_amount": "incentive_details___incentive__code_name=dashin-kharcha;__amount",
+    "total_after_addition": "total_after_addition",
+    "total_allowance": "allowance",
+
+    "total_after_allowance_addition": "total_after_allowance_addition",
+
+    "pf_deduction": "deduction_details___deduction__code_name=pf-deduction;__amount",
+    "bima": "deduction_details___deduction__code_name=nala-bima;__amount",
+    "na_la_ko": "deduction_details___deduction__code_name=na-la-ko;__amount",
+    "pf_loan": "deduction_details___deduction__code_name=pf-loan;__amount",
+    "social_security_tax": "tax_details___tax_deduction__code_name=Social Security Tax;__amount",
+    "remuneration_tax": "tax_details___tax_deduction__code_name=Remuneration Tax;__amount",
+    "total_deduction_inc_tax": "total_deduction_inc_tax",
+    "paid_amount": "paid_amount"
+  },
+  "totalling_fields": {
+    "salary_scale": "salary",
+
+    "grade_amount": "grade_amount",
+
+    "pf_addition_in_deduction": "deduction_details___deduction__code_name=pf-deduction;__amount_added_before_deduction",
+    "bima_addition_in_deduction": "deduction_details___deduction__code_name=nala-bima;__amount_added_before_deduction",
+
+    "festival_expenditure_amount": "incentive_details___incentive__code_name=dashin-kharcha;__amount",
+    "total_after_addition": "total_after_addition",
+    "total_allowance": "allowance",
+
+    "total_after_allowance_addition": "total_after_allowance_addition",
+
+    "pf_deduction": "deduction_details___deduction__code_name=pf-deduction;__amount",
+    "bima": "deduction_details___deduction__code_name=nala-bima;__amount",
+    "na_la_ko": "deduction_details___deduction__code_name=na-la-ko;__amount",
+    "pf_loan": "deduction_details___deduction__code_name=pf-loan;__amount",
+    "social_security_tax": "tax_details___tax_deduction__code_name=Social Security Tax;__amount",
+    "remuneration_tax": "tax_details___tax_deduction__code_name=Remuneration Tax;__amount",
+    "total_deduction_inc_tax": "total_deduction_inc_tax",
+    "paid_amount": "paid_amount"
+  }
+}

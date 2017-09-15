@@ -1,0 +1,80 @@
+{% extends 'hr_base.html' %}
+{% load staticfiles %}
+
+{% load filters %}
+{% load i18n %}
+
+{% block head_end %}
+
+{% endblock %}
+
+{% block alert %}
+
+    <!-- <div id="alert_placeholder">
+        <ul data-bind="foreach: errors.items" class="alert-error">
+            <li>
+                Budget for "<span data-bind="text: budget.name()"></span>" from source "<span data-bind="text: source"></span>" exceeds
+            </li>
+        </ul>
+    </div> -->
+{% endblock %}
+
+{% block  content %}
+    {% load pagination_tags %}
+    {% load sorting_tags %}
+
+    {% autosort object_list as sorted_objects %}
+    {% autopaginate sorted_objects 25 as paginated_objects %}
+    <div class="well">
+        <table class="table table-striped">
+            <thead>
+            <th>{% anchor employee _('Employee') %}</th>
+            <th>{% anchor employee.designation _('Employee Designation') %}</th>
+            <th>{% anchor pro_tempore _('Pro Tempore') %}</th>
+            <th>{% anchor pro_tempore.designation _('Pro Tempore Designation') %}</th>
+            <th>{% anchor appoint_date _('Appoint Date') %}</th>
+            <th>{% anchor dismiss_date _('Dismiss Date') %}</th>
+            <th>{% anchor status _('Status') %}</th>
+            <th>{% trans 'Controls' %}</th>
+            </thead>
+            <tbody>
+            {% for item in paginated_objects %}
+                <tr>
+                    <td class="link">
+                        <a href="{% url 'protempore_edit' item.id %}">{{ item.employee.name }}</a>
+                    </td>
+                    <td>
+                        {{ item.employee.designation }}
+                    </td>
+                    <td>
+                        {{ item.pro_tempore_employee.name }}
+                    </td>
+                    <td>
+                        {{ item.pro_tempore_employee.designation }}
+                    </td>
+                    <td>
+                        {{ item.appoint_date }}
+                    </td>
+                    <td>
+                        {{ item.dismiss_date }}
+                    </td>
+                    <td>
+                        {{ item.status }}
+                    </td>
+                    <td>
+                        <a href="{% url 'protempore_delete' item.id %}">
+                            <button class="btn btn-raised btn-danger">{% trans 'Delete' %}</button>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% paginate %}
+
+    <a class="btn btn-success btn-raised btn-lg"
+       href="{% url 'protempore_add' %}">{% trans 'New' %} {% trans 'Pro Tempore' %}</a>
+
+
+{% endblock %}

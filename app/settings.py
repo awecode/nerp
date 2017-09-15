@@ -67,7 +67,9 @@ INSTALLED_APPS = (
     'key',
     'project',
     'authority_handover',
-
+    'hr',
+    'import_export',
+    'debug_toolbar'
 )
 
 TIME_ZONE = 'Asia/Kathmandu'
@@ -81,7 +83,9 @@ LANGUAGES = (
     ('en', gettext('English')),
     ('ne', gettext('Nepali')),
 )
-LOCALE_PATHS = (os.path.join(BASE_DIR, 'locale'),)
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale'),
+)
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 

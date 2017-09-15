@@ -1,0 +1,42 @@
+{% extends "_project_base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans 'Disbursement Detail' %}{% endblock %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li><a href="{% url "disbursement_detail_list" project_fy.id %}">{% trans 'Disbursement Details' %}</a></li>
+{% endblock %}
+
+{% block content %}
+
+    {% load pagination_tags %}
+    {% load sorting_tags %}
+    {% load filters %}
+
+    {% autosort object_list as sorted_objects %}
+    {% autopaginate sorted_objects 25 as paginated_objects %}
+    <div class="well">
+    <table class="table table-striped">
+        <thead>
+        <th>{% anchor name _('Name') %}</th>
+        </thead>
+        <tbody>
+        {% for disbursement_detail in paginated_objects %}
+            <tr>
+                <td class="link">
+                    <a href="{% url 'disbursement_detail_edit' project.id disbursement_detail.id %}">{{ disbursement_detail }}</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+
+
+    <a class="btn btn-success btn-raised btn-lg"
+       href="{% url 'disbursement_detail_add' project_fy.id %}">{% trans 'New' %} {% trans 'Disbursement Detail' %}</a>
+
+    {% paginate %}
+
+{% endblock %}

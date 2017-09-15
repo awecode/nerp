@@ -1,0 +1,47 @@
+{% extends 'hr_report_base.html' %}
+{% load staticfiles %}
+
+{% load filters %}
+{% load i18n %}
+{% load arithmatic %}
+
+{% block report_body %}
+    <p class="lead text-center">{% trans 'Subject' %}: {{ months }} {{ report_title }}</p>
+    <h5>{% trans 'Date' %} {% trans 'Range' %}
+        : {{ from_date | localizen }} {% trans 'to' %} {{ to_date | localizen }}, {{ months }}</h5>
+
+    {#    Office detail block#}
+    <h5>{% trans 'Office' %} {% trans 'Name' %} : {{ branch.name }}</h5>
+    <h5>{% trans 'Office' %} {% trans 'Address' %} : {{ branch.address }}</h5>
+    <h5>{% trans 'Office' %} {% trans 'Code' %} : {{ branch.code }}</h5>
+    <h5>{% trans 'Diposited Date' %} : <input type="text" placeholder="{% trans 'Diposited Date'%}"></h5>
+    {#    End Office detail block#}
+
+    {#    Message text#}
+
+    {#    Translators: nalakosh template body message #}
+    <p class="lead">{% trans 'Dear Citizen Investment Fund' %},</p>
+    <p class="lead">{% trans 'New Baneswor, Kathmandu' %}</p>
+    <p class="lead">{% trans 'This is nalakosh template english body message' %} </p>
+    {#    End Messege text#}
+{% endblock %}
+
+{% block report_footer %}
+
+    {#    This is report footer#}
+    <div class="row">
+        <div class="col-lg-4 col-xs-4">
+            <p>{% trans 'Creator Signatute' %}</p>
+            <p>{% trans 'Date' %}: ________</p>
+        </div>
+        <div class="col-lg-4 col-xs-4">
+            <p>{% trans 'Head Accountant Signature' %}</p>
+            <p>{% trans 'Date' %}: _________</p>
+        </div>
+        <div class="col-lg-4 col-xs-4">
+            <p>{% trans 'Approved by Signature' %}</p>
+            <p>{% trans 'Date' %}: __________</p>
+        </div>
+    </div>
+    {#    End This is report footer#}
+{% endblock %}

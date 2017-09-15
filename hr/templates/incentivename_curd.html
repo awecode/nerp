@@ -1,0 +1,77 @@
+{% extends 'hr_base.html' %}
+{% load staticfiles %}
+
+{% load filters %}
+{% load i18n %}
+
+{% block head_end %}
+    <script src="{% static 'js/vendors/jquery-formset.js' %}"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('.incentivename-form').formset({
+                prefix: '{{ incentivename_formset.prefix }}'
+            });
+        });
+    </script>
+{% endblock %}
+{% block breadcrumbs %}
+    {{ block.super }}
+        <li><a href="{% url 'payroll_entry' %}">{% trans 'Payroll Entry' %}</a>
+        <li><a href="{% url 'entry_list' %}">{% trans 'Entry List' %}</a>
+
+{% endblock %}
+{% block breadcrumbs_before_print %}
+{% endblock %}
+
+{% block alert %}
+
+    <!-- <div id="alert_placeholder">
+        <ul data-bind="foreach: errors.items" class="alert-error">
+            <li>
+                Budget for "<span data-bind="text: budget.name()"></span>" from source "<span data-bind="text: source"></span>" exceeds
+            </li>
+        </ul>
+    </div> -->
+{% endblock %}
+
+{% block  content %}
+
+<form method="POST" action="{% url 'incentivename_curd' %}">
+
+    {% csrf_token %}
+
+    <div class="well">
+        {{ incentivename_formset.non_form_errors.as_ul }}
+        <table id="formset" class="form table table-striped">
+        {% for form in incentivename_formset.forms %}
+          {% if forloop.first %}
+          <thead><tr>
+            {% for field in form.visible_fields %}
+            <th>{{ field.label|capfirst }}</th>
+            {% endfor %}
+          </tr></thead>
+          {% endif %}
+          <tr class="{% cycle row1,row2 %} incentivename-form">
+          {% for field in form.visible_fields %}
+            <td>
+            {# Include the hidden fields in the form #}
+            {% if forloop.first %}
+              {% for hidden in form.hidden_fields %}
+              {{ hidden }}
+              {% endfor %}
+            {% endif %}
+              {{ field.errors.as_ul }}
+              {{ field }}
+            </td>
+          {% endfor %}
+          </tr>
+        {% endfor %}
+        </table>
+    </div>
+    {{ incentivename_formset.management_form }}
+    <input type="submit" value="Save"></input>
+
+</form>
+    
+    
+{% endblock %}

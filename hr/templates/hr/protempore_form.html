@@ -1,0 +1,51 @@
+{% extends 'hr_base.html' %}
+{% load staticfiles %}
+
+{% load filters %}
+{% load i18n %}
+
+{% block head_end %}
+    <link rel="stylesheet" href="{% static 'hr/css/hr_custom.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap/datepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'css/vendors/nepali.datepicker.v2.1.min.css' %}">
+
+    <script src="{% static 'js/vendors/nepali.datepicker.v2.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap/bootstrap-datepicker.js' %}"></script>
+
+{% endblock %}
+
+{% block alert %}
+
+    <!-- <div id="alert_placeholder">
+        <ul data-bind="foreach: errors.items" class="alert-error">
+            <li>
+                Budget for "<span data-bind="text: budget.name()"></span>" from source "<span data-bind="text: source"></span>" exceeds
+            </li>
+        </ul>
+    </div> -->
+{% endblock %}
+
+{% block  content %}
+    <div class="well">
+        <form method="post">
+        {{ form.non_field_errors }}
+            {% csrf_token %}
+            {% block extrahead %}
+                {{ employee_form.media }}
+            {% endblock %}
+            {#    {{ employee_form }}#}
+            <div class="row">
+                {% for field in form.visible_fields %}
+                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                        {{ filed.errors.as_ul }}
+                        <div><label>{{ field.label }}: </label>{{ field }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+            <input class="btn btn-raised btn-primary" type="submit" value="Save">
+        </form>
+
+    </div>
+
+
+{% endblock %}

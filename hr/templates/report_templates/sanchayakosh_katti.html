@@ -1,0 +1,133 @@
+{% extends 'hr_report_base.html' %}
+{% load staticfiles %}
+
+{% load filters %}
+{% load i18n %}
+{% load arithmatic %}
+
+{% block report_header %}
+    <div class="row">
+        {#    Translators: PF deduction distribution message#}
+        <h3 class="text-center">{% trans 'Employee PF Deduction' %}</h3>
+        <h3 class="text-center">{% trans 'PF Deduction Distribution' %}</h3>
+    </div>
+{% endblock %}
+
+{% block report_body %}
+    <div class="row">
+        <div class="col-lg-6 col-xs-6">
+            <h1>{{ report_title }}</h1>
+            <h5>{% trans 'Date' %} {% trans 'Range' %} : {{ from_date | localizen }} {% trans 'to' %} {{ to_date | localizen}}</h5>
+
+            {#    Office detail block#}
+            <h5>{% trans 'Office' %} {% trans 'Name' %} : {{ branch.name }}</h5>
+            <h5>{% trans 'Office' %} {% trans 'Address' %} : {{ branch.address }}</h5>
+            <h5>{% trans 'Office' %} {% trans 'Code' %} : {{ branch.code }}</h5>
+            {#    End Office detail block#}
+
+            {#    Bank Detail Block#}
+            <h5>{% trans 'Amount' %} {% trans 'Deposit Bank Name' %} : <input type="text" placeholder="{% trans 'Name of Bank' %}"></h5>
+            <h5>{% trans 'Amount' %} {% trans 'Deposit Bank Address' %} : <input type="text" placeholder="{% trans 'Address of Bank' %}"></h5>
+            <h5>{% trans 'Amount' %} {% trans 'Deposited' %} : 
+                {% if totals_row.3.0 %}
+                    {{ totals_row.3.0 }}
+                {% else %}
+                    <em>Not Assigned</em>
+                {% endif %}
+            </h5>
+            {#    End Bank Detail Block#}
+
+        </div>
+        <div class="col-lg-6 col-xs-6">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th colspan="3">
+                        {% trans 'For account use only' %}
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Batch No</td>
+                    <td>______</td>
+                    <td>______</td>
+                </tr>
+                <tr>
+                    <td>Folio No</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>V.P. Date</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Bank Code</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>From Month</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Up to M.</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Amount</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Coded By</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Entry By</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Released By</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {#    Message text#}
+
+    {#    Translators: PF deduction distribution message#}
+    <p class="lead">{% trans 'Dear Employee PF' %},</p>
+    <p class="lead">{% trans 'Tridevi Marg, Thamel, Kathmandu' %}</p>
+    <p class="lead">{% trans 'PF deduction distribution of this branch of this detail has been deposited to the' %} <input type="text" placeholder="{% trans 'Name of Bank' %}"> {% trans 'bank. The diposited vaoucher is also attached to this document.' %}</p>
+    {#    End Messege text#}
+{% endblock %}
+
+{% block report_footer %}
+
+    {#    This is report footer#}
+    <div class="row">
+        <div class="col-lg-4 col-xs-4">
+            <p>{% trans 'Creator Signatute' %}</p>
+            <p>{% trans 'Date' %}: ________</p>
+        </div>
+        <div class="col-lg-4 col-xs-4">
+            <p>{% trans 'Head Accountant Signature' %}</p>
+            <p>{% trans 'Date' %}: _________</p>
+        </div>
+        <div class="col-lg-4 col-xs-4">
+            <p>{% trans 'Approved by Signature' %}</p>
+            <p>{% trans 'Date' %}: __________</p>
+        </div>
+    </div>
+    {#    End This is report footer#}
+{% endblock %}

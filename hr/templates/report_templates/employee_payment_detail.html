@@ -1,0 +1,42 @@
+{% extends 'hr_report_base.html' %}
+{% load staticfiles %}
+
+{% load filters %}
+{% load i18n %}
+{% load arithmatic %}
+
+{% block report_header %} {% endblock %}
+
+{% block report_body %}
+    <p class="lead text-left">{{ report_title }}</p>
+    <p class="lead text-left">{% trans 'Date' %} {% trans 'Range' %} : {{ from_date | localizen }} {% trans 'to' %} {{ to_date | localizen }}, {{ months }}</p>
+
+    {#    Office detail block#}
+    <p class="lead text-left">{% trans 'Employee' %} {% trans 'Name' %} : {{ employee.name }}</p>
+    <p class="lead text-left">{% trans 'Employee' %} {% trans 'Designation' %} : {{ employee.designation.designation_name }}</p>
+    <p class="text-left">{% trans 'Office' %} {% trans 'Name' %} : {{ branch.name }}</p>
+    <p class="text-left">{% trans 'Office' %} {% trans 'Address' %} : {{ branch.address }}</p>
+    {#    End Office detail block#}
+
+
+{% endblock %}
+
+{% block report_footer %}
+
+    {#    This is report footer#}
+    <div class="row">
+        <div class="col-lg-4 col-xs-4">
+            <p>{% trans 'Creator Signatute' %}</p>
+            <p>{% trans 'Date' %}: ________</p>
+        </div>
+        <div class="col-lg-4 col-xs-4">
+            <p>{% trans 'Head Accountant Signature' %}</p>
+            <p>{% trans 'Date' %}: _________</p>
+        </div>
+        <div class="col-lg-4 col-xs-4">
+            <p>{% trans 'Approved by Signature' %}</p>
+            <p>{% trans 'Date' %}: __________</p>
+        </div>
+    </div>
+    {#    End This is report footer#}
+{% endblock %}

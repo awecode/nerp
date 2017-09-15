@@ -1,0 +1,46 @@
+{% extends 'hr_base.html' %}
+{% load staticfiles %}
+
+{% load filters %}
+{% load i18n %}
+
+{% block head_end %}
+
+{% endblock %}
+{% block breadcrumbs %}
+    {{ block.super }}
+        <li><a href="{% url 'payroll_entry' %}">{% trans 'Payroll Entry' %}</a>
+
+{% endblock %}
+{% block breadcrumbs_before_print %}
+{% endblock %}
+
+{% block alert %}
+
+    <!-- <div id="alert_placeholder">
+        <ul data-bind="foreach: errors.items" class="alert-error">
+            <li>
+                Budget for "<span data-bind="text: budget.name()"></span>" from source "<span data-bind="text: source"></span>" exceeds
+            </li>
+        </ul>
+    </div> -->
+{% endblock %}
+
+{% block  content %}
+    <table class="table" >
+        <tr>
+            <th>Incentive Name</th>
+            <th>Controls</th>
+        </tr>
+        {% for obj in objects %}
+            <tr>
+                <td><a href={% url 'edit_incentive' obj.id %}>{{ obj }}</a></td>
+                <td><a href={% url 'delete_allowance' obj.id %}><button type="button">Delete</button></a></td>
+
+            </tr>
+        {% endfor %}
+    </table>
+<a href={% url 'add_incentive' %}><input type="button" value="Add New Incentive"></a>
+    
+    
+{% endblock %}

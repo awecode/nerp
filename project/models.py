@@ -13,6 +13,10 @@ IMPREST_TRANSACTION_TYPES = (('initial_deposit', 'Initial Deposit'), ('gon_fund_
 
 AID_TYPES = (('loan', 'Loan'), ('grant', 'Grant'))
 
+DISBURSEMENT_METHOD = (
+    ('reimbursement', 'Reimbursement'), ('replenishment', 'Replenishment'), ('liquidation', 'Liquidation'),
+    ('direct_payment', 'Direct Payment'))
+
 DEFAULT_LEDGERS = [
     'Initial Deposit',
     'Ka-7-15',
@@ -54,21 +58,27 @@ class ProjectFy(models.Model):
     imprest_ledger = models.ForeignKey(Account, related_name='imprest_for')
     initial_deposit = models.ForeignKey(Account, related_name='deposit_for')
     replenishments = models.ForeignKey(Account, related_name='replenishments_for')
+    additional_advances = models.ForeignKey(Account, related_name='additional_advances_for')
 
     def __str__(self):
         return str(self.project) + ' - ' + str(self.fy)
 
     def save(self, *args, **kwargs):
         if not self.imprest_ledger_id:
-            self.imprest_ledger = Account.objects.create(name='Imprest Ledger (' + str(self.project.name) + ')', fy=self.fy)
+            self.imprest_ledger = Account.objects.create(name='Imprest Ledger (' + str(self.project.name) + ')',
+                                                         fy=self.fy)
         if not self.initial_deposit_id:
-            self.initial_deposit = Account.objects.create(name='Initial Deposit (' + str(self.project.name) + ')', fy=self.fy)
+            self.initial_deposit = Account.objects.create(name='Initial Deposit (' + str(self.project.name) + ')',
+                                                          fy=self.fy)
         if not self.replenishments_id:
             self.replenishments = Account.objects.create(name='Replenishments (' + str(self.project.name) + ')', fy=self.fy)
+        if not self.additional_advances_id:
+            self.additional_advances = Account.objects.create(name='Additional Advances (' + str(self.project.name) + ')',
+                                                              fy=self.fy)
         super(ProjectFy, self).save(*args, **kwargs)
 
     def get_ledgers(self):
-        self_ledgers = [self.imprest_ledger, self.initial_deposit, self.replenishments]
+        self_ledgers = [self.imprest_ledger, self.initial_deposit, self.replenishments, self.additional_advances]
         party_ledgers = [party.account for party in Party.objects.all()]
         return self_ledgers + party_ledgers
 
@@ -78,7 +88,7 @@ class ProjectFy(models.Model):
                 Account.objects.filter(name='Ka-7-17', fy=self.fy).first()] + party_ledgers
 
     def cr_ledgers(self):
-        return [self.imprest_ledger, self.initial_deposit, self.replenishments]
+        return [self.imprest_ledger, self.initial_deposit, self.replenishments, self.additional_advances]
 
     class Meta:
         unique_together = ('project', 'fy')
@@ -247,6 +257,20 @@ class ImprestJournalVoucher(models.Model):
     wa_no = models.CharField(max_length=10, blank=True, null=True)
     project_fy = models.ForeignKey(ProjectFy)
 
+    def is_dr(self):
+        if (self.dr.name.startswith('Imprest Ledger')):
+            return True
+
+    def is_cr(self):
+        if (self.cr.name.startswith('Imprest Ledger')):
+            return True
+
+    def against(self):
+        if self.is_dr():
+            return self.cr
+        elif self.is_cr():
+            return self.dr
+
     def __str__(self):
         return str(self.voucher_no)
 
@@ -260,3 +284,29 @@ class Reimbursement(models.Model):
 
     def __str__(self):
         return str(self.bank_voucher_no) + ':' + str(self.wa_no)
+
+
+class DisbursementDetail(models.Model):
+    wa_no = models.PositiveIntegerField(blank=True, null=True)
+    aid = models.ForeignKey(Aid)
+    requested_date = BSDateField(null=True, blank=True, default=today, validators=[validate_in_fy])
+    disbursement_method = models.CharField(max_length=255, choices=DISBURSEMENT_METHOD)
+    project_fy = models.ForeignKey(ProjectFy)
+    remarks = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return str(self.aid) + ' - ' + self.disbursement_method
+
+
+class DisbursementParticulars(models.Model):
+    expense_category = models.ForeignKey(ExpenseCategory)
+    request_nrs = models.PositiveIntegerField(blank=True, null=True)
+    request_usd = models.PositiveIntegerField(blank=True, null=True)
+    request_sdr = models.PositiveIntegerField(blank=True, null=True)
+    response_nrs = models.PositiveIntegerField(blank=True, null=True)
+    response_usd = models.PositiveIntegerField(blank=True, null=True)
+    response_sdr = models.PositiveIntegerField(blank=True, null=True)
+    with_held_nrs = models.PositiveIntegerField(blank=True, null=True)
+    with_held_usd = models.PositiveIntegerField(blank=True, null=True)
+    with_held_sdr = models.PositiveIntegerField(blank=True, null=True)
+    disbursement_detail = models.ForeignKey(DisbursementDetail, related_name="rows")

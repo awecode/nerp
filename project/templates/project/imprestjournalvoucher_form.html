@@ -1,4 +1,4 @@
-{% extends base_template %}
+{% extends "_project_base.html" %}
 {% load i18n filters staticfiles %}
 
 {% block title %}{{ scenario }} {% trans 'Imprest Journal Voucher' %}{% endblock %}
@@ -13,9 +13,9 @@
 {% block breadcrumbs %}
     {{ block.super }}
     <li>
-        <a href="{% url "imprest_journal_voucher_list" project.id %}">{% trans 'Imprest Journal Vouchers' %}</a>
+        <a href="{% url "imprest_journal_voucher_list" project_fy.id %}">{% trans 'Imprest Journal Vouchers' %}</a>
     </li>
-    <li>{% trans 'Add' %}</li>
+    <li>{% trans scenario %}</li>
 {% endblock %}
 
 {% block content %}
@@ -34,7 +34,7 @@
                 <div class="col-sm-12 col-md-4">
                     {{ form.wa_no.label_tag }}
                     <input class="form-control"
-                           data-bind="value: wa_no, enable: cr_ledger() && cr_ledger().name == 'Initial Deposit'" id="id_wa_no"
+                           data-bind="value: wa_no, enable: cr_ledger() && cr_ledger().name.startsWith('Initial Deposit')" id="id_wa_no"
                            maxlength="10" name="wa_no" type="text">
                 </div>
                 <div class="col-sm-12 col-md-4">
@@ -95,7 +95,7 @@
                 {% trans 'Submit' %}</button>
             {% if scenario == 'Update' %}
                 <a class="btn btn-danger btn-raised"
-                   href="{% url 'expense_delete' project.id form.instance.id %}">{% trans 'Delete' %}!</a>
+                   href="{% url 'imprest_journal_voucher_delete' project_fy.id form.instance.id %}">{% trans 'Delete' %}!</a>
             {% endif %}
         </div>
     </form>

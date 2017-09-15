@@ -1,12 +1,11 @@
 {% extends '_project_base.html' %}
 {% load i18n %}
 
-{% block title %}{{ scenario }} {% trans 'Memorandum Statement' %}{% endblock %}
+{% block title %}{{ scenario }} {% trans 'Memorandum Statement of Imprest Account' %}{% endblock %}
 
 {% block breadcrumbs %}
     {{ block.super }}
-    <li><a href="#">{% trans 'Memorandum Statements' %}</a></li>
-    <li><span>{% trans scenario %} {% trans 'Memorandum Statement' %}</span></li>
+    <li><span>{% trans scenario %} {% trans 'Memorandum Statement of Imprest Account' %}</span></li>
 {% endblock %}
 
 {% block content %}
@@ -17,9 +16,11 @@
             {% csrf_token %}
             <table class="table table-striped table-responsive table-bordered center-headings">
                 <thead>
-                <td></td>
-                <th>{% trans "NRs." %}</th>
-                <th>{% trans "US $" %}</th>
+                <tr>
+                    <th></th>
+                    <th>{% trans "NRs." %}</th>
+                    <th>{% trans "US $" %}</th>
+                </tr>
                 </thead>
                 <tbody>
                 <tr>

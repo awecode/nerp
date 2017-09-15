@@ -3,6 +3,7 @@ from django.conf.urls import include, url
 from django.conf import settings
 from django.contrib import admin
 from rest_framework.routers import DefaultRouter
+from django.conf.urls.static import static
 
 from users import views as users_views
 
@@ -37,9 +38,8 @@ urlpatterns = [
     url(r'^authority-handover/', include('authority_handover.urls')),
 
     url(r'^api/v1/', include(router.urls)),
+    url(r'^payroll/', include('hr.urls')),
 ]
-
-from django.conf.urls.static import static
 
 if settings.DEBUG:
     urlpatterns += [] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

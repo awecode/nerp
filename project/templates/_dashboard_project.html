@@ -57,6 +57,18 @@
             </div>
 
             <div>
+                <a href="{% url 'account_view' project.project_fy.id project.project_fy.imprest_ledger.id %}">{% trans 'Imprest Account' %}</a>
+            </div>
+
+            <div>
+                <a href="{% url 'ledger_list' project.project_fy.id %}">{% trans 'Ledger' %}</a>
+            </div>
+            
+            <div>
+                <a href="{% url 'disbursement_detail_list' project.project_fy.id %}">{% trans 'Disbursement Details' %}</a>
+            </div>
+
+            <div>
                 <a href="{% url 'budget_allocation' project.project_fy.id %}">{% trans 'Budget Allocation' %}</a>
             </div>
 
@@ -67,7 +79,7 @@
             <div>
                 <a href="{% url 'budget_expenditure' project.project_fy.id %}">{% trans 'Budget Expenditure' %}</a>
             </div>
-            
+
             <div>
                 <a href="{% url 'reimbursement_list' project.project_fy.id %}">{% trans 'Reimbursements as per FCGO records' %}</a>
             </div>

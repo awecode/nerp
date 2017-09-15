@@ -1,0 +1,23 @@
+{% extends "_project_base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans 'Accounts' %}{% endblock %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li><a href="{% url "ledger_list" project_fy.id %}">{% trans 'Accounts' %}</a></li>
+{% endblock %}
+
+{% block content %}
+
+    <div class="well">
+
+        {% for account in accounts %}
+            <div>
+                <a href="{% url 'account_view' project_fy.id account.id %}">
+                    {{ account }}
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -5,7 +5,7 @@
 
 {% block breadcrumbs %}
     {{ block.super }}
-    <li><a href="{% url "reimbursement_list" project.id %}">{% trans 'Reimbursements as per FCGO records' %}</a></li>
+    <li><a href="{% url "reimbursement_list" project_fy.id %}">{% trans 'Reimbursements as per FCGO records' %}</a></li>
 {% endblock %}
 
 {% block content %}
@@ -25,26 +25,23 @@
                 <th>{% anchor bank_voucher_no _('Bank Voucher no.') %}</th>
                 <th>{% anchor wa_no _('WA No.') %}</th>
                 <th>{% anchor amount _('Amount') %}</th>
-                <th>{% trans "Edit" %}</th>
+
                 </thead>
                 <tbody>
                 {% for reimbursement in paginated_objects %}
                     {% if form.instance.id != reimbursement.id %}
                         <tr>
                             <td>
-                                {{ reimbursement.date }}
+                                <a href="{% url 'reimbursement_edit' project_fy.id reimbursement.id %}">{{ reimbursement.date }}</a>
                             </td>
                             <td>
                                 {{ reimbursement.bank_voucher_no }}
                             </td>
                             <td>
-                                {{ reimbursement.wa_no }}
+                                {{ reimbursement.wa_no|default:'' }}
                             </td>
                             <td>
                                 {{ reimbursement.amount }}
-                            </td>
-                            <td>
-                                <a href="{% url 'reimbursement_edit' project.id reimbursement.id %}">Edit</a>
                             </td>
                         </tr>
                     {% else %}

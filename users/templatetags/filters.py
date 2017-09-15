@@ -17,6 +17,7 @@ from njango.utils import get_calendar
 
 from app import settings
 from app.utils.helpers import float_zero_for_none
+from hr.bsdate import BSDate
 
 register = Library()
 
@@ -293,6 +294,29 @@ def localize(text):
             text = text.replace(i, j)
     return text
 
+
+@register.filter
+def localizen(text):
+    lang_code = get_language()
+    supported_types = (int, float, BSDate)
+    if type(text) in supported_types and lang_code == 'ne':
+        text = str(text)
+        dic = {
+            '०': '0',
+            '१': '1',
+            '२': '2',
+            '३': '3',
+            '४': '4',
+            '५': '5',
+            '६': '6',
+            '७': '7',
+            '८': '8',
+            '९': '9'
+        }
+        res = dict((v, k) for k, v in dic.iteritems())
+        for i, j in res.iteritems():
+            text = text.replace(i, j)
+    return text
 
 @register.filter
 def debug(value):

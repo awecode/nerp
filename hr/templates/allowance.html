@@ -1,0 +1,170 @@
+{% extends 'hr_base.html' %}
+{% load staticfiles %}
+
+{% load filters %}
+{% load i18n %}
+
+{% block head_end %}
+    {{ block.super }}
+
+    <link rel="stylesheet" href="{% static 'hr/css/plugins/toastr/toastr.css' %}">
+    <script src="{% static 'hr/js/plugins/toastr/toastr.js' %}"></script>
+    <script src="{% static 'hr/js/plugins/blockUI/jquery.blockUI.js' %}"></script>
+    <script src="{% static 'hr/js/App.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap/datepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'css/vendors/nepali.datepicker.v2.1.min.css' %}">
+    <script src="{% static 'js/vendors/knockout-mapping-plugin.js' %}"></script>
+    <script src="{% static 'js/vendors/nepali.datepicker.v2.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap/bootstrap-datepicker.js' %}"></script>
+
+    <script src="{% static 'hr/js/allowance.js' %}"></script>
+    <script src="{% static 'hr/js/select_item_modal.js' %}"></script>
+
+    <script>
+        $(document).ready(function () {
+            vm = new allowance.vm('{{ calendar }}');
+            ko.applyBindings(vm);
+        });
+
+    </script>
+{% endblock %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li><a href="{% url 'payroll_entry' %}">{% trans 'Payroll' %} {% trans 'Entry' %}</a></li>
+    <li><a href="{% url 'entry_list' %}">{% trans 'Entry' %} {% trans 'List' %}</a></li>
+
+{% endblock %}
+{% block breadcrumbs_before_print %}
+{% endblock %}
+
+{% block alert %}
+
+    <!-- <div id="alert_placeholder">
+        <ul data-bind="foreach: errors.items" class="alert-error">
+            <li>
+                Budget for "<span data-bind="text: budget.name()"></span>" from source "<span data-bind="text: source"></span>" exceeds
+            </li>
+        </ul>
+    </div> -->
+{% endblock %}
+
+{% block content %}
+    <div class="col-lg-12 well">
+        <div class="col-lg-12">
+            <h3>{% trans "Available" %} {% trans "Allowances" %}</h3>
+        </div>
+        <div class="col-lg-4 col-lg-offset-4">
+            {#    This is validity Modal#}
+            <select-crud-modal params="{
+            api_url: validity_api_url,
+            modal_name: 'Allowance Validity',
+            select_list_obs: available_allowance_validities,
+            selected_item_obs: selected_validity,
+            optionsText : function(item){return 'Valid From: ' + item.valid_from()},
+            optionsCaption: 'Select Allowance Validity..',
+
+            form_observables: function(){
+                var self = this;
+                self.id = ko.observable();
+                self.valid_from = ko.observable();
+                self.note = ko.observable();
+            }
+        }">
+                <form>
+                    {{ av_form.media }}
+                    <div class="inline-calendar">
+                    {{ av_form }}
+                    </div>
+                </form>
+
+            </select-crud-modal>
+            {#    End This is validity Modal#}
+        </div>
+        <div class="col-lg-4">
+            {#    This is allowance name Modal#}
+            <select-crud-modal params="{
+            api_url: allowance_name_api_url,
+            modal_name: 'Allowance Name',
+            select_list_obs: available_allowance_names,
+            selected_item_obs: selected_allowance,
+            optionsText : function(item){return 'Allowance Name: ' + item.name()},
+            optionsCaption: 'Select Allowance Name..',
+
+            form_observables: function(){
+                var self = this;
+                self.id = ko.observable();
+                self.name = ko.observable();
+                self.code_name = ko.observable();
+                self.description = ko.observable();
+                self.is_tax_free = ko.observable();
+            }
+        }">
+                <form>
+                    {{ allowance_name_form }}
+                </form>
+
+            </select-crud-modal>
+        </div>
+        {#    End This is validity Modal#}
+
+        <div>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>{% trans 'Grade' %} {% trans 'Name' %}:</th>
+                    <th>{% trans 'Sum Type' %}:</th>
+                    <th>{% trans 'Value' %}</th>
+                    <th>{% trans 'Payment' %} {% trans 'Cycle' %}:</th>
+                    <th>{% trans 'Year Payment Cycle Month' %}</th>
+                </tr>
+                </thead>
+                <tbody data-bind="foreach: available_grade_groups">
+                <tr>
+                    <td colspan="5" style="background: lightgray;" data-bind="click: $data.toggle_visibility">
+                        <strong data-bind="text: $data.name"></strong>
+                        <!-- ko if:!visibility() -->
+                        <span class="glyphicon glyphicon-menu-down pull-right" aria-hidden="true"></span>
+                        <!-- /ko -->
+                        <!-- ko if:visibility() -->
+                        <span class="glyphicon glyphicon-menu-up pull-right" aria-hidden="true"></span>
+                        <!-- /ko -->
+
+
+                    </td>
+                </tr>
+                <!-- ko foreach: $data.employee_grades -->
+                <tr data-bind="with: allowance, visible: $parent.visibility">
+                    <td data-bind="text: $parent.grade_name"></td>
+                    <td><select class="form-control" data-bind="options: [
+                            {name: 'Amount', value: 'AMOUNT'},
+                            {name: 'Rate', value: 'RATE'}
+                        ],
+                        value: sum_type,
+                        optionsText: 'name',
+                        optionsValue: 'value'"></select></td>
+                    <td data-bind="editableText: value, numeric:true"></td>
+                    <td><select class="form-control" data-bind="options: [
+                            {name: gettext('Montly'), value: 'M'},
+                            {name: gettext('Yearly'), value: 'Y'},
+                            {name: gettext('Daily'), value: 'D'}
+                        ],
+                        value: payment_cycle,
+                        optionsText: 'name',
+                        optionsValue: 'value'"></select></td>
+                    <td>
+                        <select class="form-control"
+                                data-bind="options: $root.months_options, value: year_payment_cycle_month, optionsText: 'name', optionsValue: 'value', disable: ypcm_disable_edit(), optionsCaption: 'Select Payment Month..'"></select>
+                    </td>
+                </tr>
+                <!-- /ko -->
+                </tbody>
+            </table>
+            <button class="btn btn-raised btn-primary" data-bind="click: save_update">Save Update</button>
+
+        </div>
+    </div>
+
+
+
+{% endblock %}

@@ -6,7 +6,7 @@
 {% block breadcrumbs %}
     {{ block.super }}
     <li>
-        <a href="{% url "imprest_journal_voucher_list" project_fy.id %}">{% trans 'Journal Vouchers' %}</a>
+        <a href="{% url "imprest_journal_voucher_list" project_fy.id %}">{% trans 'Imprest Journal Vouchers' %}</a>
     </li>
 {% endblock %}
 
@@ -24,7 +24,7 @@
             <th>{% anchor voucher_no _('Voucher No') %}</th>
             <th>{% anchor date _('Date') %}</th>
             <th>{% anchor dr _('Dr') %}</th>
-            <th>{% anchor dr _('Cr') %}</th>
+            <th>{% anchor cr _('Cr') %}</th>
             </thead>
             <tbody>
             {% for obj in paginated_objects %}

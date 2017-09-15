@@ -1,0 +1,15 @@
+{
+  "_comment": "title: sanchaya kosh bibaran",
+  "fields": {
+    "pf_id_number": "paid_employee__pf_id_number",
+    "total_deduction": "deduction_details___deduction__code_name=pf-deduction;__amount",
+    "designation": "paid_employee__designation__designation_name",
+    "personal_number": "paid_employee__pan_number",
+    "employee_name": "paid_employee__name",
+    "addition_in_deduction": "deduction_details___deduction__code_name=pf-deduction;__amount_added_before_deduction"
+  },
+  "totalling_fields": {
+    "total_deduction": "deduction_details___deduction__code_name=pf-deduction;__amount",
+    "addition_in_deduction": "deduction_details___deduction__code_name=pf-deduction;__amount_added_before_deduction"
+  }
+}

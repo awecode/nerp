@@ -1,0 +1,80 @@
+{% extends "_project_base.html" %}
+{% load i18n pfs_filters %}
+
+{% block title %}{% trans 'Imprest Account' %}{% endblock %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li><a href="{% url "ledger_list" project_fy.id %}">{% trans 'Accounts' %}</a></li>
+    <li>{{ account }}</li>
+{% endblock %}
+
+{% block content %}
+
+    {% load pagination_tags %}
+    {% load sorting_tags %}
+    {% load filters %}
+
+    {% autosort object_list as sorted_objects %}
+    {% autopaginate sorted_objects 25 as paginated_objects %}
+    <div class="well">
+        <h1>{{ account }}</h1>
+        <table class="table table-striped">
+            <thead>
+            <tr class="">
+                <th rowspan="2">{% anchor date _('Date') %}</th>
+                <th rowspan="2">{% trans 'Particular(s)' %}</th>
+                <th rowspan="2">{% anchor voucher_no _('Voucher No') %}</th>
+                <th colspan="3">{% anchor dr _('Dr') %}</th>
+                <th colspan="3">{% anchor cr _('Cr') %}</th>
+            </tr>
+            <tr>
+                <th>{% anchor amount_nrs _('NRS') %}</th>
+                <th>{% anchor amount_usd _('USD') %}</th>
+                <th>{% anchor exchange_rate _('Ex.R.') %}</th>
+                <th>{% anchor amount_nrs _('NRS') %}</th>
+                <th>{% anchor amount_usd _('USD') %}</th>
+                <th>{% anchor exchange_rate _('Ex.R.') %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for obj in paginated_objects %}
+                <tr>
+                    <td>{{ obj.date }}</td>
+                    <td>{{ obj|against:account }}</td>
+                    <td class="link">
+                        <a href="{% url 'imprest_journal_voucher_edit' project_fy.id obj.id %}">{{ obj.voucher_no }}</a>
+                    </td>
+
+                    {% if obj.dr == account %}
+                        <td>{{ obj.amount_nrs }}</td>
+                        <td>{{ obj.amount_usd }}</td>
+                        <td>{{ obj.exchange_rate }}</td>
+                    {% else %}
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    {% endif %}
+                    {% if obj.cr == account %}
+                        <td>{{ obj.amount_nrs }}</td>
+                        <td>{{ obj.amount_usd }}</td>
+                        <td>{{ obj.exchange_rate }}</td>
+                    {% else %}
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    {% endif %}
+
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+    <a class="btn btn-success btn-raised btn-lg"
+       href="{% url 'imprest_journal_voucher_add' project_fy.id %}">{% trans 'New' %} {% trans 'Journal Voucher' %}</a>
+
+    {% paginate %}
+
+{% endblock %}

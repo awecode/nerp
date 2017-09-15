@@ -1,0 +1,348 @@
+{% extends 'hr_base.html' %}
+{% load staticfiles %}
+
+{% load filters %}
+{% load i18n %}
+
+{% block head_end %}
+    <link rel="stylesheet" href="{% static 'hr/css/hr_custom.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap/datepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'css/vendors/nepali.datepicker.v2.1.min.css' %}">
+
+
+    <link rel="stylesheet" href="{% static 'hr/css/plugins/toastr/toastr.css' %}">
+    <script src="{% static 'hr/js/plugins/toastr/toastr.js' %}"></script>
+    <script src="{% static 'hr/js/plugins/blockUI/jquery.blockUI.js' %}"></script>
+    <script src="{% static 'hr/js/App.js' %}"></script>
+
+
+    <script src="{% static 'js/vendors/knockout-mapping-plugin.js' %}"></script>
+    <script src="{% static 'js/vendors/nepali.datepicker.v2.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap/bootstrap-datepicker.js' %}"></script>
+    <script src="{% static 'hr/js/bs_calendar.js' %}"></script>
+    <script>
+        ko_data = {{ko_data|jsonify}}
+                $(document).on('click', '.dropdown-menu', function (e) {
+                    e.stopPropagation();
+                });
+    </script>
+    <script src="{% static 'hr/js/hr.js' %}"></script>
+
+{% endblock %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li><a href="{% url 'entry_list' %}">{% trans 'Entry List' %}</a>
+
+{% endblock %}
+{% block breadcrumbs_before_print %}
+{% endblock %}
+
+{% block alert %}
+    {#    <!-- ko foreach: messages -->#}
+    {#    <div class="row">#}
+    {#            <span class="alert alert-warning pull-right" role="alert">#}
+    {#                <span class="font-weight-bold text-info" data-bind="text: $data"></span>#}
+    {#                <button type="button" class="close" aria-label="Close" data-bind="click: $parent.remove_alert">#}
+    {#                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>#}
+    {#                </button>#}
+    {#            </span>#}
+    {#    </div>#}
+    {#    <!-- /ko -->#}
+{% endblock %}
+
+{% block  content %}
+{#    {{ ko_data.ctx_data.computed_scenario }}#}
+    <div class="well">
+
+
+        <div>
+            <label>Monthly Payroll </label>
+            <input type="checkbox" data-bind="checked: is_monthly_payroll">
+        </div>
+        <table class="table table-bordered">
+            <thead>
+            {{ m_form.media }}
+            <tr>
+                {% for field in m_form.visible_fields %}
+                    <th>{{ field.label|capfirst }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                {% for field in m_form.visible_fields %}
+                    <td>
+                        {{ field.errors.as_ul }}
+                        {{ field }}
+                    </td>
+                {% endfor %}
+            </tr>
+        </table>
+
+        <div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th><label>{% trans 'From Date' %}</label></th>
+                            <th>
+                                <strong data-bind="text: paid_from_date"></strong>
+                                <ul class="errorlist list-unstyled">
+                                    <li data-bind="text: paid_from_date_error"></li>
+                                </ul>
+                            </th>
+                            <th>{{ ko_data.calendar }}</th>
+                            <th><label>{% trans 'To Date' %}</label></th>
+                            <th>
+                                <strong data-bind="text: paid_to_date"></strong>
+                                <ul class="errorlist list-unstyled">
+                                    <li data-bind="text: paid_to_date_error"></li>
+                                </ul>
+                            </th>
+                            <th>{{ ko_data.calendar }}</th>
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+            <form data-bind="submit: saveAndAdd">
+                <table class="table table-striped table-bordered table-responsive payment-row-table">
+                    <thead>
+                    <tr data-bind="visible:entry_rows().length>0">
+                        <th>{% trans 'Employee' %}</th>
+
+                        <th>{% trans 'Grade' %}</th>
+                        <th>{% trans 'Designation' %}</th>
+
+
+                        <th>{% trans 'Total Allowance' %}</th>
+
+
+                        <th>{% trans 'Total Incentive' %}</th>
+
+
+                        {#                        <th>{% trans 'Total Addition From Deduction' %}</th>#}
+
+
+                        <th>{% trans 'Total Deduced Amount' %}</th>
+
+                        <th>{% trans 'Tax Details' %}</th>
+                        <th>{% trans 'Pro Tempore Amount' %}</th>
+                        <th>{% trans 'Salary' %}</th>
+                        <th>{% trans 'Paid Amount' %}</th>
+                        {% if ko_data.ctx_data.computed_scenario != 'DETAIL-VIEW' %}
+                            <th>{% trans 'Control' %}</th>
+                        {% endif %}
+                        <!-- <th>From xxxxxxxxxxxx</th>
+                        <th>To xxxxxxxxxxxxxx</th> -->
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- ko foreach: entry_rows -->
+                    <!-- ko foreach: row_errors -->
+                    <tr data-bind="css: {warning: true}">
+                        <td colspan="100%" data-bind="text: $data"></td>
+                    </tr>
+                    <!-- /ko -->
+                    <tr data-bind="css: {warning: row_errors().length > 0}">
+                        <td><select
+                                data-bind="selectize: emp_options, value: paid_employee, optionsText: 'name', optionsValue:'id'"></select>
+                        </td>
+
+                        <td><b data-bind="text: employee_grade"></b></td>
+                        <td><b data-bind="text: employee_designation"></b></td>
+
+
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-default dropdown-toggle" type="button" id="allowance-details"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <span data-bind="text: allowance"></span>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <table class=" table table-bordered table-striped"
+                                           aria-labelledby="allowance-details">
+                                        <thead>
+                                        <tr>
+                                            <th>{% trans 'Allowance Name' %}</th>
+                                            <th>{% trans 'Amount' %}</th>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        <!-- ko foreach: allowance_details -->
+                                        <tr>
+                                            <td data-bind="text: name"></td>
+                                            <td data-bind="text: amount"></td>
+                                        </tr>
+                                        <!-- /ko -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </td>
+
+
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-default dropdown-toggle" type="button" id="incentive-details"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <span data-bind="text: incentive"></span>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <table class="table table-bordered table-striped"
+                                           aria-labelledby="incentive-details">
+                                        <thead>
+                                        <tr>
+                                            <th>{% trans 'Incentive Name' %}</th>
+                                            <th>{% trans 'Amount' %}</th>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        <!-- ko foreach: incentive_details -->
+                                        <tr>
+                                            <td data-bind="text: name"></td>
+                                            <td data-bind="editableText: amount, disable_content_editable: !editable(), numeric: true"></td>
+                                        </tr>
+                                        <!-- /ko -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </td>
+
+
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-default dropdown-toggle" type="button" id="deduction-details"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <span data-bind="text: deduced_amount"></span>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <table class="table table-bordered table-striped"
+                                           aria-labelledby="deduction-details">
+                                        <thead>
+                                        <tr>
+                                            <th>{% trans 'Deduction Name' %}</th>
+                                            <th>{% trans 'Amount Added Before Deduction' %}</th>
+                                            <th>{% trans 'Deduced Amount' %}</th>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        <!-- ko foreach: deduction_details -->
+                                        <tr>
+                                            <td data-bind="text: name"></td>
+                                            <td data-bind="text: amount_added_before_deduction"></td>
+                                            <td data-bind="editableText: amount, disable_content_editable: !editable(), numeric: true"></td>
+                                        </tr>
+                                        <!-- /ko -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </td>
+
+                        {#                        <td data-bind="editableText: income_tax, disable_content_editable: disable_input, numeric: true"></td>#}
+
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-default dropdown-toggle" type="button" id="tax-details"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <span data-bind="text: total_tax"></span>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <table class="table table-bordered table-striped"
+                                           aria-labelledby="tax-details">
+                                        <thead>
+                                        <tr>
+                                            <th>{% trans 'Name' %}</th>
+                                            <th>{% trans 'Amount' %}</th>
+
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        <!-- ko foreach: tax_details -->
+                                        <tr>
+                                            <td data-bind="text: name"></td>
+                                            <td data-bind="text: amount"></td>
+                                        </tr>
+                                        <!-- /ko -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-default dropdown-toggle" type="button" id="pro-tempore-details"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <span data-bind="text: pro_tempore_amount"></span>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <table class="table table-bordered table-striped"
+                                           aria-labelledby="pro-tempore-details">
+                                        <thead>
+                                        <tr>
+                                            <th>{% trans 'Employee' %}</th>
+                                            <th>{% trans 'Employee Designation' %}</th>
+                                            <th>{% trans 'Appoint Date' %}</th>
+                                            <th>{% trans 'Dismiss Date' %}</th>
+                                            <th>{% trans 'Amount' %}</th>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        <!-- ko foreach: pro_tempore_details -->
+                                        <tr>
+                                            <td data-bind="text: employee_name"></td>
+                                            <td data-bind="text: employee_designation"></td>
+                                            <td data-bind="text: appoint_date"></td>
+                                            <td data-bind="text: dismiss_date"></td>
+                                            <td data-bind="text: amount"></td>
+
+                                        </tr>
+                                        <!-- /ko -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td data-bind="editableText: salary, disable_content_editable: disable_input, numeric: true"></td>
+                        <td data-bind="editableText: paid_amount, disable_content_editable: disable_input, numeric: true"></td>
+                        {% if ko_data.ctx_data.computed_scenario != 'DETAIL-VIEW' %}
+                            <td><input class="btn btn-raised btn-danger" type="button" value="Remove"
+                                       data-bind="click: $parent.removeRow, visible: !$parent.entry_saved()"></td>
+                        {% endif %}
+
+                    </tr>
+                    <!-- /ko -->
+                    </tbody>
+                </table>
+                <input type="button" class="btn btn-raised btn-primary" value="Add Another"
+                       data-bind="visible: switch_p_type, click: addRow">
+                {% if ko_data.ctx_data.computed_scenario != 'DETAIL-VIEW' %}
+                    <input type="submit" class="btn btn-raised btn-primary" value="Save"
+                           data-bind="visible: entry_rows().length>0 && !entry_saved()">
+                {% endif %}
+            </form>
+            {% if ko_data.ctx_data.computed_scenario != 'DETAIL-VIEW' %}
+                <input type="button" class="btn btn-raised btn-primary" value="Approve"
+                       data-bind="visible: entry_rows().length > 0 && !approved() && entry_saved(), click: approve_entry">
+                <input type="button" class="btn btn-raised btn-primary" value="Approved"
+                       data-bind="visible: entry_rows().length > 0 && approved()">
+                <input type="button" class="btn btn-raised btn-primary" value="Transact"
+                       data-bind="visible: entry_rows().length > 0 && approved() && !transacted(), click: transact">
+                <input type="button" class="btn btn-raised btn-primary" value="Transacted"
+                       data-bind="visible: entry_rows().length > 0 && approved() && transacted()">
+                <!-- <input type="button" class="#" value="Delete Entry" data-bind="click: entry_delete, visible: entry_saved()"> -->
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

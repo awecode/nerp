@@ -528,3 +528,69 @@ tr.total, tr.category, tr.subtotal {
     height: 37px;
     left: 14px;
 }
+
+.link-group > div {
+    display: inline-block;
+    /*width: 200px;*/
+    border: 3px rgba(196, 199, 198, 0.73) solid;
+    padding: 5px;
+}
+
+.link-group > div > a > h5 {
+    width: 100%;
+    text-align: center;
+    /*padding: 10px;*/
+}
+
+.link-group > div > a > img {
+    display: table;
+    margin: 0 auto;
+}
+
+.link-group > h3 {
+    text-align: left;
+    background: rgba(0, 150, 136, 0.94);
+    color: #fff;
+    padding-left: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.nerp-title {
+    background: rgba(0, 150, 136, 0.94);
+    color: #fff;
+    padding: 10px 15px 3px 15px;
+
+}
+
+
+.listing-box{
+    border: 5px solid rgba(0, 150, 136, 0.94);
+}
+
+.listing-box p {
+    background: rgba(0, 150, 136, 0.94);
+    font-size: 150%;
+    color: white;
+    font-weight: bold !important;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-bottom: 5px solid lightgray;
+
+}
+.listing-box ul{
+    /*height: 200px;*/
+    /*overflow: scroll;*/
+}
+
+.listing-box ul > li {
+    font-size: 150%;
+    font-weight: 500 !important;
+    padding-top: 4px;
+    padding-bottom: 4px;
+
+}
+
+.listing-box ul > li:nth-child(even) {
+    /*background-color: lightgray;*/
+}

@@ -1,0 +1,121 @@
+{% extends 'hr_base.html' %}
+{% load staticfiles %}
+
+{% load filters %}
+{% load i18n %}
+
+{% block head_end %}
+
+    <script src="{% static 'hr/js/entry_detail.js' %}"></script>
+    <script>
+        ko_data = {{ko_data|jsonify}};
+    </script>
+{% endblock %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li><a href="{% url 'payroll_entry' %}">{% trans 'Payroll Entry' %}</a>
+    <li><a href="{% url 'entry_list' %}">{% trans 'Entry List' %}</a>
+
+{% endblock %}
+{% block breadcrumbs_before_print %}
+{% endblock %}
+
+{% block alert %}
+
+    <!-- <div id="alert_placeholder">
+        <ul data-bind="foreach: errors.items" class="alert-error">
+            <li>
+                Budget for "<span data-bind="text: budget.name()"></span>" from source "<span data-bind="text: source"></span>" exceeds
+            </li>
+        </ul>
+    </div> -->
+{% endblock %}
+
+{% block  content %}
+    <div class="well">
+        <table>
+            <tr>
+                <th>Paid From :</th>
+                <td>{{ paid_from_date }}</td>
+                <th>Paid To :</th>
+                <td>{{ paid_to_date }}</td>
+            </tr>
+            <tr>
+                <th>Branch :</th>
+                <td>{{ branch }}</td>
+            </tr>
+        </table>
+        <table class="table payment-row-table">
+            <tr>
+                <th>Employee</th>
+
+                <th>Employee Grade</th>
+                <th>Employee Designation</th>
+
+                {% for a_title in allowance_titles %}
+                    <th>{{ a_title }}</th>
+                {% endfor %}
+                <th>Total Allowance</th>
+
+                {% for i_title in incentive_titles %}
+                    <th>{{ i_title }}</th>
+                {% endfor %}
+                <th>Total Incentive</th>
+
+                {% for d_title in deduction_titles %}
+                    <th>{{ d_title }}</th>
+                {% endfor %}
+                <th>Total Deduced Amount</th>
+
+                <th>Income Tax</th>
+                <th>Pro Tempore Amount</th>
+                <th>Salary</th>
+                <th>Paid Amount</th>
+            </tr>
+
+            {% for row in rows %}
+
+                <tr>
+                    <td>{{ row.employee }}</td>
+
+                    <td>{{ row.employee_grade }}</td>
+                    <td>{{ row.employee_designation }}</td>
+
+                    {% for a_data in row.allowance_data %}
+                        <th>{{ a_data }}</th>
+                    {% endfor %}
+                    <td>{{ row.total_allowance }}</td>
+
+                    {% for i_data in row.incentive_data %}
+                        <th>{{ i_data }}</th>
+                    {% endfor %}
+                    <td>{{ row.total_incentive }}</td>
+
+                    {% for d_data in row.deduction_data %}
+                        <th>{{ d_data }}</th>
+                    {% endfor %}
+                    <td>{{ row.deduced_amount }}</td>
+
+                    <td>{{ row.income_tax }}</td>
+                    <td>{{ row.pro_tempore_amount }}</td>
+                    <td>{{ row.salary }}</td>
+                    <td>{{ row.paid_amount }}</td>
+                </tr>
+            {% endfor %}
+
+
+        </table>
+    </div>
+
+
+
+    <input type="button" class="btn btn-raised btn-primary" value="Approve"
+           data-bind="visible: !entry_approved(), click: approve_entry">
+    <input type="button" class="btn btn-raised btn-primary" value="Approved" data-bind="visible: entry_approved()">
+    <input type="button" class="btn btn-raised btn-primary" value="Transact"
+           data-bind="visible: entry_approved() && !entry_transacted(), click: transact">
+    <input type="button" class="btn btn-raised btn-primary" value="Transacted"
+           data-bind="visible: entry_approved() && entry_transacted()">
+
+
+{% endblock %}

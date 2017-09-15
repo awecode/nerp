@@ -1,0 +1,48 @@
+{% extends 'hr_report_base.html' %}
+{% load staticfiles %}
+
+{% load filters %}
+{% load i18n %}
+{% load arithmatic %}
+
+{% block report_body %}
+    <p class="lead text-center">{% trans 'Subject' %}: {{ months }} {{ report_title }}</p>
+    <p class="text-left lead">{% trans 'Dear Internal Tax Office' %},
+    </p>
+    <p class="lead">
+        <input type="text" placeholder="{% trans 'Name of Branch' %}">
+    </p>
+    {#    Translators: Tax Report Text #}
+    <p class="lead">
+        {% trans 'Yash karyalaya/ aayojanama karyarat karmachariharulai' %} {{ months }}
+        {% trans 'mahinako talab bitaran garda tapasheel ma ullekhit padhadhikariharubata sasukar bapat katti bhaeko rakam ru. ' %}
+        {% if totals_row.3.0 %}
+            {{ totals_row.3.0 | localizen }}
+        {% else %}
+            <em>Not Assigned</em>
+        {% endif %}
+    {% trans 'aakhcharepi' %} <input type="text" placeholder="{% trans 'Amount in words' %}"> <input type="text"
+                                                                                                     placeholder="{% trans 'Name of Bank' %}">
+    {% trans 'ma jamma garieko miti' %} <input type="text" placeholder="{% trans 'Date of deposit' %}"> {% trans 'ko no.' %} <input type="text"
+                                                                                                placeholder="{% trans 'Check No.' %}">{% trans 'ko bank voucher than 2 yasaisath sanlagna rakhi pathaieko behora anurodh cha.' %}
+    </p>
+{% endblock %}
+{% block report_footer %}
+
+    {#    This is report footer#}
+    <div class="row">
+        <div class="col-lg-4 col-xs-4">
+            <p>{% trans 'Creator Signatute' %}</p>
+            <p>{% trans 'Date' %}: ________</p>
+        </div>
+        <div class="col-lg-4 col-xs-4">
+            <p>{% trans 'Head Accountant Signature' %}</p>
+            <p>{% trans 'Date' %}: _________</p>
+        </div>
+        <div class="col-lg-4 col-xs-4">
+            <p>{% trans 'Approved by Signature' %}</p>
+            <p>{% trans 'Date' %}: __________</p>
+        </div>
+    </div>
+    {#    End This is report footer#}
+{% endblock %}

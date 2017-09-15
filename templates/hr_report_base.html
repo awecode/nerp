@@ -1,0 +1,157 @@
+{% load i18n %}
+{% load staticfiles %}
+{% load solo_tags %}
+
+<!DOCTYPE html>
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+
+    <link rel="icon" type="image/png" href="{% block favicon_url %}{% static 'favicon.ico' %}{% endblock %}"/>
+
+    <title>{% block title %}{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/vendors/selectize.bootstrap3.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/print.css' %}" media="print">
+    {#    <link rel="stylesheet" href="{% static 'css/print.debug.css' %}" media="screen">#}
+    <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap-material-design.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap/ripples.min.css' %}">
+
+    <script src="{% static 'js/vendors/jquery.js' %}"></script>
+
+
+    {% block head_end %}{% endblock %}
+
+    <script src="{% static 'js/vendors/custom.modernizr.js' %}"></script>
+    <script src="{% static 'js/vendors/jquery.autosize.input.js' %}"></script>
+    {% get_current_language as LANGUAGE_CODE %}
+    <script>
+        window.lang = '{{ LANGUAGE_CODE }}';
+    </script>
+
+    {% load filters %}
+
+</head>
+<body>
+<!-- Nav Bar -->
+<div class="container-fluid">
+    <div class="header row">
+        <div class="col-lg-12 col-md-12">
+            <div class="navbar">
+                <div class="nav-bar pull-right">
+                    <div class="btn-group nav-btn" role="group" aria-label="...">
+                        {% if user.is_authenticated %}
+                            <a href="/admin" class="btn btn-default btn-lg">{% trans 'Control Panel' %}</a>
+                        {% endif %}
+                        {% include '_change_language.html' %}
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'logout' %}" class="btn btn-default btn-lg">{% trans 'Log out' %}</a>
+                        {% else %}
+                            <a href="{% url 'login' %}" class="btn btn-default btn-lg">{% trans 'Log in' %}</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <ul class="nav navbar-nav">
+                    {% get_solo 'core.AppSetting' as app_setting %}
+                    <li><a href="/"><h3>{{ app_setting.site_name }}</h3></a></li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- End Nav -->
+    <ol class="breadcrumb well">
+        {% block breadcrumbs %}
+            <li><a href="/">{% trans 'Home' %}</a>
+            </li>
+        {% endblock %}
+        {% block breadcrumbs_right %}
+            <li class="pull-right">
+                <a href="javascript: window.print();">{% trans 'Print' %}</a>
+            </li>
+            <div class="pull-right">
+                {% block breadcrumbs_before_print %}
+                {% endblock %}
+            </div>
+        {% endblock %}
+    </ol>
+
+    <div class="well">
+        {% block report_header %}
+            {% for org_title in organization_title %}
+                <h3 class="text-center">{{ org_title }}</h3>
+            {% endfor %}
+            <h3 class="text-center">{{ branch.name }}</h3>
+            <h3 class="text-center">{{ branch.address }}</h3>
+            <p class="text-right">{% trans 'Date' %}: {{ today | localizen }}</p>
+        {% endblock %}
+        {% block report_body %}{% endblock %}
+        {% block report_main_table %}
+            {#    Detail table here #}
+
+            {% for table in tables %}
+                <h4>{% trans 'Table Name' %}: {{ table.name }}</h4>
+                {% if distinguish_entry %}
+                    <h5>{% trans 'Date' %} {% trans 'Range' %}: {{ table.date_range.0 }} {% trans 'To' %} {{ table.date_range.1 }}, {% trans 'Month(s)' %} : {{ table.included_months }}</h5>
+                    <h5>{% trans 'Entry' %} {% trans 'Date' %}: {{ table.entry_datetime.0 }}, {% trans 'Entry' %} {% trans 'Time' %}: {{ table.entry_datetime.1 }}</h5>
+                {% endif %}
+                <table class="table table-bordered">
+                    {% for row in table.data %}
+                        {% if forloop.counter == 1 %}
+                            <thead>
+                            <tr>
+                                <th>{% trans 'SN' %}</th>
+                                {% for data in row %}
+                                    <th rowspan="{{ data.1 }}" colspan="{{ data.2 }}">{{ data.0 }}</th>
+                                {% endfor %}
+                            </tr>
+                            </thead>
+                        {% endif %}
+                        {% if forloop.counter > 1 and forloop.counter < table.data|length %}
+                            <tr>
+                                <td>{{ forloop.counter0| localize }}</td>
+                                {% for data in row %}
+                                    <td rowspan="{{ data.1 }}" colspan="{{ data.2 }}">{{ data.0 | localizen }}</td>
+                                {% endfor %}
+                            </tr>
+                            </thead>
+                        {% endif %}
+                        {% if forloop.counter == table.data|length %}
+                            <tr>
+                                {% for data in row %}
+                                    <td rowspan="{{ data.1 }}" colspan="{{ data.2 }}">{{ data.0 | localizen }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+
+                </table>
+            {% endfor %}
+
+            {#    End Detail table here #}
+        {% endblock %}
+        {% block report_footer %}{% endblock %}
+    </div>
+
+
+    <script src="{% static 'js/bootstrap/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/vendors/bootstrap-notify.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap/material/material.min.js' %}"></script>
+
+    <script src="{% static 'js/bootstrap/material/ripples.min.js' %}"></script>
+    <script>
+        $.material.init()
+    </script>
+    <!--script src="{% static 'js/foundation/foundation.dropdown.js' %}"></script>
+<script>
+    $(document).foundation();
+</script-->
+</body>
+</html>

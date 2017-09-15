@@ -5,7 +5,7 @@
 
 {% block breadcrumbs %}
     {{ block.super }}
-    <li><a href="{% url "reimbursement_list" project.id %}">{% trans 'Reimbursements as per FCGO records' %}</a></li>
+    <li><a href="{% url "reimbursement_list" project_fy.id %}">{% trans 'Reimbursements as per FCGO records' %}</a></li>
     <li><span>{% trans scenario %} {% trans 'Reimbursement' %}</span></li>
 {% endblock %}
 

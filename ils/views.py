@@ -203,7 +203,7 @@ def patron_form(request, pk=None):
         # if request.is_ajax():
     # base_template = 'modal.html'
     # else:
-    # base_template = 'base.html'
+    # base_template = 'hr_report_base.html'
     return render(request, 'patron_form.html', {
         'scenario': scenario,
         'form': form,

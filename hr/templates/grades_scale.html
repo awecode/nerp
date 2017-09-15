@@ -1,0 +1,124 @@
+{% extends 'hr_base.html' %}
+{% load staticfiles %}
+
+{% load filters %}
+{% load i18n %}
+
+{% block head_end %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/bootstrap/datepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'css/vendors/nepali.datepicker.v2.1.min.css' %}">
+    <script src="{% static 'js/vendors/knockout-mapping-plugin.js' %}"></script>
+    <script src="{% static 'js/vendors/nepali.datepicker.v2.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap/bootstrap-datepicker.js' %}"></script>
+
+    <script src="{% static 'hr/js/grades_scale.js' %}"></script>
+    <script src="{% static 'hr/js/select_item_modal.js' %}"></script>
+
+    <script>
+        $(document).ready(function () {
+            vm = new gradeScale.vm();
+            ko.applyBindings(vm);
+        });
+
+    </script>
+{% endblock %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li><a href="{% url 'payroll_entry' %}">{% trans 'Payroll Entry' %}</a></li>
+    <li><a href="{% url 'entry_list' %}">{% trans 'Entry List' %}</a></li>
+
+{% endblock %}
+{% block breadcrumbs_before_print %}
+    {#    <li>#}
+    {#    </li>#}
+{% endblock %}
+
+{% block alert %}
+
+    <!-- <div id="alert_placeholder">
+        <ul data-bind="foreach: errors.items" class="alert-error">
+            <li>
+                Budget for "<span data-bind="text: budget.name()"></span>" from source "<span data-bind="text: source"></span>" exceeds
+            </li>
+        </ul>
+    </div> -->
+{% endblock %}
+
+{% block content %}
+
+    <div class="col-lg-12 well">
+        <div class="col-lg-12">
+            <h3>{% trans "Employee Grade Scales" %}</h3>
+        </div>
+        <div class="col-lg-4 col-lg-offset-8">
+            {#    This is validity Modal#}
+            <select-crud-modal params="{
+            api_url: validity_api_url,
+            modal_name: 'Grade Scale Validity',
+            select_list_obs: available_scale_validities,
+            selected_item_obs: selected_validity,
+            optionsText : function(item){return 'Valid From: ' + item.valid_from()},
+            optionsCaption: 'Select Grade Scale Validity..',
+
+            form_observables: function(){
+                var self = this;
+                self.id = ko.observable();
+                self.valid_from = ko.observable();
+                self.note = ko.observable();
+            }
+        }">
+                <form>
+                    {{ gsv_form.media }}
+                    <div class="inline-calendar">
+                        {{ gsv_form }}
+                    </div>
+                </form>
+
+            </select-crud-modal>
+            {#    End This is validity Modal#}
+        </div>
+
+        <div>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Grade Number</th>
+                    <th>Grade Rate</th>
+                    <th>Salary Scale</th>
+                </tr>
+                </thead>
+                <tbody data-bind="foreach: available_grade_groups">
+                <tr>
+                    <td colspan="4" style="background: lightgray;" data-bind="click: $data.toggle_visibility">
+                        <strong data-bind="text: $data.name"></strong>
+                        <!-- ko if:!visibility() -->
+                        <span class="glyphicon glyphicon-menu-down pull-right" aria-hidden="true"></span>
+                        <!-- /ko -->
+                        <!-- ko if:visibility() -->
+                        <span class="glyphicon glyphicon-menu-up pull-right" aria-hidden="true"></span>
+                        <!-- /ko -->
+
+
+                    </td>
+                </tr>
+                <!-- ko foreach: $data.employee_grades -->
+                <tr data-bind="with: scale, visible: $parent.visibility">
+                    <td data-bind="text: $parent.grade_name"></td>
+                    <td data-bind="editableText: grade_number, numeric:true"></td>
+                    <td data-bind="editableText: grade_rate, numeric:true"></td>
+                    <td data-bind="editableText: salary_scale, numeric:true"></td>
+                </tr>
+                <!-- /ko -->
+                </tbody>
+            </table>
+            <button class="btn btn-raised btn-primary" data-bind="click: save_update">Save Update</button>
+
+        </div>
+    </div>
+
+    </div>
+
+
+{% endblock %}

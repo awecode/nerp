@@ -21,8 +21,9 @@
         <h4 class="text-center">{% localize_header %}</h4>
         <h4 class="text-center">{% trans 'Budget Expenditure' %} - {{ fy }}</h4>
     </div>
-    <div class="well">
+
         <form method="post" enctype="multipart/form-data" data-bind="submit: save" name="demand-form">
+            <div class="well">
             {% csrf_token %}
 
             <div class="selectize_width">
@@ -79,15 +80,17 @@
                     </tr>
                     <!-- /ko -->
                     <!-- /ko -->
+                    <tr class="total">
+                        <td>{% trans "Total" %}</td>
+                        <td colspan=2 data-bind="text: grand_total()"></td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
 
+            </div>
             <input type="submit" class="btn btn-info btn-raised btn-lg" value="{% trans 'Save' %}">
         </form>
-
-
-    </div>
     </div>
 
 {% endblock %}

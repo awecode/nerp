@@ -1,0 +1,123 @@
+{% extends "_project_base.html" %}
+{% load i18n staticfiles filters %}
+
+{% block title %}{{ scenario }} {% trans 'Disbursement Detail' %}{% endblock %}
+
+{% block head_end %}
+    <script src="{% static 'js/project/disbursement_detail.js' %}"></script>
+    <script>
+        ko_data = {{data|jsonify}};
+    </script>
+{% endblock %}
+
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li><a href="{% url "disbursement_detail_list" project.id %}">{% trans 'Disbursement Details' %}</a></li>
+    <li><span>{% trans scenario %} {% trans 'Disbursement Detail' %}</span></li>
+{% endblock %}
+
+{% block content %}
+    {{ form.non_field_errors }}
+    {{ form.errors }}
+    <form method="post" data-bind="submit: save">
+        {% csrf_token %}
+        <div class="well">
+            <div class="row">
+                <div class="col-md-6 col-sm-12">
+                    <label for="aids">{% trans 'Aids' %}</label>
+                    <select id="aids" data-bind="selectize: aids, value: aid_id, object: aid, optionsText: 'aid_name'"
+                            data-url="{% url 'aid_add' project_fy.project.id %}"></select>
+                </div>
+                <div class="col-md-6 col-sm-12">
+                    <label for="date">{% trans 'Date' %}</label>
+                    <input type="text" data-bind="value: requested_date" class="form-control " id="date">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-sm-12">
+                    <label for="disbursement_method">{% trans 'Disbursement Method' %}</label>
+                    <select id="disbursement_method" data-bind="selectize: disbursement_methods, value: disbursement_method"></select>
+                </div>
+                <div class="col-md-6 col-sm-12">
+                    <label for="wa_no">{% trans 'WA No.' %}</label>
+                    <input type="text" data-bind="value: wa_no, numeric: true" class="form-control " id="wa_no">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-sm-12">
+                    <label for="remarks">{% trans 'Remarks' %}</label>
+                    <input type="text" data-bind="value: remarks" class="form-control " id="remarks">
+                </div>
+                <div class="col-md-6 col-sm-12">
+                </div>
+            </div>
+        </div>
+        <div data-bind="with: table_view" class="well">
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th rowspan="2">{% trans "S.N" %}</th>
+                    <th rowspan="2">{% trans "Category" %}</th>
+                    <th colspan="3">{% trans "Request" %}</th>
+                    <th colspan="3">{% trans "Response" %}</th>
+                    <th colspan="3">{% trans "With-Held / Disallowed" %}</th>
+                    <th rowspan="2"></th>
+                </tr>
+                <tr>
+                    <th>{% trans "NRs." %}</th>
+                    <th>{% trans "USD" %}</th>
+                    <th>{% trans "SDR" %}</th>
+                    <th>{% trans "NRs." %}</th>
+                    <th>{% trans "USD" %}</th>
+                    <th>{% trans "SDR" %}</th>
+                    <th>{% trans "NRs." %}</th>
+                    <th>{% trans "USD" %}</th>
+                    <th>{% trans "SDR" %}</th>
+                </tr>
+                </thead>
+
+                <tbody id="tbody">
+                <!-- ko foreach: rows -->
+                <tr>
+                    <td>
+                        <span data-bind="text:  $index()+1, localize: 1"> </span>
+                    </td>
+                    <td>
+                        <select data-bind="selectize: $root.expense_category, value: expense_category_id"></select>
+                    </td>
+                    <td data-bind="editableText: request_nrs, numeric:true"></td>
+                    <td data-bind="editableText: request_usd, numeric: true"></td>
+                    <td data-bind="editableText: request_sdr, numeric: true"></td>
+                    <td data-bind="editableText: response_nrs, numeric:true"></td>
+                    <td data-bind="editableText: response_usd, numeric: true"></td>
+                    <td data-bind="editableText: response_sdr, numeric: true"></td>
+                    <td data-bind="text: with_held_nrs()"></td>
+                    <td data-bind="text: with_held_usd()"></td>
+                    <td data-bind="text: with_held_sdr()"></td>
+                    <td class="hidden-print">
+                        <a href="#" class="close tiny secondary" data-bind="click: $parent.removeRow">x</a>
+                    </td>
+                </tr>
+
+                <!-- /ko -->
+                </tbody>
+            </table>
+            <a class="btn btn-default btn-raised" data-bind="click: addRow">
+                {% trans 'Add New Row' %}
+            </a>
+        </div>
+
+        <div class="span12">
+            <button type="submit" value="Submit" class="btn btn-info btn-raised">
+                {% trans 'Submit' %}</button>
+            {% if scenario == 'Update' %}
+                <a class="btn btn-danger btn-raised"
+                   href="{% url 'disbursement_detail_delete' project.id obj.id %}">{% trans 'Delete' %}!</a>
+            {% endif %}
+        </div>
+    </form>
+
+
+{% endblock %}

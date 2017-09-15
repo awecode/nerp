@@ -1,0 +1,48 @@
+{% extends 'hr_base.html' %}
+{% load staticfiles %}
+
+{% load filters %}
+{% load i18n %}
+
+{% block head_end %}
+    <link rel="stylesheet" href="{% static 'hr/css/plugins/toastr/toastr.css' %}">
+    <script src="{% static 'hr/js/plugins/toastr/toastr.js' %}"></script>
+    <script src="{% static 'hr/js/plugins/blockUI/jquery.blockUI.js' %}"></script>
+    <script src="{% static 'hr/js/App.js' %}"></script>
+    <script src="{% static 'hr/js/get_report.js' %}"></script>
+    <script>
+        {#        ko_data = {{ko_data|jsonify}};#}
+    </script>
+{% endblock %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li><a href="{% url 'payroll_entry' %}">{% trans 'Payroll Entry' %}</a>
+    <li><a href="{% url 'entry_list' %}">{% trans 'Entry List' %}</a>
+
+{% endblock %}
+{% block breadcrumbs_before_print %}
+{% endblock %}
+Here the report will be generated dynamically
+{% block alert %}
+
+    <!-- <div id="alert_placeholder">
+        <ul data-bind="foreach: errors.items" class="alert-error">
+            <li>
+                Budget for "<span data-bind="text: budget.name()"></span>" from source "<span data-bind="text: source"></span>" exceeds
+            </li>
+        </ul>
+    </div> -->
+{% endblock %}
+
+{% block  content %}
+    <div class="well">
+        <form method="post" action="{% url 'get_report' %}">
+            {{ get_report_form.media }}
+            {% csrf_token %}
+
+            {{ get_report_form.as_table }}
+            <input type="submit" class="btn btn-raised btn-primary" value="Get Report">
+
+        </form>
+    </div>
+{% endblock %}

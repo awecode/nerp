@@ -1,0 +1,60 @@
+{% extends 'hr_base.html' %}
+{% load staticfiles %}
+
+{% load filters %}
+{% load i18n %}
+
+{% block head_end %}
+
+{% endblock %}
+
+{% block alert %}
+
+    <!-- <div id="alert_placeholder">
+        <ul data-bind="foreach: errors.items" class="alert-error">
+            <li>
+                Budget for "<span data-bind="text: budget.name()"></span>" from source "<span data-bind="text: source"></span>" exceeds
+            </li>
+        </ul>
+    </div> -->
+{% endblock %}
+
+{% block  content %}
+    {% load pagination_tags %}
+    {% load sorting_tags %}
+
+    {% autosort object_list as sorted_objects %}
+    {% autopaginate sorted_objects 25 as paginated_objects %}
+    <div class="well">
+        <table class="table table-striped">
+            <thead>
+            <th>{% anchor user.full_name _('Payroll Accountant') %}</th>
+            <th>{% anchor branch.name _('Branch') %}</th>
+            <th>{% trans 'Control' %}</th>
+            </thead>
+            <tbody>
+            {% for item in paginated_objects %}
+                <tr>
+                    <td class="link">
+                        <a href="{% url 'payroll_accountant_edit' item.id %}">{{ item.user.full_name }}</a>
+                    </td>
+                    <td>
+                        {{ item.branch.name }}
+                    </td>
+                    <td>
+                        <a href="{% url 'payroll_accountant_delete' item.id %}">
+                            <button class="btn btn-raised btn-primary">{% trans 'Delete' %}</button>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% paginate %}
+
+    <a class="btn btn-success btn-raised btn-lg"
+       href="{% url 'payroll_accountant_add' %}">{% trans 'New' %} {% trans 'Payroll Accountant' %}</a>
+
+
+{% endblock %}

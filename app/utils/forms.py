@@ -187,7 +187,7 @@ def form_view(some_func):
         if request.is_ajax():
             base_template = 'modal.html'
         else:
-            base_template = 'base.html'
+            base_template = 'hr_report_base.html'
         return render(request, dct['template'], {
             'scenario': scenario,
             'form': form,

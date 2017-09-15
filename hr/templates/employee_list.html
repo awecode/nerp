@@ -1,0 +1,89 @@
+{% extends 'hr_base.html' %}
+{% load staticfiles %}
+
+{% load filters %}
+{% load i18n %}
+
+{% block head_end %}
+    <link rel="stylesheet" href="{% static 'hr/css/hr_custom.css' %}">
+{% endblock %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li><a href="{% url 'payroll_entry' %}">{% trans 'Payroll Entry' %}</a>
+    <li><a href="{% url 'entry_list' %}">{% trans 'Entry List' %}</a>
+
+{% endblock %}
+{% block breadcrumbs_before_print %}
+{% endblock %}
+
+{% block alert %}
+
+    <!-- <div id="alert_placeholder">
+        <ul data-bind="foreach: errors.items" class="alert-error">
+            <li>
+                Budget for "<span data-bind="text: budget.name()"></span>" from source "<span data-bind="text: source"></span>" exceeds
+            </li>
+        </ul>
+    </div> -->
+{% endblock %}
+
+{% block  content %}
+    <div class="ftable well">
+
+        <table class="pull-right">
+            <tr>
+                <form method="get">
+                    {% for field in objects.form.visible_fields %}
+                        <td>{{ field.label }}:</td>
+                        <td>{{ field.errors.as_ul }} {{ field }}</td>
+                    {% endfor %}
+                    <td><input class="btn btn-sm btn-primary btn-raised" type="submit" value="Filter"/></td>
+                </form>
+            </tr>
+        </table>
+        <div class="clearfix"></div>
+
+    </div>
+
+    <div class="well">
+        <table class="table table-striped">
+            <tr>
+                <th>{% trans 'Name' %}</th>
+                <th>{% trans 'Designation' %}</th>
+                <th>{% trans 'Grade' %}</th>
+                <th>{% trans 'Branch' %}</th>
+                <th>{% trans 'Sex' %}</th>
+                <th>{% trans 'Marital Status' %}</th>
+                <th>{% trans 'Type' %}</th>
+                <th>
+                    <div class="pull-right">{% trans 'Status' %}</div>
+                </th>
+            </tr>
+            {% for obj in objects %}
+                <tr>
+                    <td><a href={% url 'edit_employee' obj.id %}>{{ obj }}</a></td>
+                    <td>{{ obj.designation }}</td>
+                    <td>{{ obj.designation.grade }}</td>
+                    <td>{{ obj.working_branch.name }}</td>
+                    <td>{{ obj.sex }}</td>
+                    <td>{{ obj.marital_status }}</td>
+                    <td>{{ obj.type }}</td>
+                    <td><div class="pull-right">
+                        {% if obj.status == 'ACTIVE' %}
+                            <p class="text-primary"><strong>{{ obj.status }}</strong></p>
+                        {% elif  obj.status == 'INACTIVE'%}
+                            <p class="text-danger"><strong>{{ obj.status }}</strong></p>
+                        {% else %}
+                            <p class="text-warning"><strong>{{ obj.status }}</strong></p>
+                        {% endif %}
+                    </div></td>
+                    
+
+                </tr>
+            {% endfor %}
+        </table>
+        <a href={% url 'add_employee' %}><input class="btn btn-raised btn-primary" type="button"
+                                                value="Add New Employee"></a>
+    </div>
+
+{% endblock %}

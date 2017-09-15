@@ -17,6 +17,7 @@ def initialize(apps, schema_editor):
     Group.objects.create(name='Patron')
     Group.objects.create(name='Librarian')
     Group.objects.create(name='Trainer')
+    Group.objects.create(name='Payroll Accountant')
 
     try:
         with transaction.atomic():
